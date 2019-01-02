@@ -16,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
 import net.proteanit.sql.DbUtils;
+import com.toedter.calendar.JDateChooser;
 
 
 public class AttendanceLog extends JFrame {
@@ -82,11 +83,14 @@ public class AttendanceLog extends JFrame {
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(43, 29, 89, 21);
+		contentPane.add(dateChooser);
 	}
 
 	private void connectDataBase() {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

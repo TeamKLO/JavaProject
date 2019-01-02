@@ -128,6 +128,10 @@ public class Attendance {
 		panel.add(labelEndView);
 		
 		JButton buttonStart = new JButton("\uCD9C\uADFC");
+		buttonStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		buttonStart.setBounds(37, 362, 100, 50);
 		panel.add(buttonStart);
 		
