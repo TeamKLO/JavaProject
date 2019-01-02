@@ -21,8 +21,12 @@ public class MainFrame {
 	private JLabel lblDepartment;
 	private JLabel lblPosition;
 	private JLabel lblName;
-	private JPanel panel;
+	private JPanel panelimg;
 	private JButton btnManagement;
+	private JButton btnLogin;
+	
+	Image img;
+	
 
 	/**
 	 * Launch the application.
@@ -46,6 +50,7 @@ public class MainFrame {
 	public MainFrame() {
 		initialize();
 		
+		// 메인 화면에 사원정보를 보여주는 메소드
 		setEmployeeInfo();
 	}
 
@@ -63,6 +68,7 @@ public class MainFrame {
 		JButton btnApproval = new JButton("결재");
 		btnApproval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// 결재 화면을 생성
 				ApprovalFrame window = new ApprovalFrame(frmMain);
 				window.setVisible(true);
 			}
@@ -73,6 +79,7 @@ public class MainFrame {
 		JButton btnCommute = new JButton("출결");
 		btnCommute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// 출결 화면을 생성
 				Attendance window = new Attendance();
 				window.frame.setVisible(true);
 			}
@@ -83,6 +90,7 @@ public class MainFrame {
 		JButton btnSchedule = new JButton("일정");
 		btnSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				// 일정 화면을 생성
 				ScheduleFrame window = new ScheduleFrame();
 				window.frame.setVisible(true);
 			}
@@ -92,7 +100,7 @@ public class MainFrame {
 		
 		JButton btnMessenger = new JButton("메신저");
 		btnMessenger.setVisible(false);
-		btnMessenger.setBounds(290, 111, 97, 23);
+		btnMessenger.setBounds(152, 229, 97, 23);
 		frmMain.getContentPane().add(btnMessenger);
 		
 		btnManagement = new JButton("관리");
@@ -100,10 +108,23 @@ public class MainFrame {
 		btnManagement.setBounds(152, 172, 97, 23);
 		frmMain.getContentPane().add(btnManagement);
 		
+		btnLogin = new JButton("로그아웃");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// 로그아웃 버튼 클릭시 로그인 화면을 세팅한 후 보여주고 메인 화면은 감춤
+				MainStart.classLogin.setIdPassword("", "", "로그인을 해주세요");
+				MainStart.classLogin.frmLogin.setVisible(true);				
+				frmMain.setVisible(false);
+			}
+		});
+		btnLogin.setBounds(290, 111, 97, 23);
+		frmMain.getContentPane().add(btnLogin);
+		
 		JButton btnClose = new JButton("닫기");
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				frmMain.dispose();
+				// 닫기 버튼 클릭시 프로그램 종료
+				System.exit(0);
 			}
 		});
 		btnClose.setBounds(290, 172, 97, 23);
@@ -125,37 +146,42 @@ public class MainFrame {
 		frmMain.getContentPane().add(lblName);
 		lblName.setText("3");
 		
+		panelimg = new JPanel() {
+			// 이미지 파일을 가져오기 위해 paint 메소드를 오버라이드
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+			}
+		};
+		panelimg.setBounds(27, 22, 70, 76);
+		frmMain.getContentPane().add(panelimg);		
 	}
 	
-	private void setEmployeeInfo() {
+	// 메인 화면에 사원정보를 보여주는 메소드
+	public void setEmployeeInfo() {
 		lblDepartment.setText(MainStart.dep_name);
 		lblPosition.setText(MainStart.pos_name);
 		lblName.setText(MainStart.emp_name);
+		// 사원 이미지를 보여주는 메소드
 		setEmployeeImage();
 		
+		// 매니저 코드가 1인 경우 관리 버튼을 보여줌
 		if (MainStart.man_code.equals("1")) {
 			btnManagement.setVisible(true);
 		}
 	}
 	
-	private boolean setEmployeeImage() {
-		Image img;
+	// 사원 이미지를 보여주는 메소드
+	private boolean setEmployeeImage() {		
 		File f = new File(MainStart.emp_image);
 		if (!f.exists()) {
 			return false;
 		}
 		
 		Toolkit tk = Toolkit.getDefaultToolkit();
-		img = tk.getImage(MainStart.emp_image);
-		
-		panel = new JPanel() {
-			@Override
-			public void paint(Graphics g) {
-				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-			}
-		};
-		panel.setBounds(27, 22, 70, 76);
-		frmMain.getContentPane().add(panel);
+		img = tk.getImage(MainStart.emp_image);		
+
+		panelimg.repaint();
 		
 		return true;
 	}
