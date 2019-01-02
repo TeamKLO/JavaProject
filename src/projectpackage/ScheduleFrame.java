@@ -792,8 +792,6 @@ public class ScheduleFrame {
 					+" AND APP_CONFIRMDATE <= '"+b+"'"
 					+" ORDER BY 4";
 			
-									
-
 			try {			
 				txtContent.setText("");				
 				result = stmt.executeQuery(query);				
