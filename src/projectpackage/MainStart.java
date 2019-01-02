@@ -10,7 +10,7 @@ public class MainStart {
 	// 가장 먼저 로그인 창을 띄운다
 	private static LoginFrame frmLogin;
 
-	// 로그인 하는 사원의 정보
+	// 로그인 하는 사원의 정보..
 	public static String emp_no; // 사원번호
 	public static String emp_name; // 사원이름
 	public static String emp_image; // 사원이미지경로
