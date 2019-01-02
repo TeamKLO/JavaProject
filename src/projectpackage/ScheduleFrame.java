@@ -842,7 +842,7 @@ public class ScheduleFrame {
 				txtContent.setText("");				
 				result = stmt.executeQuery(query);				
 				while (result.next()) {					
-					Object[] date = { result.getString(1), result.getString(2), result.getDate(3), result.getDate(4),
+					Object[] date = { result.getString(1), result.getString(2), result.getString(3), result.getString(4),
 							result.getString(5), result.getString(6), result.getString(7)};
 					
 					approvalModel.addRow(date);
