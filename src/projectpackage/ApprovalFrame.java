@@ -29,6 +29,8 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class ApprovalFrame extends JDialog {
 	static JFrame tmpFrame;
@@ -231,6 +233,11 @@ public class ApprovalFrame extends JDialog {
 		btnTableRefresh.setBounds(392, 49, 130, 23);
 		getContentPane().add(btnTableRefresh);
 		
+		JLabel label = new JLabel("~");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(141, 10, 26, 21);
+		getContentPane().add(label);
+		
 		setDisplay();
 	}
 	
@@ -245,7 +252,7 @@ public class ApprovalFrame extends JDialog {
 	void setDateChooser() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
-		cal.add(Calendar.DATE, -7);
+		cal.add(Calendar.DATE, -31);
 		dtcSDate.setDate(cal.getTime());
 		dtcEDate.setDate(new Date());
 	}

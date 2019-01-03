@@ -32,6 +32,8 @@ import java.lang.reflect.Field;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class ConfirmFrame extends JDialog {
 	static JFrame tmpFrame;
@@ -53,6 +55,7 @@ public class ConfirmFrame extends JDialog {
 		}
 	};
 	private JButton btnRefresh;
+	private JLabel label;
 
 	/**
 	 * Launch the application.
@@ -235,6 +238,11 @@ public class ConfirmFrame extends JDialog {
 		btnRefresh.setBounds(392, 49, 130, 23);
 		getContentPane().add(btnRefresh);
 		
+		label = new JLabel("~");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(141, 10, 26, 21);
+		getContentPane().add(label);
+		
 		setDisplay();
 	}
 	
@@ -249,7 +257,7 @@ public class ConfirmFrame extends JDialog {
 	void setDateChooser() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
-		cal.add(Calendar.DATE, -7);
+		cal.add(Calendar.DATE, -31);
 		dtcSDate.setDate(cal.getTime());
 		dtcEDate.setDate(new Date());
 	}
