@@ -57,6 +57,7 @@ public class ScheduleFrame {
 	private JLabel labelDept; // 부서
 	private JDateChooser dateChooserStartDate; // 날짜 입력 : 시작날짜
 	private JDateChooser dateChooserEndDate; // 날짜 입력 :마지막날짜
+	private JTextField textFieldSearchName;//이름검색
 	private JComboBox comboBoxContent; // 일정 사유
 	private JButton buttonInsert; // 추가버튼
 	private JButton buttonUpdate; // 수정버튼
@@ -76,7 +77,7 @@ public class ScheduleFrame {
 	
 
 	private Statement stmt = MainStart.connectDataBase();// db연결
-	private JTextField textFieldSearchName;
+
 
 	// *** 상수 선언 ***
 
