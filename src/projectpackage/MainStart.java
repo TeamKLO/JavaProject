@@ -19,6 +19,7 @@ public class MainStart {
 	public static String man_code; // 관리코드
 	public static String pos_code; // 직책코드
 	public static String pos_name; // 직책이름
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
