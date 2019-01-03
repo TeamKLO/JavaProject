@@ -1,0 +1,215 @@
+// 계정 생성 /////////////////////////////////////////////////////////////
+create user javaproject identified by java;
+javaproject // java
+
+// 테이블 생성 //////////////////////////////////////////////////////////
+CREATE TABLE EMPLOYEE (
+	emp_no	number(5)	NOT NULL,
+	emp_password	varchar2(20)	NULL,
+	emp_name	varchar2(50)	NULL,
+	emp_gender	char(1)	NULL,
+	emp_birthday	date	NULL,
+	emp_mobile	varchar2(20)	NULL,
+	emp_address	varchar2(1000)	NULL,
+	emp_joinday	date	NULL,
+	emp_image	varchar2(200)	NULL
+);
+
+CREATE TABLE DEPARTMENT (
+	dep_code	number(5)	NOT NULL,
+	dep_name	varchar2(50)	NULL,
+	dep_quota	number(3)	NULL
+);
+
+CREATE TABLE BELONG_DEPARTMENT (
+	emp_no	number(5)	NOT NULL,
+	dep_code	number(5)	NOT NULL
+);
+
+CREATE TABLE POSITION (
+	pos_code	number(5)	NOT NULL,
+	pos_name	varchar2(50)	NULL,
+	pos_approve	number(5)	NULL
+);
+
+CREATE TABLE EMPLOYEE_POSITION (
+	emp_no	number(5)	NOT NULL,
+	pos_code	number(5)	NOT NULL
+);
+
+CREATE TABLE SCHEDULE (
+	sch_code	number(5)	NOT NULL,
+	sch_regdate	date	NULL,
+	sch_startdate	date	NULL,
+	sch_enddate	date	NULL,
+	sch_content	varchar2(1000)	NULL
+);
+
+CREATE TABLE EMPLOYEE_SCHEDULE (
+	emp_no	number(5)	NOT NULL,
+	sch_code	number(5)	NOT NULL
+);
+
+CREATE TABLE COMMUTE (
+	com_date	date	NOT NULL,
+	emp_no	number(5)	NOT NULL,
+	com_startdate	date	NULL,
+	com_enddate	date	NULL
+);
+
+CREATE TABLE APPROVAL (
+	app_code	number(5)	NOT NULL,
+	emp_no	number(5)	NOT NULL,
+	cat_code	number(5)	NOT NULL,
+	app_title	varchar2(100)	NULL,
+	app_content	varchar2(1000)	NULL,
+	app_draftdate	date	NULL,
+	app_confirmdate	date	NULL,
+	app_confirmer	number(5)	NULL,
+	app_isconfirm	varchar2(10)	NULL
+);
+
+CREATE TABLE MANAGEMENT_LIST (
+	man_code	number(5)	NOT NULL,
+	man_name	varchar2(100)	NULL,
+	man_content	varchar2(1000)	NULL
+);
+
+CREATE TABLE MANAGER (
+	emp_no	number(5)	NOT NULL,
+	man_code	number(5)	NOT NULL
+);
+
+CREATE TABLE APPROVAL_CATEGORY (
+	cat_code	number(5)	NOT NULL,
+	cat_name	varchar2(50)	NULL
+);
+
+ALTER TABLE EMPLOYEE ADD CONSTRAINT PK_EMPLOYEE PRIMARY KEY (
+	emp_no
+);
+
+ALTER TABLE DEPARTMENT ADD CONSTRAINT PK_DEPARTMENT PRIMARY KEY (
+	dep_code
+);
+
+ALTER TABLE BELONG_DEPARTMENT ADD CONSTRAINT PK_BELONG_DEPARTMENT PRIMARY KEY (
+	emp_no,
+	dep_code
+);
+
+ALTER TABLE POSITION ADD CONSTRAINT PK_POSITION PRIMARY KEY (
+	pos_code
+);
+
+ALTER TABLE EMPLOYEE_POSITION ADD CONSTRAINT PK_EMPLOYEE_POSITION PRIMARY KEY (
+	emp_no,
+	pos_code
+);
+
+ALTER TABLE SCHEDULE ADD CONSTRAINT PK_SCHEDULE PRIMARY KEY (
+	sch_code
+);
+
+ALTER TABLE EMPLOYEE_SCHEDULE ADD CONSTRAINT PK_EMPLOYEE_SCHEDULE PRIMARY KEY (
+	emp_no,
+	sch_code
+);
+
+ALTER TABLE COMMUTE ADD CONSTRAINT PK_COMMUTE PRIMARY KEY (
+	com_date,
+	emp_no
+);
+
+ALTER TABLE APPROVAL ADD CONSTRAINT PK_APPROVAL PRIMARY KEY (
+	app_code,
+	emp_no,
+	cat_code
+);
+
+ALTER TABLE MANAGEMENT_LIST ADD CONSTRAINT PK_MANAGEMENT_LIST PRIMARY KEY (
+	man_code
+);
+
+ALTER TABLE MANAGER ADD CONSTRAINT PK_MANAGER PRIMARY KEY (
+	emp_no,
+	man_code
+);
+
+ALTER TABLE APPROVAL_CATEGORY ADD CONSTRAINT PK_APPROVAL_CATEGORIE PRIMARY KEY (
+	cat_code
+);
+
+// 테이블에 자료를 저장 ///////////////////////////////////////////////////////////////
+인사부 사원 손예진
+인사부 대리 전지현 DB관리자
+인사부 과장 송혜교 DB관리자
+기획부 부장 김혜수
+기획부 사원 한지민
+기획부 대리 최지우
+
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10001, 1234, '손예진', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\손예진.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10002, 1234, '전지현', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\전지현.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10003, 1234, '송혜교', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\송혜교.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10004, 1234, '김혜수', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\김혜수.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10005, 1234, '한지민', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\한지민.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10006, 1234, '최지우', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\최지우.jpg');
+
+insert into BELONG_DEPARTMENT(emp_no, dep_code) values(10001, 1);
+insert into BELONG_DEPARTMENT(emp_no, dep_code) values(10002, 1);
+insert into BELONG_DEPARTMENT(emp_no, dep_code) values(10003, 1);
+insert into BELONG_DEPARTMENT(emp_no, dep_code) values(10004, 3);
+insert into BELONG_DEPARTMENT(emp_no, dep_code) values(10005, 3);
+insert into BELONG_DEPARTMENT(emp_no, dep_code) values(10006, 3);
+
+insert into MANAGER(emp_no, man_code) values(10001, 0);
+insert into MANAGER(emp_no, man_code) values(10002, 1);
+insert into MANAGER(emp_no, man_code) values(10003, 1);
+insert into MANAGER(emp_no, man_code) values(10004, 0);
+insert into MANAGER(emp_no, man_code) values(10005, 0);
+insert into MANAGER(emp_no, man_code) values(10006, 0);
+
+insert into EMPLOYEE_POSITION(emp_no, pos_code) values(10001, 1);
+insert into EMPLOYEE_POSITION(emp_no, pos_code) values(10002, 2);
+insert into EMPLOYEE_POSITION(emp_no, pos_code) values(10003, 3);
+insert into EMPLOYEE_POSITION(emp_no, pos_code) values(10004, 4);
+insert into EMPLOYEE_POSITION(emp_no, pos_code) values(10005, 1);
+insert into EMPLOYEE_POSITION(emp_no, pos_code) values(10006, 2);
+
+insert into DEPARTMENT(dep_code, dep_name, dep_quota) values(1, '인사부', 10);
+insert into DEPARTMENT(dep_code, dep_name, dep_quota) values(2, '영업부', 10);
+insert into DEPARTMENT(dep_code, dep_name, dep_quota) values(3, '기획부', 10);
+insert into DEPARTMENT(dep_code, dep_name, dep_quota) values(4, '총무부', 10);
+insert into DEPARTMENT(dep_code, dep_name, dep_quota) values(5, '개발부', 10);
+
+insert into MANAGEMENT_LIST(man_code, man_name, man_content) values(0, '없음', '없음');
+insert into MANAGEMENT_LIST(man_code, man_name, man_content) values(1, 'DB관리', '사원 목록 입력 및 일정 입력');
+insert into MANAGEMENT_LIST(man_code, man_name, man_content) values(2, '일반관리', '이런 저런 일');
+
+insert into POSITION(pos_code, pos_name, pos_approve) values(1, '사원', 2);
+insert into POSITION(pos_code, pos_name, pos_approve) values(2, '대리', 3);
+insert into POSITION(pos_code, pos_name, pos_approve) values(3, '과장', 4);
+insert into POSITION(pos_code, pos_name, pos_approve) values(4, '부장', 5);
+insert into POSITION(pos_code, pos_name, pos_approve) values(5, '이사', 6);
+insert into POSITION(pos_code, pos_name, pos_approve) values(6, '사장', 6);
+
+insert into APPROVAL_CATEGORY(cat_code, cat_name) values(1, '일정');
+insert into APPROVAL_CATEGORY(cat_code, cat_name) values(2, '기획');
+insert into APPROVAL_CATEGORY(cat_code, cat_name) values(3, '구매');
+
+commit;
+
+// 테이블에 자료를 저장 /////////////////////////////////////////////////////////////////////
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (3,10002,2,'기획 1','기획한다 1',to_date('18/12/27','RR/MM/DD'),null,10003,'대기');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (10,10002,3,'구매 5','구매 한다 5',to_date('18/12/28','RR/MM/DD'),null,10003,'대기');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (1,10002,1,'휴가 1','휴가 간다 1',to_date('18/12/27','RR/MM/DD'),to_date('18/12/27','RR/MM/DD'),10003,'승인');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (2,10002,1,'휴가 2','휴가 간다 2',to_date('18/12/27','RR/MM/DD'),null,10003,'대기');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (4,10001,1,'외근 1','외근 하자 1',to_date('18/12/27','RR/MM/DD'),to_date('18/12/28','RR/MM/DD'),10002,'승인');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (5,10001,1,'외근 2','외근 하자 2',to_date('18/12/27','RR/MM/DD'),to_date('18/12/28','RR/MM/DD'),10002,'승인');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (6,10001,2,'기획 1','기획 하자 1',to_date('18/12/27','RR/MM/DD'),to_date('18/12/28','RR/MM/DD'),10002,'반려');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (7,10001,2,'기획 2','기획 하자 2',to_date('18/12/27','RR/MM/DD'),null,10002,'대기');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (8,10001,3,'구매 1','구매 하자 1',to_date('18/12/27','RR/MM/DD'),null,10002,'대기');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (9,10002,1,'외근 3','외근 간다 3',to_date('18/12/27','RR/MM/DD'),null,10003,'대기');
+Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (11,10002,1,'휴가 10','휴가 간다 10',to_date('18/12/28','RR/MM/DD'),null,10003,'대기');
+
+commit;

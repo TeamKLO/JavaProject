@@ -17,18 +17,26 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class DraftFrame extends JDialog {
+	// static JFrame 필드는 단지 main의 EventQueue안의 생성자를 만족시키기 위한 것일 뿐, 프로그램 실행과 상관없음
 	private static JFrame tmpFrame;
-	private Window parentWindow;
-	private ApprovalFrame parentFrame;
+
+	private Window ownerWindow;
+	private ApprovalFrame ownerFrame;
 	private JTextField txtTitle;
 	private JComboBox cbxCategory;
 	private JTextArea txtContent;
 	private JComboBox cbxConfirmer;
+	private JButton btnDraft;
+	private JButton btnClose;
 
-	private Statement stmt;	
-	
+	private Statement stmt;
+
+	// JComboBox cbxConfirmer와 보조를 맞춰 사원번호를 저장할 String Array
+	// 콤보박스에는 사원의 이름으로 드러내 보여주고, 사원번호는 안 보이지만 DB에 쿼리를 던질 때는 사원번호가 필요
 	private String[] confirmerNo;
 
 	/**
@@ -52,13 +60,19 @@ public class DraftFrame extends JDialog {
 	 * Create the dialog.
 	 */
 	public DraftFrame(Window frame) {
+		// 부모가 되는 JDialog의 owner는 frame, modal은 Dialog.ModalityType.APPLICATION_MODAL 기안
+		// 화면은 모달로 동작
 		super(frame, Dialog.ModalityType.APPLICATION_MODAL);
-		parentWindow = parentFrame;
-		parentWindow = frame;
-		parentFrame = (ApprovalFrame)parentWindow;
+		// DraftFrame은 ApprovalFrame으로 돌아갈 때 ApprovalFrame의 테이블을 수정해야함
+		// ownerWindow field를 ApprovalFrame으로 형변환
+		ownerWindow = ownerFrame;
+		ownerWindow = frame;
+		ownerFrame = (ApprovalFrame) ownerWindow;
 		setTitle("기안 작성");
 		setBounds(100, 100, 450, 400);
+		// frame이 생성될 때 위치는 frame의 중앙
 		setLocationRelativeTo(frame);
+		// frame이 close 될 때의 설정
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 
@@ -69,6 +83,15 @@ public class DraftFrame extends JDialog {
 		getContentPane().add(cbxCategory);
 
 		txtTitle = new JTextField();
+		txtTitle.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnDraft.doClick();
+				}
+			}
+		});
 		txtTitle.setBounds(79, 59, 343, 21);
 		getContentPane().add(txtTitle);
 		txtTitle.setColumns(10);
@@ -86,6 +109,15 @@ public class DraftFrame extends JDialog {
 		getContentPane().add(label_2);
 
 		txtContent = new JTextArea();
+		txtContent.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnDraft.doClick();
+				}
+			}
+		});
 		txtContent.setBounds(79, 90, 343, 146);
 		getContentPane().add(txtContent);
 
@@ -97,32 +129,53 @@ public class DraftFrame extends JDialog {
 		cbxConfirmer.setBounds(79, 249, 130, 21);
 		getContentPane().add(cbxConfirmer);
 
-		JButton btnDraft = new JButton("기안 올리기");
+		btnDraft = new JButton("기안 올리기");
+		btnDraft.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnDraft.doClick();
+				}
+			}
+		});
 		btnDraft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				sendDraft();				
+				// 기안을 함
+				sendDraft();
 			}
 		});
 		btnDraft.setBounds(79, 307, 130, 23);
 		getContentPane().add(btnDraft);
 
-		JButton btnClose = new JButton("닫기");
+		btnClose = new JButton("닫기");
+		btnClose.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnClose.doClick();
+				}
+			}
+		});
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				parentWindow.
+				// 기안 화면을 닫고, 
 				DraftFrame.this.dispose();
-				parentFrame.setTable();
+				ownerFrame.setTable();
 			}
 		});
 		btnClose.setBounds(292, 307, 130, 23);
 		getContentPane().add(btnClose);
 
-		setDisplay();
+		// 화면에 나타나는 값 초기화
+		initDisplay();
 	}
 
-	void setDisplay() {
+	void initDisplay() {
 		// 데이터베이스 연결은 필요에 따라 어디에든 붙일 수 있다.
-		stmt = MainStart.connectDataBase();		
+		stmt = MainStart.connectDataBase();
+		// JComboBox 값 초기화
 		setComboBox();
 	}
 
@@ -133,20 +186,18 @@ public class DraftFrame extends JDialog {
 
 	void setCbxConfirmer() {
 		// 쿼리의 레코드 수를 가져오는 함수가 아무래도 없다. 할 수 없이 쿼리를 두 개 던지자.
-		String cQuery = "select count(*) " + 
-				"from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e " + 
-				"where a.emp_no = b.emp_no and b.pos_code = c.pos_code and " +
-				"a.emp_no = d.emp_no and d.dep_code = e.dep_code " + 
-				"and c.pos_code > " + MainStart.pos_code + 
-				" and e.dep_code = " + MainStart.dep_code;
-		
-		String query = "select a.emp_no, a.emp_name " + 
-				"from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e " + 
-				"where a.emp_no = b.emp_no and b.pos_code = c.pos_code and " +
-				"a.emp_no = d.emp_no and d.dep_code = e.dep_code " + 
-				"and c.pos_code > " + MainStart.pos_code + 
-				" and e.dep_code = " + MainStart.dep_code;
-		
+		String cQuery = "select count(*) "
+				+ "from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e "
+				+ "where a.emp_no = b.emp_no and b.pos_code = c.pos_code and "
+				+ "a.emp_no = d.emp_no and d.dep_code = e.dep_code " + "and c.pos_code > " + MainStart.pos_code
+				+ " and e.dep_code = " + MainStart.dep_code;
+
+		String query = "select a.emp_no, a.emp_name "
+				+ "from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e "
+				+ "where a.emp_no = b.emp_no and b.pos_code = c.pos_code and "
+				+ "a.emp_no = d.emp_no and d.dep_code = e.dep_code " + "and c.pos_code > " + MainStart.pos_code
+				+ " and e.dep_code = " + MainStart.dep_code;
+
 //		String cQuery = "select count(*) " + 
 //				"from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e " + 
 //				"where a.emp_no = b.emp_no and b.pos_code = c.pos_code and " +
@@ -160,22 +211,23 @@ public class DraftFrame extends JDialog {
 //				"a.emp_no = d.emp_no and d.dep_code = e.dep_code " + 
 //				"and c.pos_code > 2 " + 
 //				" and e.dep_code = 1";
-		
-		int rowCount = 0;		
+
+		int rowCount = 0;
 
 		try {
-			 
+
 			ResultSet result = this.stmt.executeQuery(cQuery);
 			result.next();
 			rowCount = result.getInt(1);
-			if (rowCount <= 0) return;
-			
+			if (rowCount <= 0)
+				return;
+
 //			result.last();
 //			rowCount = result.getRow();
 //			result.first();
-			
+
 			confirmerNo = new String[rowCount];
-			result = this.stmt.executeQuery(query);			
+			result = this.stmt.executeQuery(query);
 			int index = 0;
 			while (result.next()) {
 				confirmerNo[index] = result.getString(1);
@@ -188,17 +240,19 @@ public class DraftFrame extends JDialog {
 			e.printStackTrace();
 		}
 	}
-	
+
+	// 기안을 함
 	void sendDraft() {
-					   
-		if (cbxConfirmer.getSelectedIndex() >= 0 && txtTitle.getText().trim().length() > 0 && txtContent.getText().trim().length() > 0) {
+
+		if (cbxConfirmer.getSelectedIndex() >= 0 && txtTitle.getText().trim().length() > 0
+				&& txtContent.getText().trim().length() > 0) {
 			try {
 				Integer tmpInt = new Integer(cbxCategory.getSelectedIndex() + 1);
 
 				String query = "insert into APPROVAL (app_code, emp_no, cat_code, app_title, "
 						+ "app_content, app_draftdate, app_confirmdate, app_confirmer, app_isconfirm) " + "values("
-						+ MainStart.getNewMaxCode(this.stmt, "APPROVAL", "app_code") + ", " + MainStart.emp_no
-						+ ", " + tmpInt.toString() + ", '" + txtTitle.getText() + "'" + ", '" + txtContent.getText()
+						+ MainStart.getNewMaxCode(this.stmt, "APPROVAL", "app_code") + ", " + MainStart.emp_no + ", "
+						+ tmpInt.toString() + ", '" + txtTitle.getText() + "'" + ", '" + txtContent.getText()
 						+ "', sysdate, null" + ", " + confirmerNo[cbxConfirmer.getSelectedIndex()] + ", '대기')";
 
 //			String query = "insert into APPROVAL (app_code, emp_no, cat_code, app_title, " +
@@ -215,7 +269,7 @@ public class DraftFrame extends JDialog {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 		} else {
 			JOptionPane.showMessageDialog(this, "기안을 올릴 수 없습니다.");
 		}

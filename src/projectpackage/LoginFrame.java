@@ -13,14 +13,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
+// 로그인 화면
 public class LoginFrame {
-
+	// 로그인 화면에서 사용하는 JFrame 필드. 다른 클래스에서도 사용할 수있도록 public
 	public JFrame frmLogin;
 
 	private JTextField txtId;
 	private JPasswordField pwfPw;
 	private JLabel lblLoginMessage;
+	private JButton btnLogin;
 
 	private Statement stmt = MainStart.connectDataBase();
 
@@ -44,6 +48,7 @@ public class LoginFrame {
 	 * Create the application.
 	 */
 	public LoginFrame() {
+		// frame 초기 설정
 		initialize();
 
 		// 로그인 정보 세팅
@@ -53,11 +58,14 @@ public class LoginFrame {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	// frame 초기 설정
 	private void initialize() {
 		frmLogin = new JFrame();
 		frmLogin.setTitle("로그인");
 		frmLogin.setBounds(100, 100, 300, 220);
+		// frame이 생성될 때 위치는 모니터의 중앙
 		frmLogin.setLocationRelativeTo(null);
+		// frame이 close 될 때의 설정
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogin.getContentPane().setLayout(null);
 
@@ -72,22 +80,48 @@ public class LoginFrame {
 		frmLogin.getContentPane().add(lblPw);
 
 		txtId = new JTextField();
+		txtId.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnLogin.doClick();
+				}
+			}
+		});
 		txtId.setBounds(91, 33, 181, 21);
 		frmLogin.getContentPane().add(txtId);
 		txtId.setColumns(10);
 
 		JButton btnClose = new JButton("닫기");
+		btnClose.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnClose.doClick();
+				}
+			}
+		});
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// 닫기 버튼을 누르면 프로그램을 완전히 종료
+				// 닫기 버튼을 클릭시 프로그램을 완전히 종료
 				System.exit(0);
-//				frmLogin.dispose();
 			}
 		});
 		btnClose.setBounds(175, 117, 97, 23);
 		frmLogin.getContentPane().add(btnClose);
 
-		JButton btnLogin = new JButton("로그인");
+		btnLogin = new JButton("로그인");
+		btnLogin.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnLogin.doClick();
+				}
+			}
+		});
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// 로그인 버튼을 클릭하면 메소드를 사용해서 결과를 얻음
@@ -103,7 +137,7 @@ public class LoginFrame {
 
 					// 메인 화면은 보이고, 로그인 화면은 감춤
 					MainStart.classMain.frmMain.setVisible(true);
-					frmLogin.setVisible(false);					
+					frmLogin.setVisible(false);
 				}
 
 			}
@@ -112,20 +146,44 @@ public class LoginFrame {
 		frmLogin.getContentPane().add(btnLogin);
 
 		lblLoginMessage = new JLabel("로그인 해주세요");
-		lblLoginMessage.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLoginMessage.setHorizontalAlignment(SwingConstants.LEFT);
 		lblLoginMessage.setBounds(38, 150, 206, 15);
 		frmLogin.getContentPane().add(lblLoginMessage);
 
 		pwfPw = new JPasswordField();
+		pwfPw.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				int key = e.getKeyCode();
+				if (key == KeyEvent.VK_ENTER) {
+					btnLogin.doClick();
+				}
+			}
+		});
 		pwfPw.setBounds(91, 71, 181, 21);
 		frmLogin.getContentPane().add(pwfPw);
 	}
 
-	// 로그인이 정상인지 아닌지 판별하는 메소드
+	// 로그인 정보 세팅
+	public void setIdPassword(String strId, String strPw, String strLoginMessage) {
+		this.txtId.setText(strId);
+		this.pwfPw.setText(strPw);
+		this.lblLoginMessage.setText(strLoginMessage);
+	}
+
+	// 로그인이 정상인지 아닌지 판별
 	private boolean isLogin() {
 		boolean retValue = false;
+		String strId = txtId.getText();
 		// JPasswordField에서 password를 String으로 얻어서 처리
 		String strPw = new String(pwfPw.getPassword());
+
+		// ID 혹은 PW가 공백이라면 볼 것도 없음
+		if (strId.equals("") || strPw.equals("")) {
+//			JOptionPane.showMessageDialog(frmLogin, "사번이나 비번이 틀렸습니다");
+			lblLoginMessage.setText("사번이나 비번이 틀렸습니다");
+			return retValue;
+		}
 
 		// ID와 PW에 해당하는 사원의 정보를 가져오는 쿼리
 		String query = "select a.emp_no, emp_password, emp_name, emp_image, " + "c.dep_code, c.dep_name, "
@@ -167,12 +225,5 @@ public class LoginFrame {
 		}
 
 		return retValue;
-	}
-
-	// 로그인 정보 세팅하는 메소드
-	public void setIdPassword(String strId, String strPw, String strLoginMessage) {
-		this.txtId.setText(strId);
-		this.pwfPw.setText(strPw);
-		this.lblLoginMessage.setText(strLoginMessage);
 	}
 }

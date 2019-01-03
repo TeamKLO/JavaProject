@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+// 프로그램 시작 및 정적필드, 정적메소드 모음
 public class MainStart {
 	// 가장 먼저 로그인 화면을 출력
 	public static LoginFrame classLogin;
@@ -37,7 +38,7 @@ public class MainStart {
 		});
 	}
 
-	// jdbc를 활용해서 oracle에 접속하는 메소드
+	// jdbc를 활용해서 oracle에 접속
 	// return: DB 접속 정보를 가진 Statement class instance 
 	public static Statement connectDataBase() {
 		try {
@@ -58,7 +59,7 @@ public class MainStart {
 		return null;
 	}
 
-	// 테이블의 필드값이 1씩 증가한다면 사용하는 메소드
+	// 테이블의 필드값이 1씩 증가한다면 사용
 	// parameter: stmt(DB 접속 정보를 가진 Statement) tableNm(해당 테이블 이름), fieldNm(해당 필드 이름)
 	// return: 테이블에서 필드가 가진 값의 최대값 + 1
 	public static String getNewMaxCode(Statement stmt, String tableNm, String fieldNm) {
