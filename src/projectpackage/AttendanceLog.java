@@ -3,27 +3,36 @@ package projectpackage;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Date;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JDialog;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 
-import net.proteanit.sql.DbUtils;
+public class AttendanceLog extends JDialog {
 
+	private JDateChooser dtcSDate;
+	private JDateChooser dtcEDate;
+	private JComboBox cbxCategory;
+	private Statement stmt;
 
-public class AttendanceLog extends JFrame {
+	String[] colTitle = { "작성날짜", "사원이름", "출근시간", "퇴근시간" };
 
-	private JPanel contentPane;
-	private JTable table;
-	
-	private Statement stmt = MainStart.connectDataBase();
+	DefaultTableModel defaultTableModel = new DefaultTableModel(colTitle, 0) {
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return false;
+		}
+	};
 
 	/**
 	 * Launch the application.
@@ -32,61 +41,75 @@ public class AttendanceLog extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AttendanceLog frame = new AttendanceLog();
-					frame.setVisible(true);
+					AttendanceLog dialog = new AttendanceLog();
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
-	Statement connection = null;
-	
+
 	/**
-	 * Create the frame.
+	 * Create the dialog.
 	 */
 	public AttendanceLog() {
-//		connection = ProjectControl.connectDataBase();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 626, 533);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		setBounds(100, 100, 602, 458);
+		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
-		
-		
-		JButton btnLoadTable = new JButton("Load Employee Data");
-		btnLoadTable.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				try {
-					String query = "select * from COMMUTE";
-//					PreparedStatement pst = connection.prepareStatement(query);
-					ResultSet rs = stmt.executeQuery(query);
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-					
-				} catch (Exception e) {
-					e.printStackTrace();
+
+		dtcSDate = new JDateChooser();
+		dtcSDate.setDateFormatString("yyyy-MM-dd");
+		dtcSDate.setBounds(12, 10, 130, 21);
+		getContentPane().add(dtcSDate);
+
+		dtcEDate = new JDateChooser();
+		dtcEDate.setDateFormatString("yyyy-MM-dd");
+		dtcEDate.setBounds(166, 10, 130, 21);
+		getContentPane().add(dtcEDate);
+
+		cbxCategory = new JComboBox();
+		cbxCategory.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if (arg0.getStateChange() == ItemEvent.SELECTED) {
+//					setTable();
 				}
-			
-				
 			}
 		});
-		btnLoadTable.setBounds(174, 62, 276, 23);
-		contentPane.add(btnLoadTable);
-		
+		cbxCategory.setModel(new DefaultComboBoxModel(new String[] { "전체", "영업부", "인사부", "기획부", "총무부", "개발부" }));
+		cbxCategory.setSelectedIndex(0);
+		cbxCategory.setBounds(12, 55, 130, 21);
+		getContentPane().add(cbxCategory);
+
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(60, 120, 506, 316);
-		contentPane.add(scrollPane);
+		scrollPane.setBounds(12, 107, 562, 158);
+		getContentPane().add(scrollPane);
+
+		JButton buttonClose = new JButton("닫기");
+		buttonClose.setBounds(444, 373, 130, 23);
+		buttonClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AttendanceLog.this.dispose();
+			}
+		});
+		getContentPane().add(buttonClose);
+
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
+		setTable();
+		
+	}
+	void setDisplay() {
+	
+		stmt = MainStart.connectDataBase();
+		setTable();
 	}
 
-	private void connectDataBase() {
-		// TODO Auto-generated method stub
-		
-	}
 
+
+	void setTable() {
+		String query = "select * from COMMUTE"; 
+					   
+					   
 }
+}	

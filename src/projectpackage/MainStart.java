@@ -34,9 +34,9 @@ public class MainStart {
 	}
 	public static Statement connectDataBase() {
 		try {
-			String url = "jdbc:oracle:thin:@127.0.0.1:1521:orcl";
-			String id = "javaproject";
-			String pw = "java";
+			String url = "jdbc:oracle:thin:@127.0.0.1:1522:orcl";
+			String id = "ora_user3";
+			String pw = "lee3";
 			Statement stmt;
 
 			Connection conn = DriverManager.getConnection(url, id, pw);

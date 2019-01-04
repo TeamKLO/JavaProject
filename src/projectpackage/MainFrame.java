@@ -73,8 +73,8 @@ public class MainFrame {
 		JButton btnCommute = new JButton("출결");
 		btnCommute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Attendance window = new Attendance();
-				window.frame.setVisible(true);
+				Attendance window = new Attendance(frmMain);
+				window.setVisible(true);
 			}
 		});
 		btnCommute.setBounds(290, 51, 97, 23);
