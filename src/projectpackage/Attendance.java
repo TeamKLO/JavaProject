@@ -82,6 +82,7 @@ public class Attendance extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
+<<<<<<< HEAD
 	public Attendance(JFrame frame) {
 		setBounds(100, 100, 549, 467);
 		getContentPane().setLayout(null);
@@ -125,6 +126,64 @@ public class Attendance extends JDialog {
 
 				lblStart_1.setText(am1 + "  " + hour + "시" + minute + "분" + second + "초");
 
+=======
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(150, 150, 450, 500);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 434, 462);
+		frame.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		labelCal = new JLabel("Clock");
+		labelCal.setFont(new Font("돋움", Font.BOLD, 24));
+		labelCal.setBounds(25, 33, 397, 57);
+		panel.add(labelCal);
+		
+				
+		JLabel labelStart = new JLabel("\uCD9C\uADFC\uC2DC\uAC04 :");
+		labelStart.setFont(new Font("돋움", Font.PLAIN, 15));
+		labelStart.setBounds(161, 117, 80, 40);
+		panel.add(labelStart);
+		
+		JLabel labelEnd = new JLabel("\uD1F4\uADFC\uC2DC\uAC04 :");
+		labelEnd.setFont(new Font("돋움", Font.PLAIN, 15));
+		labelEnd.setBounds(161, 176, 80, 40);
+		panel.add(labelEnd);
+		
+		JLabel labelStratView = new JLabel("New label");
+		labelStratView.setFont(new Font("돋움", Font.PLAIN, 15));
+		labelStratView.setBounds(294, 117, 100, 40);
+		panel.add(labelStratView);
+		
+		JLabel labelEndView = new JLabel("New label");
+		labelEndView.setFont(new Font("돋움", Font.PLAIN, 15));
+		labelEndView.setBounds(294, 176, 100, 40);
+		panel.add(labelEndView);
+		
+		JButton buttonStart = new JButton("\uCD9C\uADFC");
+		buttonStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		buttonStart.setBounds(37, 362, 100, 50);
+		panel.add(buttonStart);
+		
+		JButton buttonEnd = new JButton("\uD1F4\uADFC");
+		buttonEnd.setBounds(167, 362, 100, 50);
+		panel.add(buttonEnd);
+		
+		JButton buttonClose = new JButton("닫기");			
+		buttonClose.setBounds(294, 362, 100, 50);
+		panel.add(buttonClose);
+		
+		buttonClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				frame.dispose();
+>>>>>>> branch 'master' of https://github.com/TeamKLO/JavaProject.git
 			}
 		});
 		btnStart.addActionListener(new ActionListener() {

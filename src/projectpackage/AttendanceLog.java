@@ -18,7 +18,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 
+<<<<<<< HEAD
 public class AttendanceLog extends JDialog {
+=======
+import net.proteanit.sql.DbUtils;
+import com.toedter.calendar.JDateChooser;
+>>>>>>> branch 'master' of https://github.com/TeamKLO/JavaProject.git
 
 	private JDateChooser dtcSDate;
 	private JDateChooser dtcEDate;
@@ -83,8 +88,21 @@ public class AttendanceLog extends JDialog {
 		getContentPane().add(cbxCategory);
 
 		JScrollPane scrollPane = new JScrollPane();
+<<<<<<< HEAD
 		scrollPane.setBounds(12, 107, 562, 158);
 		getContentPane().add(scrollPane);
+=======
+		scrollPane.setBounds(60, 120, 506, 316);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(43, 29, 89, 21);
+		contentPane.add(dateChooser);
+	}
+>>>>>>> branch 'master' of https://github.com/TeamKLO/JavaProject.git
 
 		JButton buttonClose = new JButton("닫기");
 		buttonClose.setBounds(444, 373, 130, 23);
@@ -99,6 +117,7 @@ public class AttendanceLog extends JDialog {
 		setTable();
 		
 	}
+<<<<<<< HEAD
 	void setDisplay() {
 	
 		stmt = MainStart.connectDataBase();
@@ -111,5 +130,7 @@ public class AttendanceLog extends JDialog {
 		String query = "select * from COMMUTE"; 
 					   
 					   
+=======
+>>>>>>> branch 'master' of https://github.com/TeamKLO/JavaProject.git
 }
 }	

@@ -1,22 +1,22 @@
 package projectpackage;
 
-import java.awt.Button;
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.Field;
 
-import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -24,17 +24,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+
 import com.toedter.calendar.JDateChooser;
 
 public class ScheduleFrame {
@@ -51,6 +47,7 @@ public class ScheduleFrame {
 	private JDateChooser dateChooserSearchStartDate; // 날짜 검색 : 시작날짜
 	private JDateChooser dateChooserSearchEndDate; // 날짜 검색 : 마지막날짜
 	private JLabel labelSearchName; // 이름 검색 라벨
+	private JButton buttonSearch;
 
 	private JPanel panelEdit; // 관리자용 판넬
 	private JComboBox comboBoxDept; // 테이블 부서 변경
@@ -60,13 +57,27 @@ public class ScheduleFrame {
 	private JLabel labelDept; // 부서
 	private JDateChooser dateChooserStartDate; // 날짜 입력 : 시작날짜
 	private JDateChooser dateChooserEndDate; // 날짜 입력 :마지막날짜
+	private JTextField textFieldSearchName;//이름검색
 	private JComboBox comboBoxContent; // 일정 사유
 	private JButton buttonInsert; // 추가버튼
 	private JButton buttonUpdate; // 수정버튼
 	private JButton buttonDelete; // 삭제버튼
+	
+	//일정승인창
+		private JPanel panelApproval;
+		private DefaultTableModel approvalModel;//
+		private JTable approvalDbTable; // 셋이 하나의 테이블
+		private JScrollPane approvalJScollPane; //
+		private JLabel approvalLabel; //일정승인라벨	
+		private JDateChooser approvalDateChooserSearchStartDate; // 날짜 검색 : 시작날짜
+		private JDateChooser approvalDateChooserSearchEndDate; // 날짜 검색 : 마지막날짜
+		private JTextArea txtContent;
+		private JScrollPane approvalJScollPaneContent;
+	
+	
 
 	private Statement stmt = MainStart.connectDataBase();// db연결
-	private JTextField textFieldSearchName;
+
 
 	// *** 상수 선언 ***
 
@@ -87,12 +98,14 @@ public class ScheduleFrame {
 		});
 	}
 
+	//sdfsdf
 	/**
 	 * Create the application.
 	 */
 	public ScheduleFrame() {
 		initialize();
 		select();
+		scheduleSetDateChooser();
 
 	}
 
@@ -144,7 +157,7 @@ public class ScheduleFrame {
 //	       각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
 		}
 
-		/// 테이블 체크박스 추가
+		
 
 		jScollPane.setBounds(70, 130, 400, 350);
 		panel.add(jScollPane);
@@ -159,23 +172,85 @@ public class ScheduleFrame {
 			}
 		});
 
-		JButton buttonSearch = new JButton("검색");
+		buttonSearch = new JButton("검색");
 		buttonSearch.setBounds(420, 70, 60, 30);
 		panel.add(buttonSearch);
 		buttonSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent a) {
 				model.setRowCount(0);
-				search();
+				select();
 			}
 		});
 
 		dateChooserSearchStartDate = new JDateChooser();
 		dateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");
+		dateChooserSearchStartDate.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ("date".equals(evt.getPropertyName())) {
+					JDateChooser aDateChooser = (JDateChooser) evt.getSource();
+		            boolean isDateSelectedByUser = false;
+		            // Get the otherwise unaccessible JDateChooser's 'dateSelected' field.
+		            try {
+		                // Get the desired field using reflection
+		                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");		                
+		                // This line makes the value accesible (can be read and/or modified)
+		                dateSelectedField.setAccessible(true);
+		                isDateSelectedByUser = dateSelectedField.getBoolean(aDateChooser);
+		            } catch (Exception ignoreOrNot) {
+		            }
+
+		            // Do some important stuff depending on wether value was changed by user
+		            if (isDateSelectedByUser) {
+		            	model.setRowCount(0);
+		            	select();
+		            }
+
+		            // Reset the value to false
+		            try {
+		                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");
+		                dateSelectedField.setAccessible(true);
+		                dateSelectedField.setBoolean(aDateChooser, false);
+		            } catch (Exception ignoreOrNot) {
+		            }
+		        }
+			}
+		});
 		dateChooserSearchStartDate.setBounds(30, 70, 120, 30);
 		panel.add(dateChooserSearchStartDate);
 
 		dateChooserSearchEndDate = new JDateChooser();
 		dateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");
+		dateChooserSearchEndDate.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ("date".equals(evt.getPropertyName())) {
+					JDateChooser aDateChooser = (JDateChooser) evt.getSource();
+		            boolean isDateSelectedByUser = false;
+		            // Get the otherwise unaccessible JDateChooser's 'dateSelected' field.
+		            try {
+		                // Get the desired field using reflection
+		                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");		                
+		                // This line makes the value accesible (can be read and/or modified)
+		                dateSelectedField.setAccessible(true);
+		                isDateSelectedByUser = dateSelectedField.getBoolean(aDateChooser);
+		            } catch (Exception ignoreOrNot) {
+		            }
+
+		            // Do some important stuff depending on wether value was changed by user
+		            if (isDateSelectedByUser) {
+		            	model.setRowCount(0);
+		            	select();
+		            }
+
+		            // Reset the value to false
+		            try {
+		                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");
+		                dateSelectedField.setAccessible(true);
+		                dateSelectedField.setBoolean(aDateChooser, false);
+		            } catch (Exception ignoreOrNot) {
+		            }
+		        }
+			}
+		});
 		dateChooserSearchEndDate.setBounds(170, 70, 120, 30);
 		panel.add(dateChooserSearchEndDate);
 
@@ -193,9 +268,7 @@ public class ScheduleFrame {
 		panel.add(panelEdit);
 		panelEdit.setLayout(null);
 		panelEdit.setVisible(false);
-		if (MainStart.man_code.equals("1")) { // 1번 코드일 때만 관리자 메뉴 보임
-			panelEdit.setVisible(true);
-		}
+		
 
 		String[] CBmenu = { "휴가", "출장", "외근", "반차" };
 		comboBoxContent = new JComboBox(CBmenu);
@@ -289,182 +362,224 @@ public class ScheduleFrame {
 
 			}
 		});
+		
+		
+		///일정승인확인 테이블
+				panelApproval = new JPanel();
+				panelApproval.setBounds(540, 0, 540, 680);
+				frame.getContentPane().add(panelApproval);
+				panelApproval.setLayout(null);
+				panelApproval.setVisible(false);
+			
+				
+				
+				String[] approvalModelColumn = {"사원번호","부서","이름","결재제목","결재내용","승인시간","결재자","결재여부"};
+				approvalModel = new DefaultTableModel(approvalModelColumn,0) {
+					@Override
+					public boolean isCellEditable(int row, int column) {
+						return false;
+					}
+				};
+				approvalDbTable = new JTable(approvalModel);
+				approvalDbTable.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						if (approvalDbTable.getSelectedRow() >= 0) {
+							txtContent.setText(approvalDbTable.getValueAt(approvalDbTable.getSelectedRow(), 4).toString());
+						}
+					}
+				});
+				approvalJScollPane = new JScrollPane(approvalDbTable);
+				approvalDbTable.getTableHeader().setReorderingAllowed(false);// 칼럼순서변경금지
+				approvalDbTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //가로스크롤
+				
+				approvalDbTable.getColumn("결재내용").setWidth(0);
+				approvalDbTable.getColumn("결재내용").setMinWidth(0);
+				approvalDbTable.getColumn("결재내용").setMaxWidth(0);
+				
+				/// 테이블 내용 가운데 정렬하기		
+				dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
+				tcm = approvalDbTable.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
 
-	}
+				for (int i = 0; i < tcm.getColumnCount(); i++) {
+					tcm.getColumn(i).setCellRenderer(dtcr);
+				}
+				
+				
+				approvalJScollPane.setBounds(70, 130, 400, 350);
+				panelApproval.add(approvalJScollPane);
+				
+				approvalLabel = new JLabel("일정승인표");
+				approvalLabel.setBounds(70, 35, 100, 30);
+				panelApproval.add(approvalLabel);
+				
+				txtContent = new JTextArea();	
+				approvalJScollPaneContent = new JScrollPane(txtContent);
+				approvalJScollPaneContent.setBounds(70, 500, 400, 100);
+				panelApproval.add(approvalJScollPaneContent);
+				
+				
+				approvalDateChooserSearchStartDate = new JDateChooser();
+				approvalDateChooserSearchStartDate.addPropertyChangeListener(new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						if ("date".equals(evt.getPropertyName())) {
+							JDateChooser aDateChooser = (JDateChooser) evt.getSource();
+				            boolean isDateSelectedByUser = false;
+				            // Get the otherwise unaccessible JDateChooser's 'dateSelected' field.
+				            try {
+				                // Get the desired field using reflection
+				                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");		                
+				                // This line makes the value accesible (can be read and/or modified)
+				                dateSelectedField.setAccessible(true);
+				                isDateSelectedByUser = dateSelectedField.getBoolean(aDateChooser);
+				            } catch (Exception ignoreOrNot) {
+				            }
+
+				            // Do some important stuff depending on wether value was changed by user
+				            if (isDateSelectedByUser) {
+				            	approvalModel.setRowCount(0);
+				            	approvalSelect();
+				            }
+
+				            // Reset the value to false
+				            try {
+				                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");
+				                dateSelectedField.setAccessible(true);
+				                dateSelectedField.setBoolean(aDateChooser, false);
+				            } catch (Exception ignoreOrNot) {
+				            }
+				        }
+					}
+				});
+				approvalDateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");
+				approvalDateChooserSearchStartDate.setBounds(70, 70, 120, 30);
+				panelApproval.add(approvalDateChooserSearchStartDate);
+				
+				
+				
+				approvalDateChooserSearchEndDate = new JDateChooser();
+				approvalDateChooserSearchEndDate.addPropertyChangeListener(new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						if ("date".equals(evt.getPropertyName())) {
+							JDateChooser aDateChooser = (JDateChooser) evt.getSource();
+				            boolean isDateSelectedByUser = false;
+				            // Get the otherwise unaccessible JDateChooser's 'dateSelected' field.
+				            try {
+				                // Get the desired field using reflection
+				                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");		                
+				                // This line makes the value accesible (can be read and/or modified)
+				                dateSelectedField.setAccessible(true);
+				                isDateSelectedByUser = dateSelectedField.getBoolean(aDateChooser);
+				            } catch (Exception ignoreOrNot) {
+				            }
+
+				            // Do some important stuff depending on wether value was changed by user
+				            if (isDateSelectedByUser) {
+				            	approvalModel.setRowCount(0);
+				            	approvalSelect();
+				            }
+
+				            // Reset the value to false
+				            try {
+				                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");
+				                dateSelectedField.setAccessible(true);
+				                dateSelectedField.setBoolean(aDateChooser, false);
+				            } catch (Exception ignoreOrNot) {
+				            }
+				        }
+					}
+				});
+				approvalDateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");
+				approvalDateChooserSearchEndDate.setBounds(240, 70, 120, 30);
+				panelApproval.add(approvalDateChooserSearchEndDate);
+				
+			
+				
+
+			if (MainStart.man_code.equals("1")) { // 1번 코드일 때만 관리자 메뉴 보임
+				frame.setBounds(100, 100, 1100, 719);
+					panelEdit.setVisible(true);
+					panelApproval.setVisible(true);
+					approvalSetDateChooser();
+					approvalSelect();					
+					
+			}
+				
+				
+			}
+		
+		
+
+
+	
+	
+	
+	
+	
+	
+	
+	
 
 ///테이블 뷰
 	public void select() {
 		// DEPT COMBOBOX Menu
 		String deptCBM = (String) comboBoxDept.getSelectedItem();
 		ResultSet result;
-		// 부서 선택 쿼리
-		String query = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE "
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND DEP.DEP_NAME ='" + deptCBM + "' ORDER BY 1,2,3 DESC";
-
+		String a = ((JTextField)dateChooserSearchStartDate.getDateEditor().getUiComponent()).getText();
+		String b = ((JTextField)dateChooserSearchEndDate.getDateEditor().getUiComponent()).getText();
+		String c = textFieldSearchName.getText();
+		
+		
 		// 전체 부서 쿼리
-		String query2 = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE"
+		String query = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE"
 				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
 				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE ORDER BY 1,2,3 DESC";
+				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE "
+				+ " AND SCH.SCH_STARTDATE >= '"+a+"'";				
 
-		// 디폴트 부서 쿼리 (자기자신부서)
-		String query3 = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE"
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND DEP.DEP_NAME ='" + MainStart.dep_name + "' ORDER BY 1,2,3 DESC";
+	
+		String[] addString = new String[4];
+		if(!MainStart.man_code.equals("1")) {
+			addString[0] = " AND DEP.DEP_NAME = '"+MainStart.dep_name+"'";
+		}else {
+			addString[0] = "";
+		}
+		
+		if (!b.isEmpty()) {
+			addString[1] = " AND SCH.SCH_ENDDATE <= '"+b+"'";			
+		}else {
+			addString[1] ="";
+		}
+		
+		if (!c.isEmpty()) {
+			addString[2] = " AND EMP.EMP_NAME = '" + c +"'";
+		}else {
+			addString[2] ="";
+		}
+		
+		if (comboBoxDept.getSelectedIndex() > 0) {
+			addString[3] = " AND DEP.DEP_NAME = '"+comboBoxDept.getSelectedItem()+"'";
+		}else {
+			addString[3] ="";
+		}		
+		
+		
+		query = query + addString[0] + addString[1] + addString[2] + addString[3] +" ORDER BY 1,2,3 DESC";
 
-		try {
-			// 관리자가 아니라면 자기부서
-			if (!MainStart.man_code.equals("1")) {
-				result = stmt.executeQuery(query3);
-			}
-			// 전체부서 볼 때
-			else if (deptCBM.equals("전체")) {
-				result = stmt.executeQuery(query2);
-			}
-			// 특정 부서 볼 때
-			else {
-				result = stmt.executeQuery(query);
-			}
+		try {			
+			
+			result = stmt.executeQuery(query);
+			
 			while (result.next()) {
 				Object[] data = { result.getString(1), result.getString(2), result.getDate(3), result.getDate(4),
 						result.getString(5), result.getString(6), result.getString(7) };
 				model.addRow(data);
 			}
 		} catch (Exception e) {
-		}
-	}
-
-///날짜 선택 테이블 뷰
-	public void search() {
-
-		String a = ((JTextField) dateChooserSearchStartDate.getDateEditor().getUiComponent()).getText();// get value JDateChooser																									
-		String b = ((JTextField) dateChooserSearchEndDate.getDateEditor().getUiComponent()).getText();
-		String c = textFieldSearchName.getText();
-		String deptCBM = (String) comboBoxDept.getSelectedItem();
-		ResultSet result;
-
-		/// 날짜만 검색
-		/// 부서 선택+날짜 검색
-		String query = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE "
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND SCH.SCH_STARTDATE >= '" + a + "' AND SCH.SCH_ENDDATE <= '" + b + "' AND DEP.DEP_NAME ='"
-				+ deptCBM + "' ORDER BY 1,2,3 DESC";
-
-		/// 전체부서 + 날짜 검색
-		String query2 = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE "
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND SCH.SCH_STARTDATE >= '" + a + "' AND SCH.SCH_ENDDATE <= '" + b + "' ORDER BY 1,2,3 DESC";
-
-		/// 일반사원용 날짜검색
-		String query3 = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE "
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND SCH.SCH_STARTDATE >= '" + a + "' AND SCH.SCH_ENDDATE <= '" + b + "' AND DEP.DEP_NAME ='"
-				+ MainStart.dep_name + "' ORDER BY 1,2,3 DESC";
-
-		// 이름만 검색
-		// 이름입력 + 전체부서
-		String query4 = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE "
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND EMP.EMP_NAME = '" + c + "'" + " ORDER BY 1,2,3 DESC";
-
-		// 이름입력 + 기본 자기부서
-		String query6 = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE "
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND EMP.EMP_NAME = '" + c + "'" + " AND DEP.DEP_NAME = '" + MainStart.dep_name + "'"
-				+ " ORDER BY 1,2,3 DESC";
-
-		// 이름 + 날짜 검색
-		// 이름입력 + 날짜지정
-		String query5 = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE "
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND SCH.SCH_STARTDATE >= '" + a + "' AND SCH.SCH_ENDDATE <= '" + b + "'" + " AND EMP.EMP_NAME = '"
-				+ c + "'" + " ORDER BY 1,2,3 DESC";
-
-		// 기본 자기부서 + 이름입력 + 날짜지정
-		String query7 = " SELECT DEP.DEP_NAME,EMP.EMP_NAME, SCH.SCH_STARTDATE,SCH.SCH_ENDDATE, SCH.SCH_CONTENT,ES.EMP_NO,ES.SCH_CODE "
-				+ " FROM EMPLOYEE EMP ,DEPARTMENT DEP , BELONG_DEPARTMENT BD,"
-				+ " EMPLOYEE_SCHEDULE ES, SCHEDULE SCH WHERE EMP.EMP_NO = BD.EMP_No"
-				+ " AND BD.DEP_CODE = DEP.DEP_CODE AND EMP.EMP_NO = ES.EMP_NO AND ES.SCH_CODE = SCH.SCH_CODE"
-				+ " AND SCH.SCH_STARTDATE >= '" + a + "' AND SCH.SCH_ENDDATE <= '" + b + "' AND DEP.DEP_NAME ='"
-				+ MainStart.dep_name + "' " + " AND EMP.EMP_NAME = '" + c + "'" + " ORDER BY 1,2,3 DESC";
-
-		try {
-			//// 파싱해야함 중간에 - 혹은 / 넣으면 에러
-			// 특정문자를 ""로 변환
-
-			if (!a.isEmpty() && !b.isEmpty()) {// 날짜가 입력됬을때
-				a = a.replaceAll("-", "");
-				a = a.replaceAll("/", "");
-				a = a.replaceAll("_", "");
-				a = a.replaceAll("\\.", "");
-
-				b = b.replaceAll("-", "");
-				b = b.replaceAll("/", "");
-				b = b.replaceAll("_", "");
-				b = b.replaceAll("\\.", "");
-
-				int x = Integer.parseInt(a); // 문자를 int로 바꿔서 비교가능하게만듬
-				int y = Integer.parseInt(b); // 그리고 if문으로 enddate가 startdate보다 빠르면 에러발생
-				if (x > y) {
-					result = null;
-					dialog();
-				} else {
-					if (c.isEmpty()) {// 날짜만 검색용
-						if (!MainStart.man_code.equals("1")) {// 일반사원용
-							result = stmt.executeQuery(query3);
-						} else {
-							if (deptCBM.equals("전체")) {
-								result = stmt.executeQuery(query2); // 전체부서
-							} else {
-								result = stmt.executeQuery(query);
-							} // 부서선택
-						}
-					} else {// 이름 + 날짜 검색용
-						if (!MainStart.man_code.equals("1")) {// 일반사원용
-							result = stmt.executeQuery(query7);
-						} else {
-							result = stmt.executeQuery(query5);
-						}
-					}
-				}
-			} else {// 이름만 검색할 때
-				if (!MainStart.man_code.equals("1")) {// 일반사원용
-					result = stmt.executeQuery(query6);
-				} else {
-					result = stmt.executeQuery(query4); // 전체부서
-				}
-			}
-			
-			while (result.next()) {					
-				Object[] data = { result.getString(1), result.getString(2), result.getDate(3), result.getDate(4),
-						result.getString(5), result.getString(6), result.getString(7) };
-		model.addRow(data);
-			}
-			
-			
-		} catch (Exception e) {
 			dialog();
-			select();
 		}
-
 	}
+
 
 //추가 버튼 메소드
 
@@ -641,4 +756,68 @@ public class ScheduleFrame {
 		dialog.setVisible(true);
 
 	}
+	///일정테이블 날짜 셋팅 메소드
+	public void scheduleSetDateChooser() {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DATE, -14);
+		dateChooserSearchStartDate.setDate(cal.getTime());
+//		dateChooserSearchEndDate.setDate(new Date());
+	}
+	
+	
+	
+	///결제일정승인 날짜 셋팅 메소드
+	public void approvalSetDateChooser() {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DATE, -30);
+		approvalDateChooserSearchStartDate.setDate(cal.getTime());
+		approvalDateChooserSearchEndDate.setDate(new Date());
+	}
+	
+	
+	///결제일정승인 테이블 뷰
+		public void approvalSelect() {
+			
+			ResultSet result;
+			SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+			String a = ((JTextField) approvalDateChooserSearchStartDate.getDateEditor().getUiComponent()).getText();
+			String b = ((JTextField) approvalDateChooserSearchEndDate.getDateEditor().getUiComponent()).getText();
+			String query = "SELECT A.EMP_NO,D.DEP_NAME,E.EMP_NAME,A.APP_TITLE,A.APP_CONTENT,A.APP_CONFIRMDATE,A.APP_CONFIRMER,A.APP_ISCONFIRM"  
+					+" FROM APPROVAL A,EMPLOYEE E,BELONG_DEPARTMENT ED,DEPARTMENT D" 
+					+" WHERE A.EMP_NO = E.EMP_NO AND E.EMP_NO = ED.EMP_NO AND ED.DEP_CODE = D.DEP_CODE" 
+					+" AND A.CAT_CODE = 1 AND A.APP_ISCONFIRM = '승인'"
+					+" AND APP_CONFIRMDATE >= '"+a+"'"
+					+" AND APP_CONFIRMDATE <= '"+b+"'"
+					+" ORDER BY 4";
+			
+			try {			
+				txtContent.setText("");				
+				result = stmt.executeQuery(query);				
+				while (result.next()) {					
+					Object[] date = { result.getString(1), result.getString(2), result.getString(3), result.getString(4),
+							result.getString(5), result.getString(6), result.getString(7),result.getString(8)};
+					approvalModel.addRow(date);
+									
+				}			
+		
+			}catch(Exception e) {
+				
+				System.out.println(e);
+			}
+			
+		}
+	
+	
+	
 }
+
+
+
+
+
+
+
