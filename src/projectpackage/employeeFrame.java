@@ -288,8 +288,10 @@ public class employeeFrame extends JDialog {
 		};		
 		panelImage.setBounds(629, 440, 90, 70);
 		getContentPane().add(panelImage);		
+		
+		
 						
-			
+		////////액션리스너	
 		///이미지 등록 버튼 엑션리스너
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -299,6 +301,16 @@ public class employeeFrame extends JDialog {
 			}
 		});
 		
+		///등록버튼
+		insertButton.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				employeeInsert();
+				model.setRowCount(0);
+				employeeSelect();
+				
+			}
+		});
 		
 		
 	
@@ -436,18 +448,16 @@ public class employeeFrame extends JDialog {
 		
 		
 		String employeeInsertQuery = "INSERT INTO EMPLOYEE VALUES((select max(emp_no)+1 from employee),"
-				+"'"+password+"'"
-				+"'"+name+"'"
-				+"'"+gender+"'"
-				+"'"+birthday+"'"
-				+phone
-				+"'"+address+"'"
-				+"'"+hiredate+"'"
+				+"'"+password+"',"
+				+"'"+name+"',"
+				+"'"+gender+"',"
+				+"'"+birthday+"',"
+				+"'"+phone+"',"
+				+"'"+address+"',"
+				+"'"+hiredate+"',"
 				+image+")";
 		
-//		if(가져온 이미지가 널이 아니라면) {
-//			등록
-//		}
+
 		
 		String belong_DepartmentInsertQuery = "INSERT INTO BELONG_DEPARTMENT VALUES"
 				+ "((select max(emp_no) from employee),"
@@ -481,7 +491,7 @@ public class employeeFrame extends JDialog {
 				getEmpNo =result.getString(1);				
 			}			
 		      //파일을 DB 이미지 폴더에 복사	          
-	           if(!getimage.isEmpty()&&getimage.contains(location)) {
+	           if(!getimage.isEmpty()) {
 	        	   try {  		   			
 	        		   	FileInputStream fis = new FileInputStream(getimage);  // 원본파일
 	        		   	FileOutputStream fos = new FileOutputStream(location + getEmpNo+".JPG");// 복사위치 및 이름        		   	
@@ -490,26 +500,23 @@ public class employeeFrame extends JDialog {
 	        		   	int readcount = 0;        		   	  
 	        		   	while((readcount=fis.read(buffer)) != -1) {
 	        		   	fos.write(buffer, 0, readcount);   
-	        		   	}
+	        		   	}	        		   	
 	        		   	fis.close();
 	        		   	fos.close();
+	        		   	
+	        		      ///파일 복사 후 DB사원테이블 이미지 경로 업데이트
+	     	           String updateQuery = "UPDATE EMPLOYEE SET EMP_IMAGE = '"+location+getEmpNo+"'"
+	     	           					+ " WHERE EMP_NO ="+getEmpNo;
+	        		   	
+	     	          stmt.executeUpdate(updateQuery);
 	        	   }catch(Exception e) {
 	        		   System.out.println("오류투성이구만");
 	        	   }         
 	           }	      
-	           ///파일 복사 후 DB사원테이블 이미지 경로 업데이트
-	           String updateQuery = "UPDATE EMPLOYEE SET EMP_IMAGE = '"+location+getEmpNo+"'"
-	           		+ " WHERE EMP_NO ="+getEmpNo;
-	           try {
-	        	   stmt.executeUpdate(updateQuery);
-	           }catch(Exception e) {
-	        	   System.out.println("inner");
-	           }         
+	     
 	           
-	           
-			
 		}catch(Exception e) {
-			System.out.println("anjsadf");
+			System.out.println("정말큰일이구만");
 			
 		}	
 		
