@@ -1,10 +1,15 @@
 package projectpackage;
 
 import java.awt.EventQueue;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Properties;
 
 // 프로그램 시작 및 정적필드, 정적메소드 모음
 public class MainStart {
@@ -22,14 +27,13 @@ public class MainStart {
 	public static String man_code; // 관리코드
 	public static String pos_code; // 직책코드
 	public static String pos_name; // 직책이름
-	
 
 	// 프로그램 시작. 로그인 화면을 출력
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					classLogin = new LoginFrame();					
+					classLogin = new LoginFrame();
 					classLogin.frmLogin.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -39,12 +43,16 @@ public class MainStart {
 	}
 
 	// jdbc를 활용해서 oracle에 접속
-	// return: DB 접속 정보를 가진 Statement class instance 
+	// return: DB 접속 정보를 가진 Statement class instance
 	public static Statement connectDataBase() {
 		try {
-			String url = "jdbc:oracle:thin:@127.0.0.1:1522:orcl";
-			String id = "ora_user3";
-			String pw = "lee3";
+
+			// 접속 정보를 가진 ini파일을 얻음
+			Properties prop = getIniFile();
+			String url = prop.getProperty("url");
+			String id = prop.getProperty("id");
+			String pw = prop.getProperty("pw");
+			
 			Statement stmt;
 
 			Connection conn = DriverManager.getConnection(url, id, pw);
@@ -78,6 +86,28 @@ public class MainStart {
 		}
 
 		return retValue;
+	}
+
+	private static Properties getIniFile() {
+		Properties prop = new Properties();
+		// 이클립스에서 user.dir은 project 경로
+		String filePath = System.getProperty("user.dir");
+
+		// 파일이 존재하는가
+		File f = new File(filePath + "\\IniFile.ini");
+		if (!f.exists()) {
+			return null;
+		}
+		
+		try {
+			prop.load(new FileInputStream(filePath + "\\IniFile.ini"));
+		} catch (FileNotFoundException e) {			
+			e.printStackTrace();
+		} catch (IOException e) {			 
+			e.printStackTrace();
+		}
+		
+		return prop;
 	}
 
 }
