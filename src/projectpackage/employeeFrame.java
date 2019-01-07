@@ -47,6 +47,9 @@ import javax.swing.table.TableColumnModel;
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Dialog;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class employeeFrame extends JDialog {
 	
@@ -66,6 +69,7 @@ public class employeeFrame extends JDialog {
 	
 	//입력 필드
 	private String[] deptCombobox;//부서 콤보박스 내용
+	private String[] positionCombobox;//직책 콤보박스 내용
 	private JComboBox comboBoxDept; //  부서 
 	private JComboBox comboBoxPosition; //직책 
 	private JComboBox comboBoxManagementCode; // 관리코드
@@ -89,6 +93,13 @@ public class employeeFrame extends JDialog {
 	private Image image;	   //이미지
 	private JLabel labelImage; //이미지 라벨
 	private String getimage = "";   //이미지 경로
+	
+	//메뉴바
+	
+	JMenuBar menuBar;
+	JMenu menu;
+	JMenuItem menuItemDept;
+	JMenuItem menuItemPosition;
 	
 	
 	
@@ -129,7 +140,8 @@ public class employeeFrame extends JDialog {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
-		deptnameSelect();
+		deptnameSelect();//부서 콤보박스 아이템 가져오기
+		positionSelect();//직책 콤보박스 아이템 가져오기
 
 		
 		//////버튼
@@ -146,7 +158,8 @@ public class employeeFrame extends JDialog {
 		getContentPane().add(deleteButton);
 		
 		closeButton = new JButton("닫기");
-		closeButton.setBounds(600, 650, 60, 30);	
+		closeButton.setBounds(600, 650, 60, 30);
+		getContentPane().add(closeButton);		
 		
 		
 		////테이블
@@ -191,8 +204,9 @@ public class employeeFrame extends JDialog {
 		getContentPane().add(comboBoxDept);
 		
 		//직책 
-		String[] comboBoxPositionMenu = {"직책","사원","대리","과장","부장","이사","사장"};
-		comboBoxPosition = new JComboBox(comboBoxPositionMenu);
+//		String[] comboBoxPositionMenu = {"직책","사원","대리","과장","부장","이사","사장"};
+		
+		comboBoxPosition = new JComboBox(positionCombobox);
 		comboBoxPosition.setBounds(160, 480, 70,30);
 		getContentPane().add(comboBoxPosition);
 		
@@ -298,6 +312,21 @@ public class employeeFrame extends JDialog {
 		getContentPane().add(labelImage);
 	
 		
+		//메뉴바
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		menu = new JMenu("등록");
+		menuBar.add(menu);
+		
+		menuItemDept = new JMenuItem("부서등록");
+		menu.add(menuItemDept);
+		
+		menuItemPosition = new JMenuItem("직책등록");
+		menu.add(menuItemPosition);
+		
+		
+		
 		//이미지 뷰
 		panelImage = new JPanel(){
 		// 이미지 파일을 가져오기 위해 paint 메소드를 오버라이드
@@ -351,8 +380,7 @@ public class employeeFrame extends JDialog {
 				
 			}
 		});
-		//닫기버튼
-		getContentPane().add(closeButton);
+		//닫기버튼		
 		closeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			dispose();
@@ -377,6 +405,25 @@ public class employeeFrame extends JDialog {
 			}
 		});		
 
+		////메뉴바 액션리스너
+		//부서변경메뉴
+		menuItemDept.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DepartmentFrame departmentFrame = new DepartmentFrame();
+				departmentFrame.setVisible(true);
+				
+			}
+		});
+		menuItemPosition.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PositionFrame positionFrame = new PositionFrame();
+				positionFrame.setVisible(true);
+				
+			}
+		});
+		
 		
 		
 		employeeSelect();
@@ -407,6 +454,32 @@ public class employeeFrame extends JDialog {
 			
 		}
 	}
+	
+	//직책 콤보박스 뷰 메소드
+	
+	public void positionSelect() {
+		ResultSet result;
+		String query = "SELECT POS_NAME FROM POSITION ORDER BY POS_CODE";
+		int count =0;
+		int i =1;
+		try {
+			result = stmt.executeQuery(query);
+			while(result.next()) {
+				count++;
+			}//쿼리를 날려서 행의 갯수를 알아온 뒤
+			 //갯수 +1만큼 배열을 만들고
+			positionCombobox = new String[count+1];
+			positionCombobox[0] = "직책";
+			//다시 쿼리를 날려서 배열안에 목록을 넣어준다
+			result = stmt.executeQuery(query);
+			while(result.next()) {							
+				positionCombobox[i++] = result.getString(1);		
+			}
+		}catch(Exception e) {
+			
+		}
+	}
+	
 	
 	
 	///테이블 뷰 메소드
@@ -491,10 +564,9 @@ public class employeeFrame extends JDialog {
 			
 				if (i == 9) {
 					textFieldImage.setText((String) model.getValueAt(row, 9));
-					if(!textFieldImage.getText().isEmpty()) {
-					getimage = ((String)model.getValueAt(table.getSelectedRow(),9));
-					System.out.println(getimage);
-					System.out.println(((String)model.getValueAt(table.getSelectedRow(),9)));
+					File file = new File(textFieldImage.getText());			
+					if(file.exists()) {
+					getimage = ((String)model.getValueAt(table.getSelectedRow(),9));				
 					}else {
 						getimage = "";
 					}
@@ -526,12 +598,13 @@ public class employeeFrame extends JDialog {
 		if (!f.exists()) {		
 			panelImage.setVisible(false);
 			return true;
-		}		
+		}else{		
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		image = tk.getImage(getimage);
 		panelImage.repaint();
 		panelImage.setVisible(true);
 		return true;
+		}
 	}
 	
 	
@@ -737,6 +810,7 @@ public class employeeFrame extends JDialog {
 				employeedialog();
 			}else {
 			stmt.executeUpdate(employeeUpdateQuery);
+			stmt.executeUpdate("COMMIT");
 			employeedialogUpdate();}
 		} catch (SQLException e) {			
 			employeedialog();
@@ -790,14 +864,4 @@ public class employeeFrame extends JDialog {
         JOptionPane.showMessageDialog(null, "삭제되었습니다.","완료",JOptionPane.WARNING_MESSAGE);            
     
 }
-	
-	
-	
-	
-
-	
-
-	
-	
-	
 }

@@ -11,24 +11,21 @@ import java.sql.Statement;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import projectpackage.employeeFrame.employeeTableMouseListener;
-
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-public class DepartmentFrame extends JDialog {
-	private JTextField textFieldDeptname;
-	private JTextField textFieldDeptquota;
+public class PositionFrame extends JDialog {
+	private JTextField textFieldPositionname;
+	private JTextField textFieldPositionApprove;
 	
 	private DefaultTableModel model;//
 	private JTable table; 			// 테이블
@@ -37,11 +34,14 @@ public class DepartmentFrame extends JDialog {
 	JButton insertButton; 
 	JButton deleteButton;
 	JButton closeButton;
-	JLabel labelDeptname;
-	JLabel labelDeptquota;
-	private JLabel labelDepcode;
+	JLabel labelPositionname;
+	JLabel labelPositionquota;
+	private JLabel labelPositioncode;
 	
 	private Statement stmt = MainStart.connectDataBase();
+	private JLabel labelCode;
+	
+	
 	
 
 	/**
@@ -49,7 +49,7 @@ public class DepartmentFrame extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			DepartmentFrame dialog = new DepartmentFrame();
+			PositionFrame dialog = new PositionFrame();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -60,7 +60,7 @@ public class DepartmentFrame extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DepartmentFrame() {
+	public PositionFrame() {
 		setBounds(100, 100, 320, 300);
 		getContentPane().setLayout(null);	
 		setLocationRelativeTo(null);
@@ -68,7 +68,7 @@ public class DepartmentFrame extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		///테이블
-		String[] tableColumn = {"부서번호","부서이름","정원"};
+		String[] tableColumn = {"직책코드","직책이름","상급자코드"};
 		model = new DefaultTableModel(tableColumn,0){			
 			@Override
 			public boolean isCellEditable(int row, int column) {  //셀 편집 불가능 오버라이드
@@ -77,7 +77,7 @@ public class DepartmentFrame extends JDialog {
 		};
 		table = new JTable(model);		
 		jScollPane = new JScrollPane (table);
-		jScollPane.setBounds(25, 35, 250, 110);		
+		jScollPane.setBounds(25, 20, 250, 110);		
 	
 		table.getTableHeader().setReorderingAllowed(false);// 칼럼순서변경금지
 	
@@ -89,9 +89,7 @@ public class DepartmentFrame extends JDialog {
 			tcm.getColumn(i).setCellRenderer(dtcr);
 			}		
 		getContentPane().add(jScollPane);
-		table.getColumn("부서번호").setWidth(0); 
-		table.getColumn("부서번호").setMinWidth(0);
-		table.getColumn("부서번호").setMaxWidth(0);	
+
 		
 		
 		///버튼
@@ -100,7 +98,7 @@ public class DepartmentFrame extends JDialog {
 		getContentPane().add(insertButton);
 		
 		deleteButton = new JButton("삭제");
-		deleteButton.setBounds(120, 213, 60, 30);
+		deleteButton.setBounds(123, 213, 60, 30);
 		getContentPane().add(deleteButton);
 		
 		closeButton = new JButton("닫기");
@@ -108,28 +106,33 @@ public class DepartmentFrame extends JDialog {
 		getContentPane().add(closeButton);
 		
 		//입력필드
-		labelDeptname = new JLabel("부서명 :");
-		labelDeptname.setBounds(20, 180, 50, 15);
-		getContentPane().add(labelDeptname);
+		labelPositionname = new JLabel("직책명 :");
+		labelPositionname.setBounds(20, 178, 50, 20);
+		getContentPane().add(labelPositionname);
 		
-		labelDeptquota = new JLabel("부서정원 :");
-		labelDeptquota.setBounds(155, 180, 60, 15);
-		getContentPane().add(labelDeptquota);		
+		labelPositionquota = new JLabel("상급자코드 :");
+		labelPositionquota.setBounds(145, 178, 80, 20);
+		getContentPane().add(labelPositionquota);		
 		
-		textFieldDeptquota = new JTextField();
-		textFieldDeptquota.setColumns(10);
-		textFieldDeptquota.setBounds(220, 173, 50, 30);
-		getContentPane().add(textFieldDeptquota);
+		textFieldPositionApprove = new JTextField();
+		textFieldPositionApprove.setColumns(10);
+		textFieldPositionApprove.setBounds(220, 173, 40, 30);
+		getContentPane().add(textFieldPositionApprove);
 		
-		textFieldDeptname = new JTextField();
-		textFieldDeptname.setBounds(75, 173, 70, 30);
-		getContentPane().add(textFieldDeptname);
-		textFieldDeptname.setColumns(10);
+		textFieldPositionname = new JTextField();
+		textFieldPositionname.setBounds(75, 173, 60, 30);
+		getContentPane().add(textFieldPositionname);
+		textFieldPositionname.setColumns(10);
 		
-		labelDepcode = new JLabel("");
-		labelDepcode.setBounds(25, 10, 57, 15);
-		getContentPane().add(labelDepcode);
-		labelDepcode.setVisible(false);
+		labelPositioncode = new JLabel("");
+		labelPositioncode.setBounds(58, 150, 30, 20);
+		getContentPane().add(labelPositioncode);
+		labelPositioncode.setVisible(true);
+		
+		labelCode = new JLabel("코드 :");
+		labelCode.setBounds(20, 150, 39, 20);
+		getContentPane().add(labelCode);
+	
 		
 		
 		insertButton.addActionListener(new ActionListener() {			
@@ -145,7 +148,7 @@ public class DepartmentFrame extends JDialog {
 		deleteButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				departmentDelete();
+				positionDelete();
 				model.setRowCount(0);
 				departmentSelect();
 				
@@ -165,9 +168,9 @@ public class DepartmentFrame extends JDialog {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (table.getSelectedRow() >= 0) {
-					labelDepcode.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
-					textFieldDeptname.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
-					textFieldDeptquota.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
+					labelPositioncode.setText(table.getValueAt(table.getSelectedRow(), 0).toString());
+					textFieldPositionname.setText(table.getValueAt(table.getSelectedRow(), 1).toString());
+					textFieldPositionApprove.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
 				}
 			}
 		});
@@ -183,7 +186,7 @@ public class DepartmentFrame extends JDialog {
 		public void departmentSelect() {
 			
 			ResultSet result;
-			String query = "SELECT dep_code,DEP_NAME,DEP_QUOTA FROM DEPARTMENT ORDER BY DEP_CODE";
+			String query = "SELECT POS_CODE,POS_NAME,POS_APPROVE FROM POSITION ORDER BY 1";
 			
 			try {			
 				result = stmt.executeQuery(query);		
@@ -197,36 +200,67 @@ public class DepartmentFrame extends JDialog {
 			
 		}
 		
-		//부서 추가 메소드
+		//직책 추가 메소드
 		public void departmentInsert() {
 			ResultSet result;	
-			String depcode = "(select max(dep_code)+1 from department)";
-			String first = "INSERT INTO DEPARTMENT VALUES(0,'없음',999)"; //처음 아무부서도 없을때
-			String checkQuery = "select dep_code from department";		
-			String depname =  textFieldDeptname.getText();
-			String depquota = textFieldDeptquota.getText();
+			String posCode = "(select max(pos_code)+1 from position)";			
+			String positionName =  textFieldPositionname.getText();
+			String posApprove = textFieldPositionApprove.getText();
 			String commit = "COMMIT";
-			String query = "INSERT INTO DEPARTMENT VALUES("
-					+depcode+","
-					+"'"+depname+"',"
-					+depquota+")";
+			String query = "INSERT INTO POSITION VALUES("
+					+posCode+","
+					+"'"+positionName+"',";
+				
 			
-			try {//최초 아무부서도 없을때 무조건 없음부서 생성 코드
-				result = stmt.executeQuery(checkQuery);		
+			String[] addQuery = new String[2];
+			if(!posApprove.isEmpty()) {
+				addQuery[0] = posApprove;
+			}else {addQuery[0]="0";}
+			
+			addQuery[1] = ")";			
+			query = query + addQuery[0] + addQuery[1];
+			
+			
+			//최초 아무부서도 없을때 무조건 없음부서 생성 코드
+			String first = "INSERT INTO POSITION VALUES(0,'없음',0)"; //처음 아무부서도 없을때
+			try {
+				result = stmt.executeQuery(first);		
 				while(!result.next()){
 					stmt.executeQuery(first);
 				}
 			}catch(Exception e) {	
-			}				
+			}
+			
+			
+			///등록된 직책코드만 상급자로 입력 가능한 코드
+			boolean check = false;
+			String allPosCode = "select pos_code from position";
 			try {
-				if(depname.equals("없음")) {
+			result = stmt.executeQuery(allPosCode); //직책코드 존재할때만 입력가능 코드
+			while (result.next()) {
+				if (posApprove.equals(result.getString(1))||posApprove.isEmpty()) {
+					check = true;
+					break;
+				}
+			}
+			}catch(Exception e) {				
+			}
+			
+			
+			
+			try {
+				if(positionName.equals("없음")) {////없음을 또 생성불가
 					departmentdialogCantInsert();
-				}else {
+				}else if(check==false) { //상급자코드가 이상할때
+					departmentdialogCantInsertCode();
+				}
+				else {
 					stmt.executeQuery(query);
 					stmt.executeQuery(commit);
 					departmentdialogInsert();
 				}
-			}catch(Exception e) {				
+			}catch(Exception e) {	
+				System.out.println(e);
 				departmentdialog();
 				
 			}
@@ -236,16 +270,16 @@ public class DepartmentFrame extends JDialog {
 		}
 		
 		//부서 삭제 메소드
-		public void departmentDelete() {
-			String depname =  textFieldDeptname.getText();
-			String depcode = labelDepcode.getText();
+		public void positionDelete() {
+			String posname =  textFieldPositionname.getText();
+			String poscode = labelPositioncode.getText();
 			
-			String departmentDeleteQuery = "DELETE FROM DEPARTMENT WHERE DEP_NAME = '"+depname+"'";
-			String belong_departmentUpdateQuery = "UPDATE BELONG_DEPARTMENT SET DEP_CODE = 0 WHERE DEP_CODE ="+depcode;
-			String belong_departmentDeleteQuery = "DELETE FROM BELONG_DEPARTMENT WHERE DEP_CODE = "+depcode;
+			String departmentDeleteQuery = "DELETE FROM POSITION WHERE POS_NAME = '"+posname+"'";
+			String belong_departmentUpdateQuery = "UPDATE EMPLOYEE_POSITION SET POS_CODE = 0 WHERE POS_CODE ="+poscode;
+			String belong_departmentDeleteQuery = "DELETE FROM EMPLOYEE_POSITION WHERE POS_CODE = "+poscode;
 			
 			try {
-				if (depcode.equals("0")) {
+				if (poscode.equals("0")) { //0번 없음 직책은 못지움
 					departmentdialogCantDelete();
 				}else {
 				stmt.executeQuery(departmentDeleteQuery);
@@ -281,6 +315,11 @@ public class DepartmentFrame extends JDialog {
         
 	}
 		
+		//에러메세지 추가 할 수 없습니다.
+		public void departmentdialogCantInsertCode() {	
+            JOptionPane.showMessageDialog(null, "상급자 코드를 다시 확인하세요.","경고",JOptionPane.WARNING_MESSAGE);            
+        
+	}
 		
 		//등록완료 메세지
 		public void departmentdialogInsert() {	

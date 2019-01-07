@@ -52,7 +52,7 @@ public class ScheduleFrame {
 	private JLabel labelSearchBetween; //날짜검색 ~라벨
 	private JButton buttonSearch; //검색버튼
 
-	
+
 	private JLabel labelEmpno; //사원번호 입력 라벨
 	private JLabel labelBetween; //날짜입력 사이 ~표
 	private JLabel labelChooseDate; //날짜입력 라벨
@@ -61,6 +61,7 @@ public class ScheduleFrame {
 	private JLabel labelNameView; // 이름
 	private JLabel labelDeptView; // 부서
 	private JPanel panelEdit; // 관리자용 판넬
+	private String[] deptCombobox;//부서 콤보박스 내용
 	private JComboBox comboBoxDept; // 테이블 부서 변경
 	private JTextField textFieldEmpNo; // 사원번호
 	private JTextField textFieldSchCode; // 일정코드	
@@ -131,6 +132,7 @@ public class ScheduleFrame {
 		frame.getContentPane().setLayout(null);
 
 		
+		deptnameSelect();
 		
 		/////모든 사용자 판넬/////////////////
 		panel = new JPanel();
@@ -283,8 +285,8 @@ public class ScheduleFrame {
 		panelEdit.add(textFieldSchCode);
 
 		//콤보박스
-		String[] CBMenuDept = { "전체", "영업부", "인사부", "기획부", "총무부", "개발부" };
-		comboBoxDept = new JComboBox(CBMenuDept);
+//		String[] CBMenuDept = { "전체", "영업부", "인사부", "기획부", "총무부", "개발부" };
+		comboBoxDept = new JComboBox(deptCombobox);
 		comboBoxDept.setBounds(30, 30, 70, 30);
 		panelEdit.add(comboBoxDept);		
 
@@ -599,7 +601,29 @@ public class ScheduleFrame {
 
 	
 	
-	
+	//부서 콤보박스 뷰 메소드
+	public void deptnameSelect() {
+		ResultSet result;
+		String query = "SELECT DEP_NAME FROM DEPARTMENT ORDER BY DEP_CODE";
+		int count =0;
+		int i =1;
+		try {
+			result = stmt.executeQuery(query);
+			while(result.next()) {
+				count++;
+			}//쿼리를 날려서 행의 갯수를 알아온 뒤
+			 //갯수 +1만큼 배열을 만들고
+			deptCombobox = new String[count+1];
+			deptCombobox[0] = "전체";
+			//다시 쿼리를 날려서 배열안에 목록을 넣어준다
+			result = stmt.executeQuery(query);
+			while(result.next()) {							
+				deptCombobox[i++] = result.getString(1);		
+			}
+		}catch(Exception e) {
+			
+		}
+	}	
 	
 	
 	
