@@ -22,6 +22,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -55,7 +56,7 @@ public class ApprovalFrame extends JDialog {
 	private Statement stmt;
 
 	// JTable을 위한 DefaultTableModel을 생성하는데, 타이틀이 없어도 쿼리문에서 정해질 듯 하지만 일단 넣어줌
-	String[] colTitle = { "작성날짜", "결재유형", "제목", "내용", "결재여부", "승인날짜", "결재자" };
+	String[] colTitle = { "작성날짜", "결재유형", "제목", "내용", "결재여부", "승인날짜", "결재자", "결재코드" };
 	DefaultTableModel defaultTableModel = new DefaultTableModel(colTitle, 0) {
 		@Override
 		public boolean isCellEditable(int row, int column) {
@@ -63,7 +64,7 @@ public class ApprovalFrame extends JDialog {
 		}
 	};
 	private JTable table;
-	private JScrollPane scrollPane;	
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -239,10 +240,16 @@ public class ApprovalFrame extends JDialog {
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(141, 10, 26, 21);
 		getContentPane().add(label);
-		
+
 		btnDelete = new JButton("기안 삭제");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (defaultTableModel.getRowCount() > 0) {
+					// 기안 삭제
+					deleteDraft();
+				} else {
+					JOptionPane.showMessageDialog(ApprovalFrame.this, "삭제할 기안이 없습니다");
+				}
 			}
 		});
 		btnDelete.setBounds(293, 364, 97, 23);
@@ -293,7 +300,7 @@ public class ApprovalFrame extends JDialog {
 	void setTable() {
 		// 날짜별, 항목별, 결재상태별로 현재의 사원이 기안한 자료를 가져옴
 		String query = "select app_draftdate as 작성날짜, c.cat_name as 결재유형, app_title as 제목, app_content as 내용, "
-				+ "app_isconfirm as 결재여부, app_confirmdate as 승인날짜, app_confirmer as 결재자 "
+				+ "app_isconfirm as 결재여부, app_confirmdate as 승인날짜, app_confirmer as 결재자, app_code as 결재코드 "
 				+ "from EMPLOYEE a, APPROVAL b, APPROVAL_CATEGORY c "
 				+ "where a.emp_no = b.emp_no and b.cat_code = c.cat_code " + "and a.emp_no = " + MainStart.emp_no
 				+ " and app_draftdate >= to_date('" + ((JTextField) dtcSDate.getDateEditor().getUiComponent()).getText()
@@ -345,11 +352,7 @@ public class ApprovalFrame extends JDialog {
 				table.setRowSelectionInterval(0, 0);
 				// 선택된 값을 txtContent에 입력
 				txtContent.setText(defaultTableModel.getValueAt(table.getSelectedRow(), 3).toString());
-			}
-
-//			if (table.getSelectedRow() >= 0) {
-//				txtContent.setText(table.getValueAt(table.getSelectedRow(), 3).toString());
-//			}
+			}			
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -373,6 +376,7 @@ public class ApprovalFrame extends JDialog {
 		tcmTable.getColumn(4).setCellRenderer(pTableCellRenderer);
 		tcmTable.getColumn(5).setCellRenderer(pTableCellRenderer);
 		tcmTable.getColumn(6).setCellRenderer(pTableCellRenderer);
+		tcmTable.getColumn(7).setCellRenderer(pTableCellRenderer);
 
 	}
 
@@ -412,5 +416,28 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
+	}
+
+	// 기안 삭제
+	void deleteDraft() {
+		// 값이 "대기"인 경우에만 삭제가능
+		if ((defaultTableModel.getValueAt(table.getSelectedRow(), 4).toString().equals("대기"))) {
+			try {
+				String aCode = defaultTableModel.getValueAt(table.getSelectedRow(), 7).toString();
+				// 대기인 기안을 DB에서 삭제
+				String query = "delete from APPROVAL " +
+								"where app_code = " + aCode;
+
+				this.stmt.executeQuery(query);
+				JOptionPane.showMessageDialog(this, "삭제 했습니다");
+				// DB자료를 테이블에 가져와서 보여줌
+				setTable();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} else {
+			JOptionPane.showMessageDialog(this, "삭제할 수 없습니다");
+		}
 	}
 }

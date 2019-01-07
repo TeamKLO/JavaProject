@@ -176,41 +176,32 @@ public class DraftFrame extends JDialog {
 		// 데이터베이스 연결은 필요에 따라 어디에든 붙일 수 있다.
 		stmt = MainStart.connectDataBase();
 		// JComboBox 값 초기화
-		setComboBox();
+		initComboBox();
 	}
 
-	void setComboBox() {
+	void initComboBox() {
+		// 결재유형은 정해져 있으므로 0으로 초기화
 		cbxCategory.setSelectedIndex(0);
+		// 결재자를 DB에서 가져옴
 		setCbxConfirmer();
 	}
 
+	// 결재자를 DB에서 가져옴
 	void setCbxConfirmer() {
-		// 쿼리의 레코드 수를 가져오는 함수가 아무래도 없다. 할 수 없이 쿼리를 두 개 던지자.
+		// 쿼리의 레코드 수를 가져오는 함수가 아무래도 없으니 쿼리를 두 개 던짐
+		// 결과적인 레코드 수를 가져옴
 		String cQuery = "select count(*) "
 				+ "from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e "
 				+ "where a.emp_no = b.emp_no and b.pos_code = c.pos_code and "
 				+ "a.emp_no = d.emp_no and d.dep_code = e.dep_code " + "and c.pos_code > " + MainStart.pos_code
 				+ " and e.dep_code = " + MainStart.dep_code;
 
+		// 자신이 올린 기안의 결재 권한을 가진 사원의 사원 번호와 사원 이름을 가져옴
 		String query = "select a.emp_no, a.emp_name "
 				+ "from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e "
 				+ "where a.emp_no = b.emp_no and b.pos_code = c.pos_code and "
 				+ "a.emp_no = d.emp_no and d.dep_code = e.dep_code " + "and c.pos_code > " + MainStart.pos_code
 				+ " and e.dep_code = " + MainStart.dep_code;
-
-//		String cQuery = "select count(*) " + 
-//				"from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e " + 
-//				"where a.emp_no = b.emp_no and b.pos_code = c.pos_code and " +
-//				"a.emp_no = d.emp_no and d.dep_code = e.dep_code " + 
-//				"and c.pos_code > 2 " + 
-//				" and e.dep_code = 1";
-//		
-//		String query = "select a.emp_no, a.emp_name " + 
-//				"from EMPLOYEE a, EMPLOYEE_POSITION b, POSITION c, BELONG_DEPARTMENT d, DEPARTMENT e " + 
-//				"where a.emp_no = b.emp_no and b.pos_code = c.pos_code and " +
-//				"a.emp_no = d.emp_no and d.dep_code = e.dep_code " + 
-//				"and c.pos_code > 2 " + 
-//				" and e.dep_code = 1";
 
 		int rowCount = 0;
 
@@ -218,22 +209,24 @@ public class DraftFrame extends JDialog {
 
 			ResultSet result = this.stmt.executeQuery(cQuery);
 			result.next();
-			rowCount = result.getInt(1);
-			if (rowCount <= 0)
-				return;
+			
+			// 레코드 갯수를 가져와서 0이라면 함수 탈출
+			rowCount = result.getInt(1);			
+			if (rowCount <= 0) {
+				return;			
+			}
 
-//			result.last();
-//			rowCount = result.getRow();
-//			result.first();
-
+			// 사원번호를 넣는 필드의 배열 생성
 			confirmerNo = new String[rowCount];
 			result = this.stmt.executeQuery(query);
 			int index = 0;
+			// 가져온 레코드 수 만큼 사원번호와 이름을 각각 배열과 콤보박스에 넣음
 			while (result.next()) {
 				confirmerNo[index] = result.getString(1);
 				cbxConfirmer.insertItemAt(result.getString(2), index);
 				index++;
 			}
+			// 콤보박스의 인덱스 초기화
 			cbxConfirmer.setSelectedIndex(0);
 
 		} catch (Exception e) {
@@ -244,34 +237,31 @@ public class DraftFrame extends JDialog {
 	// 기안을 함
 	void sendDraft() {
 
+		// 기안은 결재를 처리할 상사가 있고, 기안 제목이 있고, 기안 내용이 있는 경우에만 할 수 있음
 		if (cbxConfirmer.getSelectedIndex() >= 0 && txtTitle.getText().trim().length() > 0
 				&& txtContent.getText().trim().length() > 0) {
 			try {
+				// 통제된 자료이므로 사용할 수 있는 방법
+				// DB의 cat_code와 콤보박스의 인덱스에 1을 더한 것이 같음
 				Integer tmpInt = new Integer(cbxCategory.getSelectedIndex() + 1);
 
+				// 결재 테이블에 기안을 insert
+				// MainStart의 getNewMaxCode 메소드는 사용해서 결재코드를 생성
+				// 결재권한을 가진 상급자의 사원번호는 콤보박스와 연동되는 confirmerNo 배열을 통해 알 수 있음
 				String query = "insert into APPROVAL (app_code, emp_no, cat_code, app_title, "
 						+ "app_content, app_draftdate, app_confirmdate, app_confirmer, app_isconfirm) " + "values("
 						+ MainStart.getNewMaxCode(this.stmt, "APPROVAL", "app_code") + ", " + MainStart.emp_no + ", "
 						+ tmpInt.toString() + ", '" + txtTitle.getText() + "'" + ", '" + txtContent.getText()
-						+ "', sysdate, null" + ", " + confirmerNo[cbxConfirmer.getSelectedIndex()] + ", '대기')";
-
-//			String query = "insert into APPROVAL (app_code, emp_no, cat_code, app_title, " +
-//				   	   "app_content, app_draftdate, app_confirmdate, app_confirmer, app_isconfirm) " +
-//				       "values(" + ProjectControl.getNewMaxCode(this.stmt, "APPROVAL", "app_code") + 
-//				       ", 10002" + 
-//				       ", " + tmpInt.toString() + 
-//				       ", '" + txtTitle.getText() + "'" + 
-//				       ", '" + txtContent.getText() + "', sysdate, null" +
-//				       ", " + confirmerNo[cbxConfirmer.getSelectedIndex()]  + ", '대기')";
+						+ "', sysdate, null" + ", " + confirmerNo[cbxConfirmer.getSelectedIndex()] + ", '대기')";			
 
 				this.stmt.executeQuery(query);
-				JOptionPane.showMessageDialog(this, "기안을 올렸습니다.");
+				JOptionPane.showMessageDialog(this, "기안을 올렸습니다");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		} else {
-			JOptionPane.showMessageDialog(this, "기안을 올릴 수 없습니다.");
+			JOptionPane.showMessageDialog(this, "기안을 올릴 수 없습니다");
 		}
 	}
 }

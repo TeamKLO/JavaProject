@@ -96,10 +96,14 @@ public class MainFrame {
 
 		JButton btnCommute = new JButton("출결");
 		btnCommute.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent arg0) {
 				// 출결 화면을 생성
+
 				Attendance window = new Attendance(frmMain);
+
 				window.setVisible(true);
+
 
 			}
 		});
@@ -194,6 +198,11 @@ public class MainFrame {
 
 	// 사원 이미지를 보여줌
 	private boolean setEmployeeImage() {
+		// 노파심에 적어보는 emp_image가 null인 경우
+		if (MainStart.emp_image == null) {
+			return false;
+		}
+		
 		// 파일이 존재하는가
 		File f = new File(MainStart.emp_image);
 		if (!f.exists()) {

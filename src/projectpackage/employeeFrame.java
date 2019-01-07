@@ -16,11 +16,13 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
@@ -44,6 +46,10 @@ import javax.swing.table.TableColumnModel;
 
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
+import java.awt.Dialog;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class employeeFrame extends JDialog {
 	
@@ -62,17 +68,20 @@ public class employeeFrame extends JDialog {
 	
 	
 	//입력 필드
+	private String[] deptCombobox;//부서 콤보박스 내용
+	private String[] positionCombobox;//직책 콤보박스 내용
 	private JComboBox comboBoxDept; //  부서 
 	private JComboBox comboBoxPosition; //직책 
 	private JComboBox comboBoxManagementCode; // 관리코드
 	private JComboBox comboBoxGender; //성별	
 	private JTextField textFieldName; // 이름
-	private JTextField textFieldEmpNo; // 사원번호	
+	private JLabel labelEmpNoView; // 사원번호	
 	private JTextField textFieldPhone; // 전화번호
 	private JTextField textFieldAddress; // 주소
 	private JTextField textFieldPassword;//비밀번호	
 	private JDateChooser dateChooserBirthday; //생년월일
-	private JDateChooser dateChooserHiredate; //입사일	
+	private JDateChooser dateChooserHiredate; //입사일
+	private JLabel labelEmpNo; //사원번호라벨
 	private JLabel labelName; //이름라벨
 	private JLabel labelAddress; //주소라벨
 	private JLabel labelPhone; //전화번호라벨
@@ -83,7 +92,17 @@ public class employeeFrame extends JDialog {
 	private JTextField textFieldImage; //이미지 주소 필드
 	private Image image;	   //이미지
 	private JLabel labelImage; //이미지 라벨
-	private String getimage;   //이미지 경로
+	private String getimage = "";   //이미지 경로
+	
+	//메뉴바
+	
+	JMenuBar menuBar;
+	JMenu menu;
+	JMenuItem menuItemDept;
+	JMenuItem menuItemPosition;
+	
+	
+	
 	
 	
 	//이미지 추가
@@ -118,8 +137,12 @@ public class employeeFrame extends JDialog {
 	public employeeFrame() {
 		setBounds(100, 100, 800, 750);
 		getContentPane().setLayout(null);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
-		
+		deptnameSelect();//부서 콤보박스 아이템 가져오기
+		positionSelect();//직책 콤보박스 아이템 가져오기
+
 		
 		//////버튼
 		insertButton = new JButton("등록");
@@ -136,12 +159,7 @@ public class employeeFrame extends JDialog {
 		
 		closeButton = new JButton("닫기");
 		closeButton.setBounds(600, 650, 60, 30);
-		getContentPane().add(closeButton);
-		closeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			dispose();
-			}
-		});
+		getContentPane().add(closeButton);		
 		
 		
 		////테이블
@@ -168,19 +186,27 @@ public class employeeFrame extends JDialog {
 			}		
 		getContentPane().add(jScollPane);
 		
+		//사이즈조절
+		table.getColumn("성별").setWidth(40); 
+		table.getColumn("성별").setMinWidth(30);
+		table.getColumn("성별").setMaxWidth(40);		
+		table.getColumn("전화번호").setWidth(100);
+		table.getColumn("전화번호").setMinWidth(100);
+		
 		
 		
 		////입력 필드/////////////////////////////////////////
 		
 		//부서
-		String[] comboBoxDeptMenu = {"부서","영업부", "인사부", "기획부", "총무부", "개발부"};
-		comboBoxDept = new JComboBox(comboBoxDeptMenu);
+//		String[] comboBoxDeptMenu = {"부서","영업부", "인사부", "기획부", "총무부", "개발부"};
+		comboBoxDept = new JComboBox(deptCombobox);
 		comboBoxDept.setBounds(70, 480, 70, 30);
 		getContentPane().add(comboBoxDept);
 		
 		//직책 
-		String[] comboBoxPositionMenu = {"직책","사원","대리","과장","부장","이사","사장"};
-		comboBoxPosition = new JComboBox(comboBoxPositionMenu);
+//		String[] comboBoxPositionMenu = {"직책","사원","대리","과장","부장","이사","사장"};
+		
+		comboBoxPosition = new JComboBox(positionCombobox);
 		comboBoxPosition.setBounds(160, 480, 70,30);
 		getContentPane().add(comboBoxPosition);
 		
@@ -208,7 +234,15 @@ public class employeeFrame extends JDialog {
 		getContentPane().add(labelName);
 		
 		//사원번호
-		textFieldEmpNo = new JTextField();
+		labelEmpNoView = new JLabel();
+		labelEmpNoView.setFont(new Font("돋움", Font.PLAIN, 15));
+		labelEmpNoView.setBounds(140, 440, 60,30);
+		getContentPane().add(labelEmpNoView);
+		//사원번호 라벨
+		labelEmpNo = new JLabel("사원번호 : ");
+		labelEmpNo.setFont(new Font("돋움", Font.PLAIN, 15));
+		labelEmpNo.setBounds(70, 440, 100,30);
+		getContentPane().add(labelEmpNo);
 		
 		// 전화번호
 		textFieldPhone = new JTextField();
@@ -278,6 +312,21 @@ public class employeeFrame extends JDialog {
 		getContentPane().add(labelImage);
 	
 		
+		//메뉴바
+		menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		menu = new JMenu("등록");
+		menuBar.add(menu);
+		
+		menuItemDept = new JMenuItem("부서등록");
+		menu.add(menuItemDept);
+		
+		menuItemPosition = new JMenuItem("직책등록");
+		menu.add(menuItemPosition);
+		
+		
+		
 		//이미지 뷰
 		panelImage = new JPanel(){
 		// 이미지 파일을 가져오기 위해 paint 메소드를 오버라이드
@@ -311,42 +360,155 @@ public class employeeFrame extends JDialog {
 				
 			}
 		});
-		
-		
+		///수정버튼
+		updateButton.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				employeeUpdate();
+				model.setRowCount(0);
+				employeeSelect();
+				
+			}
+		});
+		///삭제버튼
+		deleteButton.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				employeeDelete();
+				model.setRowCount(0);
+				employeeSelect();
+				
+			}
+		});
+		//닫기버튼		
+		closeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			dispose();
+			}
+		});
 	
+		///이미지 클릭시 파일열기
+		panelImage.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {// 더블클릭
+					if(!getimage.isEmpty()) {				
+					try {
+						Process p = Runtime.getRuntime().exec(new String[] {"cmd.exe", "/c", getimage});
+						System.out.println(getimage);
+					} catch (Exception e1) {						
+						System.out.println(e1);
+					}
+					
+				 }
+				}
+			}
+		});		
+
+		////메뉴바 액션리스너
+		//부서변경메뉴
+		menuItemDept.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DepartmentFrame departmentFrame = new DepartmentFrame();
+				departmentFrame.setVisible(true);
+				
+			}
+		});
+		menuItemPosition.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PositionFrame positionFrame = new PositionFrame();
+				positionFrame.setVisible(true);
+				
+			}
+		});
 		
 		
 		
-		employeeSelect();		
+		employeeSelect();
+		
 	}
+	
+	
+	//부서 콤보박스 뷰 메소드
+	public void deptnameSelect() {
+		ResultSet result;
+		String query = "SELECT DEP_NAME FROM DEPARTMENT ORDER BY DEP_CODE";
+		int count =0;
+		int i =1;
+		try {
+			result = stmt.executeQuery(query);
+			while(result.next()) {
+				count++;
+			}//쿼리를 날려서 행의 갯수를 알아온 뒤
+			 //갯수 +1만큼 배열을 만들고
+			deptCombobox = new String[count+1];
+			deptCombobox[0] = "부서";
+			//다시 쿼리를 날려서 배열안에 목록을 넣어준다
+			result = stmt.executeQuery(query);
+			while(result.next()) {							
+				deptCombobox[i++] = result.getString(1);		
+			}
+		}catch(Exception e) {
+			
+		}
+	}
+	
+	//직책 콤보박스 뷰 메소드
+	
+	public void positionSelect() {
+		ResultSet result;
+		String query = "SELECT POS_NAME FROM POSITION ORDER BY POS_CODE";
+		int count =0;
+		int i =1;
+		try {
+			result = stmt.executeQuery(query);
+			while(result.next()) {
+				count++;
+			}//쿼리를 날려서 행의 갯수를 알아온 뒤
+			 //갯수 +1만큼 배열을 만들고
+			positionCombobox = new String[count+1];
+			positionCombobox[0] = "직책";
+			//다시 쿼리를 날려서 배열안에 목록을 넣어준다
+			result = stmt.executeQuery(query);
+			while(result.next()) {							
+				positionCombobox[i++] = result.getString(1);		
+			}
+		}catch(Exception e) {
+			
+		}
+	}
+	
 	
 	
 	///테이블 뷰 메소드
 	public void employeeSelect() {
 		
 		ResultSet result;
-		String query = "SELECT D.DEP_NAME, P.POS_NAME, E.EMP_NAME, E.EMP_NO,E.EMP_GENDER, E.EMP_BIRTHDAY," 
-				+" E.EMP_MOBILE, E.EMP_ADDRESS, E.EMP_JOINDAY, E.EMP_IMAGE, E.EMP_PASSWORD, M.MAN_CODE"
+		String query = "SELECT D.DEP_NAME, P.POS_NAME, E.EMP_NAME, E.EMP_NO,E.EMP_GENDER, E.EMP_JOINDAY," 
+				+" E.EMP_BIRTHDAY, E.EMP_MOBILE, E.EMP_ADDRESS, E.EMP_IMAGE, E.EMP_PASSWORD, M.MAN_CODE"
 				+" FROM DEPARTMENT D, BELONG_DEPARTMENT BD, EMPLOYEE E, MANAGER M,"  
 				+" EMPLOYEE_POSITION EP, POSITION P" 
 				+" WHERE D.DEP_CODE = BD.DEP_CODE AND BD.EMP_NO = E.EMP_NO" 
 				+" AND E.EMP_NO = M.EMP_NO AND E.EMP_NO = EP.EMP_NO" 
-				+" AND EP.POS_CODE = P.POS_CODE";
+				+" AND EP.POS_CODE = P.POS_CODE"
+				+" ORDER BY 1,4";
 		
 		try {			
 			result = stmt.executeQuery(query);		
 			while (result.next()) {
 				Object[] data = { result.getString(1),result.getString(2),result.getString(3),result.getString(4),
-						result.getString(5), result.getString(6), result.getString(7),result.getString(8),
+						result.getString(5), result.getDate(6), result.getDate(7),result.getString(8),
 						result.getString(9),result.getString(10),result.getString(11),result.getString(12)};
 				model.addRow(data);
 			}
 		}catch(Exception e) {
-			System.out.println("아 제발 나타나지마");
+			
 		}		
 		
 	}
-	
+
 	
 	
 	///테이블 마우스리스너
@@ -369,19 +531,28 @@ public class employeeFrame extends JDialog {
 				if (i == 2) {
 					textFieldName.setText((String) model.getValueAt(row, 2));
 				}
+				if (i ==3) {
+					labelEmpNoView.setText((String) model.getValueAt(row, 3));
+				}
 				if (i == 4) {
 					comboBoxGender.setSelectedItem((String) model.getValueAt(row, 4));
 				}
 				if (i == 5) {
-					if((String)model.getValueAt(row, 5)!=null) {
+					if((Date)model.getValueAt(row, 5)!=null) {
 						((JTextField) dateChooserHiredate.getDateEditor().getUiComponent())
 						.setText(transFormat.format(model.getValueAt(row, 5)));						
-					}				
+					}else {
+						((JTextField) dateChooserHiredate.getDateEditor().getUiComponent())
+						.setText("");	
+					}
 				}
 				if (i == 6) {
-					if((String)model.getValueAt(row, 6)!=null) {
+					if((Date)model.getValueAt(row, 6)!=null) {
 					((JTextField) dateChooserBirthday.getDateEditor().getUiComponent())
 					.setText(transFormat.format(model.getValueAt(row, 6)));
+					}else {
+						((JTextField) dateChooserBirthday.getDateEditor().getUiComponent())
+						.setText("");
 					}
 				}
 				if (i == 7) {
@@ -391,8 +562,16 @@ public class employeeFrame extends JDialog {
 					textFieldAddress.setText((String) model.getValueAt(row, 8));
 				}
 			
-				if (i == 9) {											
+				if (i == 9) {
+					textFieldImage.setText((String) model.getValueAt(row, 9));
+					File file = new File(textFieldImage.getText());			
+					if(file.exists()) {
 					getimage = ((String)model.getValueAt(table.getSelectedRow(),9));				
+					}else {
+						getimage = "";
+					}
+					setEmployeeImage();
+					
 				}
 				if (i == 10) {
 					textFieldPassword.setText((String) model.getValueAt(row, 10));
@@ -401,14 +580,14 @@ public class employeeFrame extends JDialog {
 					if(((String) model.getValueAt(row, 11)).equals("0")) {
 						comboBoxManagementCode.setSelectedIndex(1);				
 					}else if(((String) model.getValueAt(row, 11)).equals("1")) {
-						comboBoxManagementCode.setSelectedIndex(2);
-					}else {
 						comboBoxManagementCode.setSelectedIndex(3);
+					}else {
+						comboBoxManagementCode.setSelectedIndex(2);
 					}
 				}
 				
 			}
-			setEmployeeImage();
+			
 		}
 	}
 	
@@ -416,13 +595,16 @@ public class employeeFrame extends JDialog {
 	///이미지 뷰 메소드	
 	private boolean setEmployeeImage() {		
 		File f = new File(getimage);
-		if (!f.exists()) {
-			return false;
-		}		
+		if (!f.exists()) {		
+			panelImage.setVisible(false);
+			return true;
+		}else{		
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		image = tk.getImage(getimage);
-		panelImage.repaint();		
+		panelImage.repaint();
+		panelImage.setVisible(true);
 		return true;
+		}
 	}
 	
 	
@@ -439,15 +621,35 @@ public class employeeFrame extends JDialog {
 		String hiredate = ((JTextField) dateChooserHiredate.getDateEditor().getUiComponent()).getText();	
 		String phone = textFieldPhone.getText();
 		String address = textFieldAddress.getText();
-		String image = "null";
+		String image = textFieldImage.getText();
 		
 		String deptname = (String)comboBoxDept.getSelectedItem();		
 		String ManagementCode = (String)comboBoxManagementCode.getSelectedItem();
 		String Position = (String)comboBoxPosition.getSelectedItem();
 		
+		////최초로 등록할때 사원번호 입력
+		String empno = "10001"; //메인테이블
+		String empno2 = "10001"; //연결테이블
+		String checkQuery = "select emp_no from employee";
+		try {result = stmt.executeQuery(checkQuery);
+			while(result.next()) {//사원번호가 있으면
+				empno = "(select max(emp_no)+1 from employee)";
+				empno2 = "(select max(emp_no) from employee)";
+			}
+		}catch(Exception e) {			
+		}		
 		
+		///입력값이 하나라도 널이면 에러
+		File f = new File(image);		
+		if(password.isEmpty()||name.isEmpty()||gender.isEmpty()||birthday.isEmpty()||
+				hiredate.isEmpty()||phone.isEmpty()||address.isEmpty()||image.isEmpty()||
+				deptname.isEmpty()||ManagementCode.isEmpty()||Position.isEmpty()||!f.exists()) {
+			employeedialog();
+			return;
+		}
 		
-		String employeeInsertQuery = "INSERT INTO EMPLOYEE VALUES((select max(emp_no)+1 from employee),"
+		String employeeInsertQuery = "INSERT INTO EMPLOYEE VALUES("
+				+empno+","
 				+"'"+password+"',"
 				+"'"+name+"',"
 				+"'"+gender+"',"
@@ -455,45 +657,46 @@ public class employeeFrame extends JDialog {
 				+"'"+phone+"',"
 				+"'"+address+"',"
 				+"'"+hiredate+"',"
-				+image+")";
+				+"'"+image+"')";
 		
 
 		
-		String belong_DepartmentInsertQuery = "INSERT INTO BELONG_DEPARTMENT VALUES"
-				+ "((select max(emp_no) from employee),"
+		String belong_DepartmentInsertQuery = "INSERT INTO BELONG_DEPARTMENT VALUES ("
+				+ empno2+","
 				+ "(select dep_code from department where dep_name = '"+deptname+"'))";
 		
-		String managerInsertQuery = "INSERT INTO MANAGER VALUES"
-				+ "((select max(emp_no) from employee),"
+		String managerInsertQuery = "INSERT INTO MANAGER VALUES ("
+				+ empno2+","
 				+ "(select man_code from management_list where man_name = '"+ManagementCode+"'))";
 		
-		String employee_PositionInsertQuery = "INSERT INTO EMPLOYEE_POSITION"
-				+ "((select max(emp_no) from employee),"
+		String employee_PositionInsertQuery = "INSERT INTO EMPLOYEE_POSITION VALUES ("
+				+ empno2+","
 				+ "(select pos_code from position where pos_name = '"+Position+"'))";
-		
-		
+		String commit = "COMMIT";
 
 		
 		try {
+			
 			stmt.executeUpdate(employeeInsertQuery);
 			stmt.executeUpdate(belong_DepartmentInsertQuery);
 			stmt.executeUpdate(managerInsertQuery);
 			stmt.executeUpdate(employee_PositionInsertQuery);
+			stmt.executeQuery(commit);
 			
 			
 			
 			//사진등록을 위한 사원번호 알아오는 코드/
 			String empNo = "SELECT MAX(EMP_NO) FROM EMPLOYEE";		
 			String getEmpNo = null;
-			String location= "C:\\Users\\KITRI\\git\\JavaProject\\image\\";
+			String location= System.getProperty("user.dir") + "\\image\\";
 			result = stmt.executeQuery(empNo);			
 			while (result.next()){
 				getEmpNo =result.getString(1);				
 			}			
 		      //파일을 DB 이미지 폴더에 복사	          
-	           if(!getimage.isEmpty()) {
+	           if(f.exists()) {//사진이 있다면
 	        	   try {  		   			
-	        		   	FileInputStream fis = new FileInputStream(getimage);  // 원본파일
+	        		   	FileInputStream fis = new FileInputStream(image);  // 원본파일
 	        		   	FileOutputStream fos = new FileOutputStream(location + getEmpNo+".JPG");// 복사위치 및 이름        		   	
 	        		   	//파일복사
 	        		   	byte[] buffer = new byte[1024];
@@ -505,18 +708,19 @@ public class employeeFrame extends JDialog {
 	        		   	fos.close();
 	        		   	
 	        		      ///파일 복사 후 DB사원테이블 이미지 경로 업데이트
-	     	           String updateQuery = "UPDATE EMPLOYEE SET EMP_IMAGE = '"+location+getEmpNo+"'"
-	     	           					+ " WHERE EMP_NO ="+getEmpNo;
-	        		   	
+	     	           String updateQuery = "UPDATE EMPLOYEE SET EMP_IMAGE = '"+location+getEmpNo+".JPG'"
+	     	           					+ " WHERE EMP_NO ="+getEmpNo;	        		   	
 	     	          stmt.executeUpdate(updateQuery);
+	     	          stmt.executeQuery(commit);
 	        	   }catch(Exception e) {
-	        		   System.out.println("오류투성이구만");
+	        		   employeedialog();
+	        		   
 	        	   }         
 	           }	      
-	     
-	           
+	           employeedialogInsert();
+	         
 		}catch(Exception e) {
-			System.out.println("정말큰일이구만");
+			employeedialog();
 			
 		}	
 		
@@ -525,20 +729,30 @@ public class employeeFrame extends JDialog {
 	///삭제메소드
 	public void employeeDelete() {
 		ResultSet result;
-		String empNo = textFieldEmpNo.getText();
+		String empNo = labelEmpNoView.getText();
+		String Image = textFieldImage.getText();
 		
 		String employeeDeleteQuery = "DELETE FROM EMPLOYEE WHERE EMP_NO ="+empNo;
-		String belong_DepartmentDeleteQuery = "DELTE FROM BELONG_DEPARTMENT WHERE EMP_NO ="+empNo;
+		String belong_DepartmentDeleteQuery = "DELETE FROM BELONG_DEPARTMENT WHERE EMP_NO ="+empNo;
 		String managerDeleteQuery = "DELETE FROM MANAGER WHERE EMP_NO ="+empNo;
-		String employee_PositionDeleteQuery = "DELTE FROM EMPLOYEE_POSITION WHERE EMP_NO ="+empNo;
+		String employee_PositionDeleteQuery = "DELETE FROM EMPLOYEE_POSITION WHERE EMP_NO ="+empNo;
+		String commit = "COMMIT";
 		
 		try {
 			stmt.executeUpdate(employeeDeleteQuery);
 			stmt.executeUpdate(belong_DepartmentDeleteQuery);
 			stmt.executeUpdate(managerDeleteQuery);
-			stmt.executeUpdate(employee_PositionDeleteQuery);			
-		}catch(Exception e) {
+			stmt.executeUpdate(employee_PositionDeleteQuery);
+			 stmt.executeQuery(commit);
 			
+			//사진 파일이 있다면 사진파일 삭제
+			File file = new File(Image);
+			if(file.exists()) {				
+				file.delete();
+			}
+			employeedialogDelete();
+		}catch(Exception e) {
+			employeedialog();
 		}
 		
 	}
@@ -548,7 +762,7 @@ public class employeeFrame extends JDialog {
 	public void employeeUpdate() {
 		ResultSet result;
 		
-		String empNo = textFieldEmpNo.getText();
+		String empNo = labelEmpNoView.getText();
 		String password = textFieldPassword.getText();
 		String name = textFieldName.getText();
 		String gender = (String)comboBoxGender.getSelectedItem();
@@ -559,44 +773,47 @@ public class employeeFrame extends JDialog {
 		String image = textFieldImage.getText();
 		
 		
-		//사진등록을 위한 사원번호 알아오는 코드/
-		String updateImage = "null";
-		String getEmpNo = null;
-		String location= "C:\\Users\\KITRI\\git\\JavaProject\\image\\";
-		try {		
-		String a = "SELECT MAX(EMP_NO) FROM EMPLOYEE";	
-		result = stmt.executeQuery(a);			
-		while (result.next()){
-			getEmpNo =result.getString(1);				
-		}
-		//불러온파일	
-		File file = new File(image);	
+	//이미지 수정 코드
+		String updateImage = "";		
+		String location= System.getProperty("user.dir") + "\\image\\";		
+		//불러온파일
+		try {
+		File file = new File(image);
+		if(file.exists()) {//이미지파일이 있다면			
 		//저장할파일
-		File updateFile = new File(location+getEmpNo+".JPG"); 
+		File updateFile = new File(location+empNo+".JPG"); 
 		BufferedImage bi = ImageIO.read(file);
-		ImageIO.write(bi, "JPG", updateFile);
+		ImageIO.write(bi, "JPG", updateFile);		
+		updateImage = location+empNo+".JPG";
+		getimage = updateImage;
+		}
+		}catch(Exception e) {			
+			employeedialog();
+		}
 		
-		updateImage = location+getEmpNo+".JPG";
-		}catch(Exception e) {
-			
-		}		
 		
 		String employeeUpdateQuery = "UPDATE EMPLOYEE SET "
 									+" EMP_PASSWORD = '"+password+"',"
 									+" EMP_NAME = '"+name+"',"
 									+" EMP_GENDER = '"+gender+"',"
 									+" EMP_BIRTHDAY = '"+birthday+"',"
-									+" EMP_MOBILE = "+phone+","
+									+" EMP_MOBILE = '"+phone+"',"
 									+" EMP_ADDRESS = '"+address+"',"
-									+" EMP_JOINDAY = '"+hiredate+"'"
-									+" EMP_IMAGE ="+updateImage+"'"
+									+" EMP_JOINDAY = '"+hiredate+"',"
+									+" EMP_IMAGE ='"+updateImage+"'"
 									+" WHERE EMP_NO ="+ empNo;
 		
 		
 		try {
+			if(password.isEmpty()||name.isEmpty()||gender.isEmpty()||birthday.isEmpty()||phone.isEmpty()||
+					address.isEmpty()||hiredate.isEmpty()||updateImage.isEmpty()){
+				employeedialog();
+			}else {
 			stmt.executeUpdate(employeeUpdateQuery);
-		} catch (SQLException e) {
-			
+			stmt.executeUpdate("COMMIT");
+			employeedialogUpdate();}
+		} catch (SQLException e) {			
+			employeedialog();
 		}
 		
 	}
@@ -604,8 +821,11 @@ public class employeeFrame extends JDialog {
 	
 	//이미지 선택
 	public void fileChoice() {
-		JFileChooser fileChooser = new JFileChooser();		
-           
+		JFileChooser fileChooser = new JFileChooser();
+		//JPG 파일만 불러오기
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("JPG Image", "jpg");
+		fileChooser.addChoosableFileFilter(filter);
 		   //창을 강제로 닫거나 취소버튼을 누른경우 다이얼로그
            int ret=fileChooser.showOpenDialog(null);
            if(ret!=JFileChooser.APPROVE_OPTION){
@@ -621,10 +841,27 @@ public class employeeFrame extends JDialog {
            Toolkit tk = Toolkit.getDefaultToolkit();
            image = tk.getImage(getimage);
            panelImage.repaint();
-   		
+           panelImage.setVisible(true);   		
          			   			
        }
-	
-	
-	
+	//에러메세지
+	public void employeedialog() {	
+            JOptionPane.showMessageDialog(null, "다시확인하여 주세요.","경고",JOptionPane.WARNING_MESSAGE);            
+        
+	}
+	//등록완료 메세지
+	public void employeedialogInsert() {	
+        JOptionPane.showMessageDialog(null, "등록되었습니다.","완료",JOptionPane.WARNING_MESSAGE);            
+    
+}
+	//수정완료 메세지
+	public void employeedialogUpdate() {	
+        JOptionPane.showMessageDialog(null, "수정되었습니다.","완료",JOptionPane.WARNING_MESSAGE);            
+    
+}
+	//삭제완료 메세지
+	public void employeedialogDelete() {	
+        JOptionPane.showMessageDialog(null, "삭제되었습니다.","완료",JOptionPane.WARNING_MESSAGE);            
+    
+}
 }

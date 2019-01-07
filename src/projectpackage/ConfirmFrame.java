@@ -341,10 +341,6 @@ public class ConfirmFrame extends JDialog {
 				txtContent.setText(defaultTableModel.getValueAt(table.getSelectedRow(), 3).toString());
 			}
 
-//			if (table.getSelectedRow() >= 0) {
-//				txtContent.setText(table.getValueAt(table.getSelectedRow(), 2).toString());
-//			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -361,7 +357,7 @@ public class ConfirmFrame extends JDialog {
 						+ "where app_code = " + defaultTableModel.getValueAt(table.getSelectedRow(), 6).toString();
 
 				this.stmt.executeQuery(query);
-				JOptionPane.showMessageDialog(this, "승인 했습니다.");
+				JOptionPane.showMessageDialog(this, "승인 했습니다");
 				// DB자료를 테이블에 가져와서 보여줌
 				setTable();
 			} catch (Exception e) {
@@ -369,7 +365,7 @@ public class ConfirmFrame extends JDialog {
 			}
 
 		} else {
-			JOptionPane.showMessageDialog(this, "승인할 수 없습니다.");
+			JOptionPane.showMessageDialog(this, "승인할 수 없습니다");
 		}
 	}
 
@@ -384,7 +380,7 @@ public class ConfirmFrame extends JDialog {
 						+ "where app_code = " + defaultTableModel.getValueAt(table.getSelectedRow(), 6).toString();
 
 				this.stmt.executeQuery(query);
-				JOptionPane.showMessageDialog(this, "반려 했습니다.");
+				JOptionPane.showMessageDialog(this, "반려 했습니다");
 				// DB자료를 테이블에 가져와서 보여줌
 				setTable();
 			} catch (Exception e) {
@@ -392,7 +388,7 @@ public class ConfirmFrame extends JDialog {
 			}
 
 		} else {
-			JOptionPane.showMessageDialog(this, "반려할 수 없습니다.");
+			JOptionPane.showMessageDialog(this, "반려할 수 없습니다");
 		}
 	}
 
