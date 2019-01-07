@@ -97,14 +97,10 @@ public class MainFrame {
 		JButton btnCommute = new JButton("출결");
 		btnCommute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-<<<<<<< HEAD
+				// 출결 화면을 생성
 				Attendance window = new Attendance(frmMain);
 				window.setVisible(true);
-=======
-				// 출결 화면을 생성
-				Attendance window = new Attendance();
-				window.frame.setVisible(true);
->>>>>>> branch 'master' of https://github.com/TeamKLO/JavaProject.git
+
 			}
 		});
 		btnCommute.setBounds(290, 51, 97, 23);
@@ -208,7 +204,7 @@ public class MainFrame {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		img = tk.getImage(MainStart.emp_image);
 
-		// 이미지를 표현할 JPanel의  repaint메소드를 실행
+		// 이미지를 표현할 JPanel의 repaint메소드를 실행
 		panelimg.repaint();
 
 		return true;

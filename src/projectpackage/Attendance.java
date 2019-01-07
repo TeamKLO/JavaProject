@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
@@ -19,20 +20,22 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 
 public class Attendance extends JDialog {
 	static JFrame tmpFrame;
-	private JLabel lblNowDate;
 
+	private JLabel lblNowDate;
 	private JLabel lblDept;
 	private JLabel lblPosi;
 	private JLabel lblNm;
 	private JPanel panel;
 	private JButton btnManagement;
-	private Statement stmt;
+	private Statement stmt = MainStart.connectDataBase();
 
 	/**
 	 * Launch the application.
@@ -51,51 +54,26 @@ public class Attendance extends JDialog {
 		});
 	}
 
-	public void clock() {
-		Thread clock = new Thread() {
-			public void run() {
-				try {
-					for (;;) {
-						Calendar cal = new GregorianCalendar();
-						int day = cal.get(Calendar.DAY_OF_MONTH);
-						int month = cal.get(Calendar.MONTH) + 1;
-						int year = cal.get(Calendar.YEAR);
-
-//						int second = cal.get(Calendar.SECOND);
-//						int minute = cal.get(Calendar.MINUTE);
-//						int hour = cal.get(Calendar.HOUR);
-
-						lblNowDate.setText(year + "년 " + month + "월 " + day + "일");
-
-						sleep(1000);
-					}
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		clock.start();
-
-	}
-
 	/**
 	 * Create the dialog.
 	 */
-<<<<<<< HEAD
+
 	public Attendance(JFrame frame) {
+		super(frame, true);
+		setTitle("출결");
 		setBounds(100, 100, 549, 467);
-		getContentPane().setLayout(null);
 		setLocationRelativeTo(frame);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		getContentPane().setLayout(null);
 
 		JLabel lblStart_1 = new JLabel("");
 		lblStart_1.setFont(new Font("굴림", Font.BOLD, 16));
-		lblStart_1.setBounds(326, 104, 152, 21);
+		lblStart_1.setBounds(326, 104, 195, 21);
 		getContentPane().add(lblStart_1);
 
 		JLabel lblEnd_1 = new JLabel("");
 		lblEnd_1.setFont(new Font("굴림", Font.BOLD, 16));
-		lblEnd_1.setBounds(326, 156, 152, 18);
+		lblEnd_1.setBounds(326, 156, 195, 18);
 		getContentPane().add(lblEnd_1);
 
 		JButton btnStart = new JButton("출근 등록");
@@ -126,70 +104,11 @@ public class Attendance extends JDialog {
 
 				lblStart_1.setText(am1 + "  " + hour + "시" + minute + "분" + second + "초");
 
-=======
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(150, 150, 450, 500);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 0, 434, 462);
-		frame.getContentPane().add(panel);
-		panel.setLayout(null);
-		
-		labelCal = new JLabel("Clock");
-		labelCal.setFont(new Font("돋움", Font.BOLD, 24));
-		labelCal.setBounds(25, 33, 397, 57);
-		panel.add(labelCal);
-		
-				
-		JLabel labelStart = new JLabel("\uCD9C\uADFC\uC2DC\uAC04 :");
-		labelStart.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelStart.setBounds(161, 117, 80, 40);
-		panel.add(labelStart);
-		
-		JLabel labelEnd = new JLabel("\uD1F4\uADFC\uC2DC\uAC04 :");
-		labelEnd.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelEnd.setBounds(161, 176, 80, 40);
-		panel.add(labelEnd);
-		
-		JLabel labelStratView = new JLabel("New label");
-		labelStratView.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelStratView.setBounds(294, 117, 100, 40);
-		panel.add(labelStratView);
-		
-		JLabel labelEndView = new JLabel("New label");
-		labelEndView.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelEndView.setBounds(294, 176, 100, 40);
-		panel.add(labelEndView);
-		
-		JButton buttonStart = new JButton("\uCD9C\uADFC");
-		buttonStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+				employeeInsert();
+
 			}
 		});
-		buttonStart.setBounds(37, 362, 100, 50);
-		panel.add(buttonStart);
-		
-		JButton buttonEnd = new JButton("\uD1F4\uADFC");
-		buttonEnd.setBounds(167, 362, 100, 50);
-		panel.add(buttonEnd);
-		
-		JButton buttonClose = new JButton("닫기");			
-		buttonClose.setBounds(294, 362, 100, 50);
-		panel.add(buttonClose);
-		
-		buttonClose.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				frame.dispose();
->>>>>>> branch 'master' of https://github.com/TeamKLO/JavaProject.git
-			}
-		});
-		btnStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+
 		btnStart.setBounds(45, 285, 97, 43);
 		getContentPane().add(btnStart);
 
@@ -197,7 +116,7 @@ public class Attendance extends JDialog {
 		btnEnd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (!lblStart_1.getText().equals(""))
+				if (lblStart_1.getText().equals(""))
 					return;
 
 				String am1 = null;
@@ -220,13 +139,13 @@ public class Attendance extends JDialog {
 				}
 
 				lblEnd_1.setText(am1 + "  " + hour + "시" + minute + "분" + second + "초");
+				update();
 
 			}
+
 		});
 		btnEnd.setBounds(210, 285, 97, 43);
 		getContentPane().add(btnEnd);
-		
-		
 
 		JButton buttonClose = new JButton("닫기");
 		buttonClose.setBounds(381, 376, 97, 23);
@@ -240,7 +159,7 @@ public class Attendance extends JDialog {
 		JButton btnLog = new JButton("출결 로그");
 		btnLog.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				AttendanceLog window = new AttendanceLog();
+				AttendanceLog window = new AttendanceLog(Attendance.this);
 				window.setVisible(true);
 			}
 		});
@@ -315,4 +234,51 @@ public class Attendance extends JDialog {
 		return true;
 	}
 
+	public void employeeInsert() {
+
+		String query = "INSERT INTO COMMUTE VALUES(sysdate," + MainStart.emp_no
+				+ ",sysdate, to_date('01/01/01','RR/MM/DD'))";
+
+		try {
+			stmt.executeUpdate(query);
+		} catch (Exception e) {
+			System.out.println(e);
+
+		}
+
+	}
+
+	public void update() {
+		String query = "UPDATE COMMUTE SET COM_ENDDATE = sysdate " + "WHERE EMP_NO = " + MainStart.emp_no;
+		try {
+			stmt.executeUpdate(query);
+		} catch (Exception e) {
+			System.out.println(e);
+
+		}
+
+	}
+
+	public void clock() {
+		Thread clock = new Thread() {
+			public void run() {
+				try {
+					for (;;) {
+						Calendar cal = new GregorianCalendar();
+						int day = cal.get(Calendar.DAY_OF_MONTH);
+						int month = cal.get(Calendar.MONTH) + 1;
+						int year = cal.get(Calendar.YEAR);
+
+						lblNowDate.setText(year + "년 " + month + "월 " + day + "일");
+
+						sleep(1000);
+					}
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		clock.start();
+	}
 }
