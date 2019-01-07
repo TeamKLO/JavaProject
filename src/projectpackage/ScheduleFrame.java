@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -48,14 +49,21 @@ public class ScheduleFrame {
 	private JDateChooser dateChooserSearchStartDate; // 날짜 검색 : 시작날짜
 	private JDateChooser dateChooserSearchEndDate; // 날짜 검색 : 마지막날짜
 	private JLabel labelSearchName; // 이름 검색 라벨
-	private JButton buttonSearch;
+	private JLabel labelSearchBetween; //날짜검색 ~라벨
+	private JButton buttonSearch; //검색버튼
 
+	
+	private JLabel labelEmpno; //사원번호 입력 라벨
+	private JLabel labelBetween; //날짜입력 사이 ~표
+	private JLabel labelChooseDate; //날짜입력 라벨
+	private JLabel labelName; //이름라벨
+	private JLabel labelDept; //부서라벨
+	private JLabel labelNameView; // 이름
+	private JLabel labelDeptView; // 부서
 	private JPanel panelEdit; // 관리자용 판넬
 	private JComboBox comboBoxDept; // 테이블 부서 변경
 	private JTextField textFieldEmpNo; // 사원번호
-	private JTextField textFieldSchCode; // 일정코드
-	private JLabel labelName; // 이름
-	private JLabel labelDept; // 부서
+	private JTextField textFieldSchCode; // 일정코드	
 	private JDateChooser dateChooserStartDate; // 날짜 입력 : 시작날짜
 	private JDateChooser dateChooserEndDate; // 날짜 입력 :마지막날짜
 	private JTextField textFieldSearchName;//이름검색
@@ -65,19 +73,21 @@ public class ScheduleFrame {
 	private JButton buttonDelete; // 삭제버튼
 	
 	//일정승인창
-		private JPanel panelApproval;
+		private JPanel panelApproval;//일정승인보기 판넬
 		private DefaultTableModel approvalModel;//
-		private JTable approvalDbTable; // 셋이 하나의 테이블
+		private JTable approvalDbTable; // 셋이 하나의 일정승인테이블
 		private JScrollPane approvalJScollPane; //
 		private JLabel approvalLabel; //일정승인라벨	
 		private JDateChooser approvalDateChooserSearchStartDate; // 날짜 검색 : 시작날짜
 		private JDateChooser approvalDateChooserSearchEndDate; // 날짜 검색 : 마지막날짜
-		private JTextArea txtContent;
-		private JScrollPane approvalJScollPaneContent;
+		private JTextArea txtContent; //일정내용
+		private JScrollPane approvalJScollPaneContent;//일정내용스크롤
 	
 	
 
 	private Statement stmt = MainStart.connectDataBase();// db연결
+
+
 
 
 	// *** 상수 선언 ***
@@ -165,7 +175,7 @@ public class ScheduleFrame {
 		panel.add(buttonClose);
 		
 		buttonSearch = new JButton("검색");
-		buttonSearch.setBounds(420, 70, 60, 30);
+		buttonSearch.setBounds(440, 70, 60, 30);
 		panel.add(buttonSearch);
 		
 
@@ -177,18 +187,23 @@ public class ScheduleFrame {
 
 		dateChooserSearchEndDate = new JDateChooser();
 		dateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");		
-		dateChooserSearchEndDate.setBounds(170, 70, 120, 30);
+		dateChooserSearchEndDate.setBounds(180, 70, 120, 30);
 		panel.add(dateChooserSearchEndDate);
 		
 		////이름검색 필드
 		textFieldSearchName = new JTextField(10);
 		textFieldSearchName.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldSearchName.setBounds(340, 70, 70, 30);
+		textFieldSearchName.setBounds(360, 70, 70, 30);
 		panel.add(textFieldSearchName);
 		////이름 라벨
 		labelSearchName = new JLabel("이름 : ");
-		labelSearchName.setBounds(300, 70, 51, 30);
+		labelSearchName.setBounds(320, 70, 51, 30);
 		panel.add(labelSearchName);
+		//날짜검색 ~라벨
+		labelSearchBetween = new JLabel("~");
+		labelSearchBetween.setFont(new Font("돋움", Font.PLAIN, 12));
+		labelSearchBetween.setBounds(160, 70, 10, 30);
+		panel.add(labelSearchBetween);
 
 		
 		
@@ -215,51 +230,82 @@ public class ScheduleFrame {
 		panelEdit.add(buttonDelete);
 
 		////입력필드//////////////
+		
+		//라벨
+		labelDept = new JLabel("부서 : ");
+		labelDept.setFont(new Font("돋움", Font.PLAIN, 12));
+		labelDept.setBounds(182, 499, 40, 30);
+		panelEdit.add(labelDept);
+		
+		labelName = new JLabel("이름 : ");
+		labelName.setFont(new Font("돋움", Font.PLAIN, 12));
+		labelName.setBounds(302, 500, 40, 30);
+		panelEdit.add(labelName);
+		
+		labelEmpno = new JLabel("사원번호 : ");
+		labelEmpno.setFont(new Font("돋움", Font.PLAIN, 12));
+		labelEmpno.setBounds(30, 500, 60, 30);
+		panelEdit.add(labelEmpno);
+		
+		labelBetween = new JLabel("~");
+		labelBetween.setFont(new Font("돋움", Font.PLAIN, 12));
+		labelBetween.setBounds(220, 539, 10, 30);
+		panelEdit.add(labelBetween);
+		
+		labelChooseDate = new JLabel("날짜입력 : ");
+		labelChooseDate.setFont(new Font("돋움", Font.PLAIN, 12));
+		labelChooseDate.setBounds(30, 540, 60, 30);
+		panelEdit.add(labelChooseDate);
+		
+		labelNameView = new JLabel("");
+		labelNameView.setFont(new Font("돋움", Font.PLAIN, 12));
+		labelNameView.setBounds(340, 500, 80, 30);
+		panelEdit.add(labelNameView);
+
+		labelDeptView = new JLabel("");
+		labelDeptView.setFont(new Font("돋움", Font.PLAIN, 12));
+		labelDeptView.setBounds(220, 500, 80, 30);
+		panelEdit.add(labelDeptView);
+		
+		//입력필드
 		textFieldEmpNo = new JTextField();
-		textFieldEmpNo.setText("사원번호");
-		textFieldEmpNo.setBounds(50, 500, 80, 30);
+		textFieldEmpNo.setBounds(90, 500, 80, 30);
 		panelEdit.add(textFieldEmpNo);
 		textFieldEmpNo.setColumns(10);
 		textFieldEmpNo.setHorizontalAlignment(JTextField.CENTER);
 
-		labelName = new JLabel("이름");
-		labelName.setFont(new Font("돋움", Font.PLAIN, 12));
-		labelName.setBounds(288, 500, 80, 30);
-		panelEdit.add(labelName);
-
-		labelDept = new JLabel("부서");
-		labelDept.setFont(new Font("돋움", Font.PLAIN, 12));
-		labelDept.setBounds(174, 500, 80, 30);
-		panelEdit.add(labelDept);
-
+		
 		textFieldSchCode = new JTextField();
 		textFieldSchCode.setText("일정코드");
 		textFieldSchCode.setColumns(10);
-		textFieldSchCode.setBounds(391, 541, 60, 30);
+		textFieldSchCode.setBounds(475, 541, 60, 30);
 		textFieldSchCode.setVisible(false);
 		panelEdit.add(textFieldSchCode);
 
 		//콤보박스
 		String[] CBMenuDept = { "전체", "영업부", "인사부", "기획부", "총무부", "개발부" };
 		comboBoxDept = new JComboBox(CBMenuDept);
-		comboBoxDept.setBounds(50, 30, 70, 30);
+		comboBoxDept.setBounds(30, 30, 70, 30);
 		panelEdit.add(comboBoxDept);		
 
 		String[] CBmenu = { "휴가", "출장", "외근", "반차" };
 		comboBoxContent = new JComboBox(CBmenu);
-		comboBoxContent.setBounds(311, 540, 68, 30);
+		comboBoxContent.setBounds(380, 540, 68, 30);
 		panelEdit.add(comboBoxContent);
 
 		//날짜선택
 		dateChooserStartDate = new JDateChooser();
 		dateChooserStartDate.setDateFormatString("yyyy-MM-dd");
-		dateChooserStartDate.setBounds(30, 540, 120, 30);
+		dateChooserStartDate.setBounds(90, 540, 120, 30);
 		panelEdit.add(dateChooserStartDate);
 
 		dateChooserEndDate = new JDateChooser();
 		dateChooserEndDate.setDateFormatString("yyyy-MM-dd");
-		dateChooserEndDate.setBounds(170, 540, 120, 30);
+		dateChooserEndDate.setBounds(240, 540, 120, 30);
 		panelEdit.add(dateChooserEndDate);
+		
+
+
 		
 		
 		
@@ -680,6 +726,7 @@ public class ScheduleFrame {
 				stmt.executeUpdate(query);
 				stmt.executeUpdate(query2);
 				stmt.executeUpdate(queryCommit);
+				dialogInsert();
 			}
 		} catch (Exception e) {
 			dialog();
@@ -717,6 +764,7 @@ public class ScheduleFrame {
 				}else {
 				stmt.executeQuery(query);
 				stmt.executeQuery(queryCommit);
+				dialogUpdate();
 				}
 			} catch (Exception e) {
 				dialog();
@@ -734,6 +782,7 @@ public class ScheduleFrame {
 			stmt.executeUpdate(query);
 			stmt.executeUpdate(query2);
 			stmt.executeUpdate(queryCommit);
+			dialogDelete();;
 
 		} catch (Exception e) {
 			dialog();
@@ -767,10 +816,10 @@ public class ScheduleFrame {
 
 			for (int i = 0; i < column; i++) {
 				if (i == 0) {
-					labelDept.setText((String) model.getValueAt(row, 0));
+					labelDeptView.setText((String) model.getValueAt(row, 0));
 				}
 				if (i == 1) {
-					labelName.setText((String) model.getValueAt(row, 1));
+					labelNameView.setText((String) model.getValueAt(row, 1));
 				}
 				if (i == 2) {
 					((JTextField) dateChooserStartDate.getDateEditor().getUiComponent())
@@ -803,11 +852,11 @@ public class ScheduleFrame {
 	}
 
 //Dialog 메소드
-
+///직접 만들어본것 에러메세지
 	public void dialog() {
 
 		// 부모 Frame을 frame로 하고, 이름을 "다시 입력하세요"
-		Dialog dialog = new Dialog(frame, "다시 입력하세요");
+		Dialog dialog = new Dialog(frame, "경고");
 		dialog.setSize(210, 120);
 		dialog.setLocation(50, 50);
 		dialog.setLayout(new FlowLayout());
@@ -825,8 +874,26 @@ public class ScheduleFrame {
 		dialog.add(ok);
 
 		dialog.setVisible(true);
-
 	}
+
+	//등록완료 메세지
+	public void dialogInsert() {	
+        JOptionPane.showMessageDialog(null, "등록되었습니다.","완료",JOptionPane.WARNING_MESSAGE);          
+    
+}
+	//수정완료 메세지
+	public void dialogUpdate() {	
+        JOptionPane.showMessageDialog(null, "수정되었습니다.","완료",JOptionPane.WARNING_MESSAGE);            
+    
+}
+	//삭제완료 메세지
+	public void dialogDelete() {	
+        JOptionPane.showMessageDialog(null, "삭제되었습니다.","완료",JOptionPane.WARNING_MESSAGE);            
+    
+}
+	
+	
+	
 	///일정테이블 날짜 셋팅 메소드
 	public void scheduleSetDateChooser() {
 		
@@ -862,7 +929,7 @@ public class ScheduleFrame {
 					+" AND A.CAT_CODE = 1 AND A.APP_ISCONFIRM = '승인'"
 					+" AND APP_CONFIRMDATE >= '"+a+"'"
 					+" AND APP_CONFIRMDATE <= '"+b+"'"
-					+" ORDER BY 4";
+					+" ORDER BY 4,2";
 			
 			try {			
 				txtContent.setText("");				
@@ -880,9 +947,6 @@ public class ScheduleFrame {
 			}
 			
 		}
-	
-	
-	
 }
 
 
