@@ -62,21 +62,21 @@ public class LoginFrame {
 	private void initialize() {
 		frmLogin = new JFrame();
 		frmLogin.setTitle("로그인");
-		frmLogin.setBounds(100, 100, 300, 220);
+		frmLogin.setBounds(100, 100, 270, 250);
 		// frame이 생성될 때 위치는 모니터의 중앙
 		frmLogin.setLocationRelativeTo(null);
 		// frame이 close 될 때의 설정
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogin.getContentPane().setLayout(null);
 
-		JLabel lblId = new JLabel("사번");
+		JLabel lblId = new JLabel("사원번호 : ");
 		lblId.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblId.setBounds(12, 36, 57, 15);
+		lblId.setBounds(30, 35, 70, 20);
 		frmLogin.getContentPane().add(lblId);
 
-		JLabel lblPw = new JLabel("암호");
+		JLabel lblPw = new JLabel("암호 : ");
 		lblPw.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblPw.setBounds(12, 74, 57, 15);
+		lblPw.setBounds(30, 75, 70, 20);
 		frmLogin.getContentPane().add(lblPw);
 
 		txtId = new JTextField();
@@ -89,7 +89,7 @@ public class LoginFrame {
 				}
 			}
 		});
-		txtId.setBounds(91, 33, 181, 21);
+		txtId.setBounds(110, 35, 110, 20);
 		frmLogin.getContentPane().add(txtId);
 		txtId.setColumns(10);
 
@@ -109,7 +109,7 @@ public class LoginFrame {
 				System.exit(0);
 			}
 		});
-		btnClose.setBounds(175, 117, 97, 23);
+		btnClose.setBounds(145, 125, 80, 30);
 		frmLogin.getContentPane().add(btnClose);
 
 		btnLogin = new JButton("로그인");
@@ -142,12 +142,12 @@ public class LoginFrame {
 
 			}
 		});
-		btnLogin.setBounds(38, 117, 97, 23);
+		btnLogin.setBounds(30, 125, 80, 30);
 		frmLogin.getContentPane().add(btnLogin);
 
 		lblLoginMessage = new JLabel("로그인 해주세요");
 		lblLoginMessage.setHorizontalAlignment(SwingConstants.LEFT);
-		lblLoginMessage.setBounds(38, 150, 206, 15);
+		lblLoginMessage.setBounds(38, 175, 206, 15);
 		frmLogin.getContentPane().add(lblLoginMessage);
 
 		pwfPw = new JPasswordField();
@@ -160,7 +160,7 @@ public class LoginFrame {
 				}
 			}
 		});
-		pwfPw.setBounds(91, 71, 181, 21);
+		pwfPw.setBounds(110, 75, 110, 20);
 		frmLogin.getContentPane().add(pwfPw);
 	}
 

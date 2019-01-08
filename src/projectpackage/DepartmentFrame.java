@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import projectpackage.employeeFrame.employeeTableMouseListener;
+import projectpackage.EmployeeFrame.employeeTableMouseListener;
 
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;

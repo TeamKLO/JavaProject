@@ -91,7 +91,7 @@ public class ApprovalFrame extends JDialog {
 		// 부모가 되는 JDialog의 owner는 frame, modal은 true이므로 결재 화면은 모달로 동작
 		super(frame, true);
 		setTitle("나의 기안 및 결재");
-		setBounds(100, 100, 550, 450);
+		setBounds(100, 100, 554,719);
 		// frame이 생성될 때 위치는 frame의 중앙
 		setLocationRelativeTo(frame);
 		// frame이 close 될 때의 설정
@@ -102,14 +102,14 @@ public class ApprovalFrame extends JDialog {
 		// JDateChooser의 값이 변할 때 일어나는 이벤트
 		setDateChooserChangeEvent(dtcSDate);
 		dtcSDate.setDateFormatString("yyyy-MM-dd");
-		dtcSDate.setBounds(12, 10, 130, 21);
+		dtcSDate.setBounds(12, 10, 130, 25);
 		getContentPane().add(dtcSDate);
 
 		dtcEDate = new JDateChooser();
 		// JDateChooser의 값이 변할 때 일어나는 이벤트
 		setDateChooserChangeEvent(dtcEDate);
 		dtcEDate.setDateFormatString("yyyy-MM-dd");
-		dtcEDate.setBounds(169, 10, 130, 21);
+		dtcEDate.setBounds(169, 10, 130, 25);
 		getContentPane().add(dtcEDate);
 
 		cbxCategory = new JComboBox();
@@ -122,7 +122,7 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		cbxCategory.setBounds(12, 50, 130, 21);
+		cbxCategory.setBounds(12, 50, 130, 25);
 		cbxCategory.setModel(new DefaultComboBoxModel(new String[] { "전체", "일정", "기획", "구매" }));
 		getContentPane().add(cbxCategory);
 
@@ -136,7 +136,7 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		cbxState.setBounds(169, 50, 130, 21);
+		cbxState.setBounds(169, 50, 130, 25);
 		cbxState.setModel(new DefaultComboBoxModel(new String[] { "전체", "대기", "승인", "반려" }));
 		getContentPane().add(cbxState);
 
@@ -154,7 +154,7 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		btnDraft.setBounds(12, 364, 97, 23);
+		btnDraft.setBounds(12, 600, 110, 30);
 		btnDraft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// 기안 화면을 생성
@@ -165,7 +165,7 @@ public class ApprovalFrame extends JDialog {
 		});
 		getContentPane().add(btnDraft);
 
-		btnClose = new JButton("닫기");
+		btnClose = new JButton("닫 기");
 		btnClose.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -175,7 +175,7 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		btnClose.setBounds(425, 364, 97, 23);
+		btnClose.setBounds(425, 600, 110, 30);
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ApprovalFrame.this.dispose();
@@ -201,7 +201,7 @@ public class ApprovalFrame extends JDialog {
 				window.setVisible(true);
 			}
 		});
-		btnConfirm.setBounds(154, 364, 97, 23);
+		btnConfirm.setBounds(154, 600, 110, 30);
 		getContentPane().add(btnConfirm);
 
 		scrollPane = new JScrollPane();
@@ -252,7 +252,7 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		btnDelete.setBounds(293, 364, 97, 23);
+		btnDelete.setBounds(293, 600, 110, 30);
 		getContentPane().add(btnDelete);
 
 		// 화면에 나타나는 값 초기화

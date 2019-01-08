@@ -66,14 +66,14 @@ public class MainFrame {
 	private void initialize() {
 		frmMain = new JFrame();
 		frmMain.setTitle("메인");
-		frmMain.setBounds(100, 100, 450, 300);
+		frmMain.setBounds(100, 100, 450, 320);
 		// frame이 생성될 때 위치는 모니터의 중앙
 		frmMain.setLocationRelativeTo(null);
 		// frame이 close 될 때의 설정
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMain.getContentPane().setLayout(null);
 
-		btnApproval = new JButton("결재");
+		btnApproval = new JButton("결 재");
 		btnApproval.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -91,10 +91,10 @@ public class MainFrame {
 				window.setVisible(true);
 			}
 		});
-		btnApproval.setBounds(152, 51, 97, 23);
+		btnApproval.setBounds(152, 51, 100, 30);
 		frmMain.getContentPane().add(btnApproval);
 
-		JButton btnCommute = new JButton("출결");
+		JButton btnCommute = new JButton("출 결");
 		btnCommute.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -107,10 +107,10 @@ public class MainFrame {
 
 			}
 		});
-		btnCommute.setBounds(290, 51, 97, 23);
+		btnCommute.setBounds(290, 51, 100, 30);
 		frmMain.getContentPane().add(btnCommute);
 
-		JButton btnSchedule = new JButton("일정");
+		JButton btnSchedule = new JButton("일 정");
 		btnSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// 일정 화면을 생성
@@ -118,17 +118,26 @@ public class MainFrame {
 				window.frame.setVisible(true);
 			}
 		});
-		btnSchedule.setBounds(152, 111, 97, 23);
+		btnSchedule.setBounds(152, 111, 100, 30);
 		frmMain.getContentPane().add(btnSchedule);
 
 		JButton btnMessenger = new JButton("메신저");
 		btnMessenger.setVisible(false);
-		btnMessenger.setBounds(152, 229, 97, 23);
+		btnMessenger.setBounds(152, 229, 100, 30);
 		frmMain.getContentPane().add(btnMessenger);
 
-		btnManagement = new JButton("관리");
+		btnManagement = new JButton("관 리");
 		btnManagement.setVisible(false);
-		btnManagement.setBounds(152, 172, 97, 23);
+		btnManagement.setBounds(290, 111, 100, 30);
+		btnManagement.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EmployeeFrame employeeFrame = new EmployeeFrame();
+				employeeFrame.setVisible(true);
+				
+			}
+		});
 		frmMain.getContentPane().add(btnManagement);
 
 		btnLogin = new JButton("로그아웃");
@@ -140,32 +149,32 @@ public class MainFrame {
 				frmMain.setVisible(false);
 			}
 		});
-		btnLogin.setBounds(290, 111, 97, 23);
+		btnLogin.setBounds(152, 172, 100, 30);
 		frmMain.getContentPane().add(btnLogin);
 
-		JButton btnClose = new JButton("닫기");
+		JButton btnClose = new JButton("닫 기");
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// 닫기 버튼 클릭시 프로그램 종료
 				System.exit(0);
 			}
 		});
-		btnClose.setBounds(290, 172, 97, 23);
+		btnClose.setBounds(290, 172, 100, 30);
 		frmMain.getContentPane().add(btnClose);
 
 		lblDepartment = new JLabel("New label");
 		lblDepartment.setForeground(Color.BLACK);
-		lblDepartment.setBounds(40, 119, 57, 15);
+		lblDepartment.setBounds(30, 140, 80, 20);
 		frmMain.getContentPane().add(lblDepartment);
 		lblDepartment.setText("1");
 
 		lblPosition = new JLabel("New label");
-		lblPosition.setBounds(40, 148, 57, 15);
+		lblPosition.setBounds(30, 170, 80, 20);
 		frmMain.getContentPane().add(lblPosition);
 		lblPosition.setText("2");
 
 		lblName = new JLabel("New label");
-		lblName.setBounds(40, 180, 57, 15);
+		lblName.setBounds(30, 200, 80, 20);
 		frmMain.getContentPane().add(lblName);
 		lblName.setText("3");
 
@@ -176,7 +185,7 @@ public class MainFrame {
 				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
 			}
 		};
-		panelimg.setBounds(27, 22, 70, 76);
+		panelimg.setBounds(30, 40, 80, 80);
 		frmMain.getContentPane().add(panelimg);
 	}
 

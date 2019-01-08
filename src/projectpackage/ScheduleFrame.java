@@ -126,7 +126,7 @@ public class ScheduleFrame {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setTitle("일정");
-		frame.setBounds(100, 100, 554, 719);
+		frame.setBounds(100, 100, 554,719);  
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLocationRelativeTo(null); // 프레임 가운데서 띄우기
 		frame.getContentPane().setLayout(null);
@@ -167,44 +167,40 @@ public class ScheduleFrame {
 //	       컬럼모델에서 컬럼의 갯수만큼 컬럼을 가져와 for문을 이용하여
 //	       각각의 셀렌더러를 아까 생성한 dtcr에 set해줌
 		}
-		jScollPane.setBounds(70, 130, 400, 350);
+		jScollPane.setBounds(30, 130, 470, 350);
 		panel.add(jScollPane);		
 		
 		
 		/////버튼
-		buttonClose = new JButton("닫기");
-		buttonClose.setBounds(420, 600, 60, 30);
+		buttonClose = new JButton("닫 기");
+		buttonClose.setBounds(420, 600, 80, 30);
 		panel.add(buttonClose);
-		
-		buttonSearch = new JButton("검색");
-		buttonSearch.setBounds(440, 70, 60, 30);
-		panel.add(buttonSearch);
 		
 
 		////날짜 선택
 		dateChooserSearchStartDate = new JDateChooser();
 		dateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");		
-		dateChooserSearchStartDate.setBounds(30, 70, 120, 30);
+		dateChooserSearchStartDate.setBounds(30, 70, 110, 25);
 		panel.add(dateChooserSearchStartDate);
 
 		dateChooserSearchEndDate = new JDateChooser();
 		dateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");		
-		dateChooserSearchEndDate.setBounds(180, 70, 120, 30);
+		dateChooserSearchEndDate.setBounds(170, 70, 110, 25);
 		panel.add(dateChooserSearchEndDate);
 		
 		////이름검색 필드
 		textFieldSearchName = new JTextField(10);
 		textFieldSearchName.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldSearchName.setBounds(360, 70, 70, 30);
+		textFieldSearchName.setBounds(340, 70, 80, 25);
 		panel.add(textFieldSearchName);
 		////이름 라벨
 		labelSearchName = new JLabel("이름 : ");
-		labelSearchName.setBounds(320, 70, 51, 30);
+		labelSearchName.setBounds(300, 70, 50, 25);
 		panel.add(labelSearchName);
 		//날짜검색 ~라벨
 		labelSearchBetween = new JLabel("~");
 		labelSearchBetween.setFont(new Font("돋움", Font.PLAIN, 12));
-		labelSearchBetween.setBounds(160, 70, 10, 30);
+		labelSearchBetween.setBounds(150, 70, 10, 30);
 		panel.add(labelSearchBetween);
 
 		
@@ -219,16 +215,16 @@ public class ScheduleFrame {
 				
 
 		///버튼///////////////		
-		buttonInsert = new JButton("추가");		
-		buttonInsert.setBounds(50, 600, 60, 30);
+		buttonInsert = new JButton("추 가");		
+		buttonInsert.setBounds(30, 600, 80, 30);
 		panelEdit.add(buttonInsert);		
 		
-		buttonUpdate = new JButton("수정");	
-		buttonUpdate.setBounds(174, 600, 60, 30);
+		buttonUpdate = new JButton("수 정");	
+		buttonUpdate.setBounds(160, 600, 80, 30);
 		panelEdit.add(buttonUpdate);
 		
-		buttonDelete = new JButton("삭제");	
-		buttonDelete.setBounds(298, 600, 60, 30);
+		buttonDelete = new JButton("삭 제");	
+		buttonDelete.setBounds(290, 600, 80, 30);
 		panelEdit.add(buttonDelete);
 
 		////입력필드//////////////
@@ -251,7 +247,7 @@ public class ScheduleFrame {
 		
 		labelBetween = new JLabel("~");
 		labelBetween.setFont(new Font("돋움", Font.PLAIN, 12));
-		labelBetween.setBounds(220, 539, 10, 30);
+		labelBetween.setBounds(210, 539, 10, 30);
 		panelEdit.add(labelBetween);
 		
 		labelChooseDate = new JLabel("날짜입력 : ");
@@ -271,7 +267,7 @@ public class ScheduleFrame {
 		
 		//입력필드
 		textFieldEmpNo = new JTextField();
-		textFieldEmpNo.setBounds(90, 500, 80, 30);
+		textFieldEmpNo.setBounds(90, 500, 80, 25);
 		panelEdit.add(textFieldEmpNo);
 		textFieldEmpNo.setColumns(10);
 		textFieldEmpNo.setHorizontalAlignment(JTextField.CENTER);
@@ -287,24 +283,36 @@ public class ScheduleFrame {
 		//콤보박스
 //		String[] CBMenuDept = { "전체", "영업부", "인사부", "기획부", "총무부", "개발부" };
 		comboBoxDept = new JComboBox(deptCombobox);
-		comboBoxDept.setBounds(30, 30, 70, 30);
+		comboBoxDept.setBounds(30, 30, 80, 25);
 		panelEdit.add(comboBoxDept);		
 
 		String[] CBmenu = { "휴가", "출장", "외근", "반차" };
 		comboBoxContent = new JComboBox(CBmenu);
-		comboBoxContent.setBounds(380, 540, 68, 30);
+		comboBoxContent.setBounds(370, 540, 80, 25);
 		panelEdit.add(comboBoxContent);
 
 		//날짜선택
 		dateChooserStartDate = new JDateChooser();
 		dateChooserStartDate.setDateFormatString("yyyy-MM-dd");
-		dateChooserStartDate.setBounds(90, 540, 120, 30);
+		dateChooserStartDate.setBounds(90, 540, 110, 25);
 		panelEdit.add(dateChooserStartDate);
 
 		dateChooserEndDate = new JDateChooser();
 		dateChooserEndDate.setDateFormatString("yyyy-MM-dd");
-		dateChooserEndDate.setBounds(240, 540, 120, 30);
+		dateChooserEndDate.setBounds(230, 540, 110, 25);
 		panelEdit.add(dateChooserEndDate);
+		
+		buttonSearch = new JButton("검 색");
+		buttonSearch.setBounds(430, 70, 70, 25);
+		panelEdit.add(buttonSearch);
+		
+		//검색버튼
+		buttonSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent a) {
+				model.setRowCount(0);
+				select();
+			}
+		});
 		
 
 
@@ -364,12 +372,12 @@ public class ScheduleFrame {
 				//날짜선택
 				approvalDateChooserSearchStartDate = new JDateChooser();				
 				approvalDateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");
-				approvalDateChooserSearchStartDate.setBounds(70, 70, 120, 30);
+				approvalDateChooserSearchStartDate.setBounds(70, 70, 110, 25);
 				panelApproval.add(approvalDateChooserSearchStartDate);								
 				
 				approvalDateChooserSearchEndDate = new JDateChooser();				
 				approvalDateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");
-				approvalDateChooserSearchEndDate.setBounds(240, 70, 120, 30);
+				approvalDateChooserSearchEndDate.setBounds(240, 70, 110, 25);
 				panelApproval.add(approvalDateChooserSearchEndDate);
 				
 			
@@ -384,14 +392,6 @@ public class ScheduleFrame {
 				buttonClose.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						frame.dispose();
-					}
-				});
-				
-				//검색버튼
-				buttonSearch.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent a) {
-						model.setRowCount(0);
-						select();
 					}
 				});
 				//추가버튼

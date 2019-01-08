@@ -51,7 +51,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-public class employeeFrame extends JDialog {
+public class EmployeeFrame extends JDialog {
 	
 
 	//버튼
@@ -122,7 +122,7 @@ public class employeeFrame extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			employeeFrame dialog = new employeeFrame();
+			EmployeeFrame dialog = new EmployeeFrame();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -134,7 +134,7 @@ public class employeeFrame extends JDialog {
 	 * Create the dialog.
 	 */
 	
-	public employeeFrame() {
+	public EmployeeFrame() {
 		setBounds(100, 100, 800, 750);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
