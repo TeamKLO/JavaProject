@@ -1,6 +1,7 @@
 package projectpackage;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,6 +67,8 @@ public class DepartmentFrame extends JDialog {
 		setLocationRelativeTo(null);
 		setTitle("부서등록");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
+
 		
 		///테이블
 		String[] tableColumn = {"부서번호","부서이름","정원"};

@@ -61,6 +61,7 @@ public class ConfirmFrame extends JDialog {
 	private JButton btnConfirm;
 	private JButton btnReturn;
 	private JButton btnClose;
+	private JLabel labelFrameTitle;
 
 	private Statement stmt;
 
@@ -130,6 +131,13 @@ public class ConfirmFrame extends JDialog {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 
+		labelFrameTitle = new JLabel("결재 하기");
+		labelFrameTitle.setForeground(Color.WHITE);
+		labelFrameTitle.setBounds(12, 12, 57, 15);
+		getContentPane().add(labelFrameTitle);
+		
+		
+		
 		dtcSDate = new JDateChooser();
 		dtcSDate.setBackground(new Color(255, 255, 224));
 		// JDateChooser의 값이 변할 때 일어나는 이벤트

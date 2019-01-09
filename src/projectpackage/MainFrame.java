@@ -35,6 +35,7 @@ public class MainFrame {
 	private JButton btnManagement;
 	private JButton btnLogin;
 	private JButton btnApproval;
+	private JLabel labelFrameTitle;
 	int xx,xy;
 
 	// 사원 이미지 파일을 대입할 필드
@@ -100,6 +101,11 @@ public class MainFrame {
 		frmMain.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmMain.getContentPane().setLayout(null);
 		frmMain.setUndecorated(true);
+		
+		labelFrameTitle = new JLabel("KLO");
+		labelFrameTitle.setForeground(Color.WHITE);
+		labelFrameTitle.setBounds(12, 12, 57, 15);
+		frmMain.add(labelFrameTitle);
 
 		btnApproval = new JButton("결 재");
 		btnApproval.setForeground(Color.BLACK);

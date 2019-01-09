@@ -55,7 +55,7 @@ import java.awt.event.MouseMotionAdapter;
 
 public class EmployeeFrame extends JDialog {
 	
-
+	private JLabel labelFrameTitle;
 	//버튼
 	private JButton insertButton;  //등록버튼
 	private JButton updateButton;  //수정버튼
@@ -166,9 +166,14 @@ public class EmployeeFrame extends JDialog {
 		this.setUndecorated(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
+		
 		deptnameSelect();//부서 콤보박스 아이템 가져오기
 		positionSelect();//직책 콤보박스 아이템 가져오기
-
+		
+		labelFrameTitle = new JLabel("사원 관리");
+		labelFrameTitle.setForeground(Color.WHITE);
+		labelFrameTitle.setBounds(12, 12, 57, 15);
+		getContentPane().add(labelFrameTitle);
 		
 		//////버튼
 		insertButton = new JButton("등 록");

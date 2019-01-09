@@ -56,8 +56,8 @@ public class ApprovalFrame extends JDialog {
 	private JButton btnDraft;
 	private JButton btnClose;
 	private JButton btnConfirm;
-	private JButton btnDelete;
-
+	private JButton btnDelete;	
+	private JLabel labelFrameTitle;
 	private Statement stmt;
 
 	// JTable을 위한 DefaultTableModel을 생성하는데, 타이틀이 없어도 쿼리문에서 정해질 듯 하지만 일단 넣어줌
@@ -120,13 +120,21 @@ public class ApprovalFrame extends JDialog {
 		setBounds(100, 100, 661, 700);
 		// frame이 생성될 때 위치는 frame의 중앙
 		setLocationRelativeTo(frame);
+		
 
 		this.setUndecorated(true);
 
 		// frame이 close 될 때의 설정
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
+		
+		labelFrameTitle = new JLabel("결재");
+		labelFrameTitle.setForeground(Color.WHITE);
+		labelFrameTitle.setBounds(12, 12, 57, 15);
+		getContentPane().add(labelFrameTitle);
 
+		
+		
 		dtcSDate = new JDateChooser();
 		dtcSDate.setBackground(new Color(255, 255, 224));
 		// JDateChooser의 값이 변할 때 일어나는 이벤트
@@ -337,9 +345,12 @@ public class ApprovalFrame extends JDialog {
 		getContentPane().add(lblBackImg);
 
 
-
+		
+		
+				
 		// 화면에 나타나는 값 초기화
 		initDisplay();
+		
 
 	}
 

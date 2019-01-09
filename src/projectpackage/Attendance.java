@@ -38,6 +38,7 @@ public class Attendance extends JDialog {
 	private JLabel lblNm;
 	private JPanel panel;
 	private JButton btnManagement;
+	private JLabel labelFrameTitle;
 	private Statement stmt = MainStart.connectDataBase();
 	int xx, xy;
 
@@ -100,6 +101,13 @@ public class Attendance extends JDialog {
 		this.setUndecorated(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
+		
+		
+		labelFrameTitle = new JLabel("출결");
+		labelFrameTitle.setForeground(Color.WHITE);
+		labelFrameTitle.setBounds(12, 12, 57, 15);
+		getContentPane().add(labelFrameTitle);
+		
 
 		JLabel lblStart_1 = new JLabel("");
 		lblStart_1.setForeground(Color.WHITE);

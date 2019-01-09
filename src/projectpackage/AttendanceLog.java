@@ -40,6 +40,7 @@ public class AttendanceLog extends JDialog {
 	private JDateChooser dateChooserSearchStartDate;
 	private JDateChooser dateChooserSearchEndDate;
 	private JComboBox comboBoxDept;
+	private JLabel labelFrameTitle;
 	private Statement stmt = MainStart.connectDataBase();
 	// 테이블
 	private DefaultTableModel model;//
@@ -98,6 +99,10 @@ public class AttendanceLog extends JDialog {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 	
+		labelFrameTitle = new JLabel("출결 로그");
+		labelFrameTitle.setForeground(Color.WHITE);
+		labelFrameTitle.setBounds(12, 12, 57, 15);
+		getContentPane().add(labelFrameTitle);
 
 		dateChooserSearchStartDate = new JDateChooser();
 		dateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");
