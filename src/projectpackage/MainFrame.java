@@ -157,7 +157,7 @@ public class MainFrame {
 		btnSchedule.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// 일정 화면을 생성
-				ScheduleFrame window = new ScheduleFrame();
+				ScheduleFrame window = new ScheduleFrame(frmMain);
 				window.frame.setVisible(true);
 			}
 		});
@@ -182,7 +182,7 @@ public class MainFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				EmployeeFrame employeeFrame = new EmployeeFrame();
+				EmployeeFrame employeeFrame = new EmployeeFrame(frmMain);
 				employeeFrame.setVisible(true);
 				
 			}

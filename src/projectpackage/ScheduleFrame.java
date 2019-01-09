@@ -44,6 +44,8 @@ public class ScheduleFrame {
 
 	// *** 메인 UI 관련 변수 선언 ***
 	public JFrame frame;
+	public JFrame ownerFrame;
+	
 	private JLabel labelFrameTitle;
 
 	
@@ -125,6 +127,15 @@ public class ScheduleFrame {
 	 * Create the application.
 	 */
 	public ScheduleFrame() {
+		initialize();
+		scheduleSetDateChooser();
+		select();
+
+	}
+	
+	public ScheduleFrame(JFrame ownerFrame) {
+		this.ownerFrame = ownerFrame;
+		ownerFrame.setEnabled(false);
 		initialize();
 		scheduleSetDateChooser();
 		select();
@@ -423,7 +434,8 @@ public class ScheduleFrame {
 		// 닫기버튼
 		buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
+				ownerFrame.setEnabled(true);
+				frame.dispose();				
 			}
 		});
 		// 추가버튼
