@@ -293,9 +293,11 @@ public class EmployeeFrame extends JDialog {
 		
 		//사원번호
 		labelEmpNoView = new JLabel();
+		labelEmpNoView.setForeground(Color.WHITE);
 		labelEmpNoView.setFont(new Font("돋움", Font.PLAIN, 15));
 		labelEmpNoView.setBounds(90, 387, 60,30);
 		getContentPane().add(labelEmpNoView);
+		
 		//사원번호 라벨
 		labelEmpNo = new JLabel("사원번호 : ");
 		labelEmpNo.setForeground(Color.WHITE);
@@ -477,7 +479,7 @@ public class EmployeeFrame extends JDialog {
 	
 		//////이미지	      
 		lblBackImg = new JLabel("lblBackImg");
-		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\image\\BackImg.jpg"));
 		lblBackImg.setBounds(0, 0, 661, 700);
 		getContentPane().add(lblBackImg);
 		

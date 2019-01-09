@@ -206,6 +206,40 @@ public class ScheduleFrame {
 
 		
 		
+		////날짜 선택
+		dateChooserSearchStartDate = new JDateChooser();
+		dateChooserSearchStartDate.setBounds(48, 121, 110, 25);
+		panel.add(dateChooserSearchStartDate);
+		dateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");
+		
+		dateChooserSearchEndDate = new JDateChooser();
+		dateChooserSearchEndDate.setBounds(184, 121, 110, 25);
+		panel.add(dateChooserSearchEndDate);
+		dateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");
+		
+		
+		////이름검색 필드
+		textFieldSearchName = new JTextField(10);
+		textFieldSearchName.setBounds(429, 121, 80, 25);		
+		textFieldSearchName.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(textFieldSearchName);
+		
+		
+		////이름 라벨
+		labelSearchName = new JLabel("이름 : ");
+		labelSearchName.setForeground(Color.WHITE);
+		labelSearchName.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelSearchName.setBounds(380, 121, 50, 25);
+		panel.add(labelSearchName);
+		
+		//날짜검색 ~라벨
+		labelSearchBetween = new JLabel("~");
+		labelSearchBetween.setForeground(Color.WHITE);
+		labelSearchBetween.setBounds(167, 117, 10, 30);		
+		labelSearchBetween.setFont(new Font("돋움", Font.PLAIN, 12));
+		panel.add(labelSearchBetween);
+		
+		
 		
 		////////관리자용 판넬///////////////
 		panelEdit = new JPanel();
@@ -233,6 +267,11 @@ public class ScheduleFrame {
 		buttonDelete.setFont(new Font("굴림체", Font.BOLD, 12));
 		buttonDelete.setBounds(351, 629, 110, 30);
 		panelEdit.add(buttonDelete);
+		
+		buttonSearch = new JButton("검 색");
+		buttonSearch.setBackground(new Color(255, 255, 224));
+		buttonSearch.setBounds(521, 121, 70, 25);
+		panel.add(buttonSearch);
 
 		////입력필드//////////////
 		
@@ -267,22 +306,23 @@ public class ScheduleFrame {
 		panelEdit.add(labelChooseDate);
 		
 		labelNameView = new JLabel("");
+		labelNameView.setForeground(Color.WHITE);
 		labelNameView.setFont(new Font("돋움", Font.PLAIN, 12));
 		labelNameView.setBounds(429, 502, 80, 30);
 		panelEdit.add(labelNameView);
 
 		labelDeptView = new JLabel("");
+		labelDeptView.setForeground(Color.WHITE);
 		labelDeptView.setFont(new Font("돋움", Font.PLAIN, 12));
 		labelDeptView.setBounds(274, 502, 80, 30);
 		panelEdit.add(labelDeptView);
 		
 		//입력필드
 		textFieldEmpNo = new JTextField();
-		textFieldEmpNo.setBounds(124, 505, 80, 25);
-		panelEdit.add(textFieldEmpNo);
+		textFieldEmpNo.setBounds(124, 505, 80, 25);	
 		textFieldEmpNo.setColumns(10);
 		textFieldEmpNo.setHorizontalAlignment(JTextField.CENTER);
-
+		panelEdit.add(textFieldEmpNo);
 		
 		textFieldSchCode = new JTextField();
 		textFieldSchCode.setText("일정코드");
@@ -299,8 +339,7 @@ public class ScheduleFrame {
 		panelEdit.add(comboBoxDept);		
 
 		String[] CBmenu = { "휴가", "출장", "외근", "반차" };
-		comboBoxContent = new JComboBox(CBmenu);
-		comboBoxContent.setForeground(Color.WHITE);
+		comboBoxContent = new JComboBox(CBmenu);	
 		comboBoxContent.setBackground(new Color(255, 255, 224));
 		comboBoxContent.setFont(new Font("굴림체", Font.BOLD, 12));
 		comboBoxContent.setBounds(391, 546, 80, 25);
@@ -317,23 +356,12 @@ public class ScheduleFrame {
 		dateChooserEndDate.setBounds(257, 544, 110, 25);
 		panelEdit.add(dateChooserEndDate);
 		
-		buttonSearch = new JButton("검 색");
-		buttonSearch.setBackground(new Color(255, 255, 224));
-		buttonSearch.setBounds(521, 121, 70, 25);
-		panelEdit.add(buttonSearch);
+	
 		
-		//검색버튼
-		buttonSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent a) {
-				model.setRowCount(0);
-				select();
-			}
-		});
+	
 		
 
 
-		
-		
 		
 		///일정승인확인 판넬///////////
 				panelApproval = new JPanel();
@@ -376,8 +404,7 @@ public class ScheduleFrame {
 				
 				////라벨
 				approvalLabel = new JLabel("일정승인표");
-				approvalLabel.setForeground(Color.WHITE);
-				approvalLabel.setBackground(Color.WHITE);
+				approvalLabel.setForeground(Color.WHITE);				
 				approvalLabel.setFont(new Font("굴림체", Font.BOLD, 12));
 				approvalLabel.setBounds(48, 54, 100, 30);
 				panelApproval.add(approvalLabel);
@@ -385,19 +412,56 @@ public class ScheduleFrame {
 				///일정내용
 				txtContent = new JTextArea();	
 				approvalJScollPaneContent = new JScrollPane(txtContent);
+				//JTextArea 세로 스크롤
+				txtContent.append("\r\n"); 
+				txtContent.setCaretPosition(txtContent.getText().length());
 				approvalJScollPaneContent.setBounds(48, 438, 338, 100);
 				panelApproval.add(approvalJScollPaneContent);
+				
 				
 				//날짜선택
 				approvalDateChooserSearchStartDate = new JDateChooser();				
 				approvalDateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");
 				approvalDateChooserSearchStartDate.setBounds(48, 120, 110, 25);
-				panelApproval.add(approvalDateChooserSearchStartDate);								
+				panel.add(approvalDateChooserSearchStartDate);								
+				
+				//일정테이블시작날짜
+				approvalDateChooserSearchStartDate.addPropertyChangeListener(new PropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent evt) {
+						if ("date".equals(evt.getPropertyName())) {
+							JDateChooser aDateChooser = (JDateChooser) evt.getSource();
+				            boolean isDateSelectedByUser = false;
+				            // Get the otherwise unaccessible JDateChooser's 'dateSelected' field.
+				            try {
+				                // Get the desired field using reflection
+				                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");		                
+				                // This line makes the value accesible (can be read and/or modified)
+				                dateSelectedField.setAccessible(true);
+				                isDateSelectedByUser = dateSelectedField.getBoolean(aDateChooser);
+				            } catch (Exception ignoreOrNot) {
+				            }
+
+				            // Do some important stuff depending on wether value was changed by user
+				            if (isDateSelectedByUser) {
+				            	approvalModel.setRowCount(0);
+				            	approvalSelect();
+				            }
+
+				            // Reset the value to false
+				            try {
+				                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");
+				                dateSelectedField.setAccessible(true);
+				                dateSelectedField.setBoolean(aDateChooser, false);
+				            } catch (Exception ignoreOrNot) {
+				            }
+				        }
+					}
+				});
 				
 				approvalDateChooserSearchEndDate = new JDateChooser();				
 				approvalDateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");
 				approvalDateChooserSearchEndDate.setBounds(185, 121, 110, 25);
-				panelApproval.add(approvalDateChooserSearchEndDate);
+				panel.add(approvalDateChooserSearchEndDate);
 				
 				JLabel labelSearchBetween_1 = new JLabel("~");
 				labelSearchBetween_1.setFont(new Font("돋움", Font.PLAIN, 12));
@@ -442,7 +506,13 @@ public class ScheduleFrame {
 						select();
 					}
 				});
-				
+				//검색버튼
+				buttonSearch.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent a) {
+						model.setRowCount(0);
+						select();
+					}
+				});
 				
 				///콤보박스
 				//부서선택
@@ -466,39 +536,6 @@ public class ScheduleFrame {
 						if (approvalDbTable.getSelectedRow() >= 0) {
 							txtContent.setText(approvalDbTable.getValueAt(approvalDbTable.getSelectedRow(), 4).toString());
 						}
-					}
-				});
-				
-				//일정테이블시작날짜
-				approvalDateChooserSearchStartDate.addPropertyChangeListener(new PropertyChangeListener() {
-					public void propertyChange(PropertyChangeEvent evt) {
-						if ("date".equals(evt.getPropertyName())) {
-							JDateChooser aDateChooser = (JDateChooser) evt.getSource();
-				            boolean isDateSelectedByUser = false;
-				            // Get the otherwise unaccessible JDateChooser's 'dateSelected' field.
-				            try {
-				                // Get the desired field using reflection
-				                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");		                
-				                // This line makes the value accesible (can be read and/or modified)
-				                dateSelectedField.setAccessible(true);
-				                isDateSelectedByUser = dateSelectedField.getBoolean(aDateChooser);
-				            } catch (Exception ignoreOrNot) {
-				            }
-
-				            // Do some important stuff depending on wether value was changed by user
-				            if (isDateSelectedByUser) {
-				            	approvalModel.setRowCount(0);
-				            	approvalSelect();
-				            }
-
-				            // Reset the value to false
-				            try {
-				                Field dateSelectedField = JDateChooser.class.getDeclaredField("dateSelected");
-				                dateSelectedField.setAccessible(true);
-				                dateSelectedField.setBoolean(aDateChooser, false);
-				            } catch (Exception ignoreOrNot) {
-				            }
-				        }
 					}
 				});
 				//일정테이블끝날짜
@@ -533,45 +570,25 @@ public class ScheduleFrame {
 				        }
 					}
 				});
-			
-			//////이미지	
-				lblBackImg = new JLabel("lblBackImg");
-				lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
-				lblBackImg.setBounds(0, 0, 661, 700);
-				panel.add(lblBackImg);
-				
-				lblBackImgEdit = new JLabel("lblBackImg");
-				lblBackImgEdit.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
-				lblBackImgEdit.setBounds(0, 0, 661, 700);
-				panelEdit.add(lblBackImgEdit);
 				
 
-				////날짜 선택
-				dateChooserSearchStartDate = new JDateChooser();
-				dateChooserSearchStartDate.setBounds(48, 121, 110, 25);
-				panelEdit.add(dateChooserSearchStartDate);
-				dateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");
-				//날짜검색 ~라벨
-				labelSearchBetween = new JLabel("~");
-				labelSearchBetween.setBounds(167, 117, 10, 30);
-				panelEdit.add(labelSearchBetween);
-				labelSearchBetween.setFont(new Font("돋움", Font.PLAIN, 12));
+		
+			
 				
-						dateChooserSearchEndDate = new JDateChooser();
-						dateChooserSearchEndDate.setBounds(184, 121, 110, 25);
-						panelEdit.add(dateChooserSearchEndDate);
-						dateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");
+					
+					
 						
-						////이름검색 필드
-						textFieldSearchName = new JTextField(10);
-						textFieldSearchName.setBounds(429, 121, 80, 25);
-						panelEdit.add(textFieldSearchName);
-						textFieldSearchName.setHorizontalAlignment(SwingConstants.CENTER);
-						////이름 라벨
-						labelSearchName = new JLabel("이름 : ");
-						labelSearchName.setFont(new Font("굴림체", Font.BOLD, 12));
-						labelSearchName.setBounds(388, 121, 50, 25);
-						panelEdit.add(labelSearchName);
+						lblBackImgEdit = new JLabel("lblBackImg");
+						lblBackImgEdit.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
+						lblBackImgEdit.setBounds(0, 0, 661, 700);
+						panelEdit.add(lblBackImgEdit);
+				
+						
+						//////이미지	
+							lblBackImg = new JLabel("lblBackImg");
+							lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
+							lblBackImg.setBounds(0, 0, 661, 700);
+							panel.add(lblBackImg);
 						//끝날짜
 						dateChooserSearchEndDate.addPropertyChangeListener(new PropertyChangeListener() {
 							public void propertyChange(PropertyChangeEvent evt) {

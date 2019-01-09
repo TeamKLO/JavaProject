@@ -41,6 +41,7 @@ public class Attendance extends JDialog {
 	private Statement stmt = MainStart.connectDataBase();
 	int xx, xy;
 
+	Image img;
 	/**
 	 * Launch the application.
 	 */
@@ -79,6 +80,20 @@ public class Attendance extends JDialog {
 				xy = e.getY();
 			}
 		});
+		
+		panel = new JPanel() {
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+			}
+		};
+		panel.setBounds(78, 41, 119, 124);
+		getContentPane().add(panel);
+		
+		
+		
+		
+		
 		setTitle("출결");
 		setBounds(100, 100, 661, 571);
 		setLocationRelativeTo(frame);
@@ -247,9 +262,15 @@ public class Attendance extends JDialog {
 		lblNm.setText("3");
 
 		lblStart_1.setText("");
+		
+		JLabel lblBackImg = new JLabel("lblBackImg");
+		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
+		lblBackImg.setBounds(0, 0, 661, 571);
+		getContentPane().add(lblBackImg);
 
 		clock();
 		setEmployeeInfo();
+		
 
 	}
 
@@ -262,7 +283,7 @@ public class Attendance extends JDialog {
 	}
 
 	private boolean setEmployeeImage() {
-		Image img;
+		
 		File f = new File(MainStart.emp_image);
 		if (!f.exists()) {
 			return false;
@@ -271,21 +292,7 @@ public class Attendance extends JDialog {
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		img = tk.getImage(MainStart.emp_image);
 
-		JPanel panel = new JPanel() {
-			@Override
-			public void paint(Graphics g) {
-				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-			}
-		};
-		panel.setBounds(78, 41, 119, 124);
-		getContentPane().add(panel);
-		
-		JLabel lblBackImg = new JLabel("lblBackImg");
-		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
-		lblBackImg.setBounds(0, 0, 661, 571);
-		getContentPane().add(lblBackImg);
-		
-		
+
 
 		return true;
 	}

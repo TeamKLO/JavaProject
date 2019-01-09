@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JScrollPane;
 
 public class DraftFrame extends JDialog {
 	// static JFrame 필드는 단지 main의 EventQueue안의 생성자를 만족시키기 위한 것일 뿐, 프로그램 실행과 상관없음
@@ -38,6 +39,7 @@ public class DraftFrame extends JDialog {
 	// JComboBox cbxConfirmer와 보조를 맞춰 사원번호를 저장할 String Array
 	// 콤보박스에는 사원의 이름으로 드러내 보여주고, 사원번호는 안 보이지만 DB에 쿼리를 던질 때는 사원번호가 필요
 	private String[] confirmerNo;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -83,15 +85,6 @@ public class DraftFrame extends JDialog {
 		getContentPane().add(cbxCategory);
 
 		txtTitle = new JTextField();
-		txtTitle.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				int key = e.getKeyCode();
-				if (key == KeyEvent.VK_ENTER) {
-					btnDraft.doClick();
-				}
-			}
-		});
 		txtTitle.setBounds(79, 59, 343, 21);
 		getContentPane().add(txtTitle);
 		txtTitle.setColumns(10);
@@ -107,19 +100,6 @@ public class DraftFrame extends JDialog {
 		JLabel label_2 = new JLabel("기안내용");
 		label_2.setBounds(12, 90, 57, 15);
 		getContentPane().add(label_2);
-
-		txtContent = new JTextArea();
-		txtContent.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				int key = e.getKeyCode();
-				if (key == KeyEvent.VK_ENTER) {
-					btnDraft.doClick();
-				}
-			}
-		});
-		txtContent.setBounds(79, 90, 343, 146);
-		getContentPane().add(txtContent);
 
 		JLabel label_3 = new JLabel("결제상사");
 		label_3.setBounds(12, 252, 57, 15);
@@ -167,6 +147,15 @@ public class DraftFrame extends JDialog {
 		});
 		btnClose.setBounds(292, 307, 130, 23);
 		getContentPane().add(btnClose);
+		
+		txtContent = new JTextArea();		
+		txtContent.append("\r\n");
+		txtContent.setCaretPosition(txtContent.getText().length());
+		
+		scrollPane = new JScrollPane(txtContent);
+		scrollPane.setBounds(79, 90, 343, 146);
+		getContentPane().add(scrollPane);
+		scrollPane.setViewportView(txtContent);
 
 		// 화면에 나타나는 값 초기화
 		initDisplay();

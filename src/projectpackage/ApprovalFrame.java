@@ -174,10 +174,6 @@ public class ApprovalFrame extends JDialog {
 		cbxState.setModel(new DefaultComboBoxModel(new String[] { "전체", "대기", "승인", "반려" }));
 		getContentPane().add(cbxState);
 
-		txtContent = new JTextArea();
-		txtContent.setBounds(48, 438, 564, 100);
-		getContentPane().add(txtContent);
-
 		btnDraft = new JButton("기안 올리기");
 		btnDraft.setBackground(new Color(255, 255, 224));
 		btnDraft.setForeground(Color.BLACK);
@@ -318,6 +314,18 @@ public class ApprovalFrame extends JDialog {
 		});
 		btnDelete.setBounds(351, 629, 110, 30);
 		getContentPane().add(btnDelete);
+		
+		txtContent = new JTextArea();
+		txtContent.setEditable(false);
+		txtContent.append("\r\n");
+		txtContent.setCaretPosition(txtContent.getText().length());
+		
+		
+		JScrollPane scrollPane_1 = new JScrollPane(txtContent);
+		scrollPane_1.setBounds(48, 438, 564, 100);
+		getContentPane().add(scrollPane_1);
+		scrollPane_1.setViewportView(txtContent);
+				
 
 		lblBackImg = new JLabel("lblBackImg");
 		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));

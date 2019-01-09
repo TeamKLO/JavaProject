@@ -75,6 +75,7 @@ public class ConfirmFrame extends JDialog {
 	private JLabel lblBackImg;
 	private JLabel lblCloseX;
 	int xx,xy;
+	private JScrollPane scrollPane_1;
 
 	/**
 	 * Launch the application.
@@ -197,11 +198,6 @@ public class ConfirmFrame extends JDialog {
 			}
 		});
 		scrollPane.setViewportView(table);
-
-		txtContent = new JTextArea();
-		txtContent.setText("");
-		txtContent.setBounds(48, 438, 564, 100);
-		getContentPane().add(txtContent);
 		
 //		lblCloseX = new JLabel("X");
 //		lblCloseX.addMouseListener(new MouseAdapter() {
@@ -301,6 +297,18 @@ public class ConfirmFrame extends JDialog {
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(216, 68, 61, 21);
 		getContentPane().add(label);
+		
+		txtContent = new JTextArea();		
+		txtContent.setEditable(false);
+		txtContent.setText("");
+		txtContent.append("\r\n");
+		txtContent.setCaretPosition(txtContent.getText().length());
+		
+		scrollPane_1 = new JScrollPane(txtContent);
+		scrollPane_1.setBounds(48, 438, 564, 100);
+		getContentPane().add(scrollPane_1);	
+		scrollPane_1.setViewportView(txtContent);
+				
 		
 		lblBackImg = new JLabel("lblBackImg");
 		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
