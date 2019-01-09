@@ -32,6 +32,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import com.toedter.calendar.JDateChooser;
 import javax.swing.border.BevelBorder;
@@ -172,6 +173,7 @@ public class ScheduleFrame {
 
 		jScollPane = new JScrollPane(dbTable);
 		dbTable.getTableHeader().setReorderingAllowed(false);// 칼럼순서변경금지
+		dbTable.setRowSorter(new TableRowSorter(model)); //테이블 열클릭 정렬
 		/// 테이블 내용 가운데 정렬하기
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
@@ -381,6 +383,7 @@ public class ScheduleFrame {
 		}
 
 		approvalJScollPane.setBounds(47, 190, 338, 225);
+		approvalDbTable.setRowSorter(new TableRowSorter(approvalModel)); //테이블 열클릭 정렬
 		panelApproval.add(approvalJScollPane);
 
 		//// 라벨
@@ -893,27 +896,28 @@ public class ScheduleFrame {
 
 			for (int i = 0; i < column; i++) {
 				if (i == 0) {
-					labelDeptView.setText((String) model.getValueAt(row, 0));
+//					labelDeptView.setText(approvalDbTable.getValueAt(approvalDbTable.getSelectedRow(), 4).toString());					
+					labelDeptView.setText((String) model.getValueAt(dbTable.convertRowIndexToModel(dbTable.getSelectedRow()), 0));
 				}
 				if (i == 1) {
-					labelNameView.setText((String) model.getValueAt(row, 1));
+					labelNameView.setText((String) model.getValueAt(dbTable.convertRowIndexToModel(dbTable.getSelectedRow()), 1));
 				}
 				if (i == 2) {
 					((JTextField) dateChooserStartDate.getDateEditor().getUiComponent())
-							.setText(transFormat.format(model.getValueAt(row, 2)));
+							.setText(transFormat.format(model.getValueAt(dbTable.convertRowIndexToModel(dbTable.getSelectedRow()), 2)));
 				}
 				if (i == 3) {
 					((JTextField) dateChooserEndDate.getDateEditor().getUiComponent())
-							.setText(transFormat.format(model.getValueAt(row, 3)));
+							.setText(transFormat.format(model.getValueAt(dbTable.convertRowIndexToModel(dbTable.getSelectedRow()), 3)));
 				}
 				if (i == 4) {
-					comboBoxContent.setSelectedItem((String) model.getValueAt(row, 4));
+					comboBoxContent.setSelectedItem((String) model.getValueAt(dbTable.convertRowIndexToModel(dbTable.getSelectedRow()), 4));
 				} // 콤보박스라인
 				if (i == 5) {
-					textFieldEmpNo.setText((String) model.getValueAt(row, 5));
+					textFieldEmpNo.setText((String) model.getValueAt(dbTable.convertRowIndexToModel(dbTable.getSelectedRow()), 5));
 				}
 				if (i == 6) {
-					textFieldSchCode.setText((String) model.getValueAt(row, 6));
+					textFieldSchCode.setText((String) model.getValueAt(dbTable.convertRowIndexToModel(dbTable.getSelectedRow()), 6));
 				}
 			}
 

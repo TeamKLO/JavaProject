@@ -44,6 +44,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
@@ -233,6 +234,7 @@ public class EmployeeFrame extends JDialog {
 		table.addMouseListener(new employeeTableMouseListener());
 		table.getTableHeader().setReorderingAllowed(false);// 칼럼순서변경금지
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //가로스크롤
+		table.setRowSorter(new TableRowSorter(model));
 		
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
@@ -630,50 +632,50 @@ public class EmployeeFrame extends JDialog {
 
 			for (int i = 0; i < column; i++) {
 				if (i == 0) {
-					comboBoxDept.setSelectedItem((String) model.getValueAt(row, 0));
+					comboBoxDept.setSelectedItem((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 0));
 				}
 				if (i == 1) {
-					comboBoxPosition.setSelectedItem((String) model.getValueAt(row, 1));
+					comboBoxPosition.setSelectedItem((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 1));
 				}
 				if (i == 2) {
-					textFieldName.setText((String) model.getValueAt(row, 2));
+					textFieldName.setText((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 2));
 				}
 				if (i ==3) {
-					labelEmpNoView.setText((String) model.getValueAt(row, 3));
+					labelEmpNoView.setText((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()),3));
 				}
 				if (i == 4) {
-					comboBoxGender.setSelectedItem((String) model.getValueAt(row, 4));
+					comboBoxGender.setSelectedItem((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 4));
 				}
 				if (i == 5) {
-					if((Date)model.getValueAt(row, 5)!=null) {
+					if((Date)model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 5)!=null) {
 						((JTextField) dateChooserHiredate.getDateEditor().getUiComponent())
-						.setText(transFormat.format(model.getValueAt(row, 5)));						
+						.setText(transFormat.format(model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 5)));						
 					}else {
 						((JTextField) dateChooserHiredate.getDateEditor().getUiComponent())
 						.setText("");	
 					}
 				}
 				if (i == 6) {
-					if((Date)model.getValueAt(row, 6)!=null) {
+					if((Date)model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6)!=null) {
 					((JTextField) dateChooserBirthday.getDateEditor().getUiComponent())
-					.setText(transFormat.format(model.getValueAt(row, 6)));
+					.setText(transFormat.format(model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6)));
 					}else {
 						((JTextField) dateChooserBirthday.getDateEditor().getUiComponent())
 						.setText("");
 					}
 				}
 				if (i == 7) {
-					textFieldPhone.setText((String) model.getValueAt(row, 7));
+					textFieldPhone.setText((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7));
 				}
 				if (i == 8) {
-					textFieldAddress.setText((String) model.getValueAt(row, 8));
+					textFieldAddress.setText((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 8));
 				}
 			
 				if (i == 9) {
-					textFieldImage.setText((String) model.getValueAt(row, 9));
+					textFieldImage.setText((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 9));
 					File file = new File(textFieldImage.getText());			
 					if(file.exists()) {
-					getimage = ((String)model.getValueAt(table.getSelectedRow(),9));				
+					getimage = ((String)model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()),9));				
 					}else {
 						getimage = "";
 					}
@@ -681,12 +683,12 @@ public class EmployeeFrame extends JDialog {
 					
 				}
 				if (i == 10) {
-					textFieldPassword.setText((String) model.getValueAt(row, 10));
+					textFieldPassword.setText((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 10));
 				}
 				if (i == 11) {					
-					if(((String) model.getValueAt(row, 11)).equals("0")) {
+					if(((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 11)).equals("0")) {
 						comboBoxManagementCode.setSelectedIndex(1);				
-					}else if(((String) model.getValueAt(row, 11)).equals("1")) {
+					}else if(((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 11)).equals("1")) {
 						comboBoxManagementCode.setSelectedIndex(3);
 					}else {
 						comboBoxManagementCode.setSelectedIndex(2);
