@@ -97,6 +97,21 @@ public class ApprovalFrame extends JDialog {
 	public ApprovalFrame(JFrame frame) {
 		// 부모가 되는 JDialog의 owner는 frame, modal은 true이므로 결재 화면은 모달로 동작
 		super(frame, true);
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				setLocation(x - xx, y - xy);
+			}
+		});
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
 		getContentPane().setBackground(new Color(240, 240, 240));
 
 		setTitle("나의 기안 및 결재");
@@ -187,19 +202,19 @@ public class ApprovalFrame extends JDialog {
 		});
 		getContentPane().add(btnDraft);
 
-		lblCloseX = new JLabel("X");
-		lblCloseX.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ApprovalFrame.this.dispose();
-			}
-		});
-
-		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
-		lblCloseX.setForeground(Color.WHITE);
-		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCloseX.setBounds(622, 8, 42, 20);
-		this.getContentPane().add(lblCloseX);
+//		lblCloseX = new JLabel("X");
+//		lblCloseX.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				ApprovalFrame.this.dispose();
+//			}
+//		});
+//
+//		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
+//		lblCloseX.setForeground(Color.WHITE);
+//		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblCloseX.setBounds(622, 8, 42, 20);
+//		this.getContentPane().add(lblCloseX);
 
 		btnClose = new JButton("닫 기");
 		btnClose.setBackground(new Color(255, 255, 224));
@@ -304,11 +319,10 @@ public class ApprovalFrame extends JDialog {
 		btnDelete.setBounds(351, 629, 110, 30);
 		getContentPane().add(btnDelete);
 
-//		lblBackImg = new JLabel("lblBackImg");
-//
-//		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
-//		lblBackImg.setBounds(0, 0, 661, 700);
-//		getContentPane().add(lblBackImg);
+		lblBackImg = new JLabel("lblBackImg");
+		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
+		lblBackImg.setBounds(0, 0, 661, 700);
+		getContentPane().add(lblBackImg);
 
 
 

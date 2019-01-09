@@ -32,6 +32,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.event.MouseMotionAdapter;
 
 public class AttendanceLog extends JDialog {
 	static JFrame tmpFrame;
@@ -43,6 +44,7 @@ public class AttendanceLog extends JDialog {
 	// 테이블
 	private DefaultTableModel model;//
 	private JTable table; // 사원 목록 테이블
+	int xx, xy;
 
 	String[] colTitle = { "작성날짜", "사원이름", "출근시간", "퇴근시간" };
 
@@ -75,6 +77,21 @@ public class AttendanceLog extends JDialog {
 	 */
 	public AttendanceLog(Window frame) {
 		super(frame, Dialog.ModalityType.APPLICATION_MODAL);
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				setLocation(x - xx, y - xy);
+			}
+		});
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
 		setTitle("출결 로그");
 //		setBounds(588, 300, 614, 500);
 //		setLocationRelativeTo(frame);
@@ -133,6 +150,7 @@ public class AttendanceLog extends JDialog {
 		}
 
 		getContentPane().add(scrollPane);
+		
 
 		JButton buttonClose = new JButton("닫 기");
 		buttonClose.setBackground(new Color(255, 255, 224));
@@ -145,18 +163,18 @@ public class AttendanceLog extends JDialog {
 		});
 		getContentPane().add(buttonClose);
 		
-		JLabel lblCloseX = new JLabel("X");
-		lblCloseX.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				AttendanceLog.this.dispose();
-			}
-		});
-		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCloseX.setForeground(Color.WHITE);
-		lblCloseX.setFont(new Font("Dialog", Font.BOLD, 18));
-		lblCloseX.setBounds(622, 8, 42, 20);
-		getContentPane().add(lblCloseX);
+//		JLabel lblCloseX = new JLabel("X");
+//		lblCloseX.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				AttendanceLog.this.dispose();
+//			}
+//		});
+//		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblCloseX.setForeground(Color.WHITE);
+//		lblCloseX.setFont(new Font("Dialog", Font.BOLD, 18));
+//		lblCloseX.setBounds(622, 8, 42, 20);
+//		getContentPane().add(lblCloseX);
 
 		JLabel lblNewLabel = new JLabel("~");
 		lblNewLabel.setForeground(Color.WHITE);
@@ -178,7 +196,7 @@ public class AttendanceLog extends JDialog {
 		getContentPane().add(button);
 		
 		JLabel lblBackImg = new JLabel("lblBackImg");
-		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
 		lblBackImg.setBounds(0, 0, 661, 700);
 		getContentPane().add(lblBackImg);
 		
@@ -257,10 +275,15 @@ public class AttendanceLog extends JDialog {
 
 	public void scheduleSetDateChooser() {
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
-		cal.add(Calendar.DATE, -14);
-		dateChooserSearchStartDate.setDate(cal.getTime());
+		Calendar calS = Calendar.getInstance();
+		calS.setTime(new Date());
+		calS.add(Calendar.DATE, -14);
+		dateChooserSearchStartDate.setDate(calS.getTime());
+		
+		Calendar calE = Calendar.getInstance();
+		calE.setTime(new Date());
+		calE.add(Calendar.DATE, 0);
+		dateChooserSearchEndDate.setDate(calE.getTime());
 
 	}
 }

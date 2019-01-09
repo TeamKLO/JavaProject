@@ -36,6 +36,7 @@ import javax.swing.table.TableColumnModel;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.border.BevelBorder;
 import java.awt.Color;
+import java.awt.event.MouseMotionAdapter;
 
 public class ScheduleFrame {
 	////
@@ -74,6 +75,7 @@ public class ScheduleFrame {
 	private JButton buttonInsert; // 추가버튼
 	private JButton buttonUpdate; // 수정버튼
 	private JButton buttonDelete; // 삭제버튼
+	int xx,xy;
 	
 	//일정승인창
 		private JPanel panelApproval;//일정승인보기 판넬
@@ -131,9 +133,24 @@ public class ScheduleFrame {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				frame.setLocation(x - xx, y - xy);
+			}
+		});
+		frame.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
 		frame.setTitle("일정");
-//		frame.setBounds(100, 100, 661, 700);  
-		frame.setBounds(100, 100, 1400, 700);
+		frame.setBounds(0, 0, 661, 700);  
+
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLocationRelativeTo(null); // 프레임 가운데서 띄우기
 		frame.setUndecorated(true);
@@ -182,6 +199,7 @@ public class ScheduleFrame {
 		
 		/////버튼
 		buttonClose = new JButton("닫 기");
+		buttonClose.setBackground(new Color(255, 255, 224));
 		buttonClose.setFont(new Font("굴림체", Font.BOLD, 12));
 		buttonClose.setBounds(507, 629, 110, 30);
 		panel.add(buttonClose);
@@ -199,16 +217,19 @@ public class ScheduleFrame {
 
 		///버튼///////////////		
 		buttonInsert = new JButton("추 가");		
+		buttonInsert.setBackground(new Color(255, 255, 224));
 		buttonInsert.setFont(new Font("굴림체", Font.BOLD, 12));
 		buttonInsert.setBounds(48, 629, 110, 30);
 		panelEdit.add(buttonInsert);		
 		
 		buttonUpdate = new JButton("수 정");	
+		buttonUpdate.setBackground(new Color(255, 255, 224));
 		buttonUpdate.setFont(new Font("굴림체", Font.BOLD, 12));
 		buttonUpdate.setBounds(199, 629, 110, 30);
 		panelEdit.add(buttonUpdate);
 		
 		buttonDelete = new JButton("삭 제");	
+		buttonDelete.setBackground(new Color(255, 255, 224));
 		buttonDelete.setFont(new Font("굴림체", Font.BOLD, 12));
 		buttonDelete.setBounds(351, 629, 110, 30);
 		panelEdit.add(buttonDelete);
@@ -217,16 +238,19 @@ public class ScheduleFrame {
 		
 		//라벨
 		labelDept = new JLabel("부서 : ");
+		labelDept.setForeground(Color.WHITE);
 		labelDept.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelDept.setBounds(226, 502, 50, 30);
 		panelEdit.add(labelDept);
 		
 		labelName = new JLabel("이름 : ");
+		labelName.setForeground(Color.WHITE);
 		labelName.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelName.setBounds(377, 502, 61, 30);
 		panelEdit.add(labelName);
 		
 		labelEmpno = new JLabel("사원번호 : ");
+		labelEmpno.setForeground(Color.WHITE);
 		labelEmpno.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelEmpno.setBounds(49, 501, 78, 30);
 		panelEdit.add(labelEmpno);
@@ -237,6 +261,7 @@ public class ScheduleFrame {
 		panelEdit.add(labelBetween);
 		
 		labelChooseDate = new JLabel("날짜입력 : ");
+		labelChooseDate.setForeground(Color.WHITE);
 		labelChooseDate.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelChooseDate.setBounds(48, 540, 78, 30);
 		panelEdit.add(labelChooseDate);
@@ -269,11 +294,14 @@ public class ScheduleFrame {
 		//콤보박스
 //		String[] CBMenuDept = { "전체", "영업부", "인사부", "기획부", "총무부", "개발부" };
 		comboBoxDept = new JComboBox(deptCombobox);
+		comboBoxDept.setBackground(new Color(255, 255, 224));
 		comboBoxDept.setBounds(48, 62, 80, 25);
 		panelEdit.add(comboBoxDept);		
 
 		String[] CBmenu = { "휴가", "출장", "외근", "반차" };
 		comboBoxContent = new JComboBox(CBmenu);
+		comboBoxContent.setForeground(Color.WHITE);
+		comboBoxContent.setBackground(new Color(255, 255, 224));
 		comboBoxContent.setFont(new Font("굴림체", Font.BOLD, 12));
 		comboBoxContent.setBounds(391, 546, 80, 25);
 		panelEdit.add(comboBoxContent);
@@ -290,6 +318,7 @@ public class ScheduleFrame {
 		panelEdit.add(dateChooserEndDate);
 		
 		buttonSearch = new JButton("검 색");
+		buttonSearch.setBackground(new Color(255, 255, 224));
 		buttonSearch.setBounds(521, 121, 70, 25);
 		panelEdit.add(buttonSearch);
 		
@@ -308,7 +337,7 @@ public class ScheduleFrame {
 		
 		///일정승인확인 판넬///////////
 				panelApproval = new JPanel();
-				panelApproval.setBounds(661, 0, 661, 700);
+				panelApproval.setBounds(661, 0, 429, 700);
 				frame.getContentPane().add(panelApproval);
 				panelApproval.setLayout(null);
 				panelApproval.setVisible(false);
@@ -341,7 +370,7 @@ public class ScheduleFrame {
 					tcm.getColumn(i).setCellRenderer(dtcr);
 				}				
 				
-				approvalJScollPane.setBounds(48, 190, 564, 225);
+				approvalJScollPane.setBounds(47, 190, 338, 225);
 				panelApproval.add(approvalJScollPane);
 				
 				
@@ -356,7 +385,7 @@ public class ScheduleFrame {
 				///일정내용
 				txtContent = new JTextArea();	
 				approvalJScollPaneContent = new JScrollPane(txtContent);
-				approvalJScollPaneContent.setBounds(48, 438, 564, 100);
+				approvalJScollPaneContent.setBounds(48, 438, 338, 100);
 				panelApproval.add(approvalJScollPaneContent);
 				
 				//날짜선택
@@ -507,12 +536,12 @@ public class ScheduleFrame {
 			
 			//////이미지	
 				lblBackImg = new JLabel("lblBackImg");
-				lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+				lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
 				lblBackImg.setBounds(0, 0, 661, 700);
 				panel.add(lblBackImg);
 				
 				lblBackImgEdit = new JLabel("lblBackImg");
-				lblBackImgEdit.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+				lblBackImgEdit.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
 				lblBackImgEdit.setBounds(0, 0, 661, 700);
 				panelEdit.add(lblBackImgEdit);
 				
@@ -540,6 +569,7 @@ public class ScheduleFrame {
 						textFieldSearchName.setHorizontalAlignment(SwingConstants.CENTER);
 						////이름 라벨
 						labelSearchName = new JLabel("이름 : ");
+						labelSearchName.setFont(new Font("굴림체", Font.BOLD, 12));
 						labelSearchName.setBounds(388, 121, 50, 25);
 						panelEdit.add(labelSearchName);
 						//끝날짜
@@ -610,8 +640,8 @@ public class ScheduleFrame {
 					});
 				
 				lblBackImgApproval = new JLabel("lblBackImg");
-				lblBackImgApproval.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
-				lblBackImgApproval.setBounds(0, 0, 661, 700);
+				lblBackImgApproval.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
+				lblBackImgApproval.setBounds(0, 0, 429, 700);
 				panelApproval.add(lblBackImgApproval);
 				
 				
@@ -621,7 +651,7 @@ public class ScheduleFrame {
 			/////관리자와 일반사원 구분
 			/////1번 코드일 때만 관리자 메뉴 보임
 				if (MainStart.man_code.equals("1")) {
-					frame.setBounds(100, 100, 1100, 719);
+					frame.setBounds(100, 100, 1090, 700);
 						panelEdit.setVisible(true);
 						panelApproval.setVisible(true);
 						approvalSetDateChooser();

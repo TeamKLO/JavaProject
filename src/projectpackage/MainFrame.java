@@ -211,38 +211,38 @@ public class MainFrame {
 		btnClose.setBounds(457, 495, 110, 30);
 		frmMain.getContentPane().add(btnClose);
 		
-		JLabel lblCloseX = new JLabel("X");
-		lblCloseX.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
-			}
-		});
-		
-		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
-		lblCloseX.setForeground(Color.WHITE);
-		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCloseX.setBounds(622, 8, 42, 20);
-		frmMain.getContentPane().add(lblCloseX);
+//		JLabel lblCloseX = new JLabel("X");
+//		lblCloseX.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				System.exit(0);
+//			}
+//		});
+//		
+//		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
+//		lblCloseX.setForeground(Color.WHITE);
+//		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblCloseX.setBounds(622, 8, 42, 20);
+//		frmMain.getContentPane().add(lblCloseX);
 
 		lblDepartment = new JLabel("New label");
 		lblDepartment.setFont(new Font("굴림체", Font.BOLD, 15));
 		lblDepartment.setForeground(Color.WHITE);
-		lblDepartment.setBounds(181, 85, 80, 20);
+		lblDepartment.setBounds(234, 85, 80, 20);
 		frmMain.getContentPane().add(lblDepartment);
 		lblDepartment.setText("1");
 
 		lblPosition = new JLabel("New label");
 		lblPosition.setForeground(Color.WHITE);
 		lblPosition.setFont(new Font("굴림체", Font.BOLD, 15));
-		lblPosition.setBounds(181, 115, 80, 20);
+		lblPosition.setBounds(234, 115, 80, 20);
 		frmMain.getContentPane().add(lblPosition);
 		lblPosition.setText("2");
 
 		lblName = new JLabel("New label");
 		lblName.setForeground(Color.WHITE);
 		lblName.setFont(new Font("굴림체", Font.BOLD, 15));
-		lblName.setBounds(181, 145, 80, 20);
+		lblName.setBounds(234, 145, 80, 20);
 		frmMain.getContentPane().add(lblName);
 		lblName.setText("3");
 
@@ -253,11 +253,11 @@ public class MainFrame {
 				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
 			}
 		};
-		panelimg.setBounds(40, 41, 119, 124);
+		panelimg.setBounds(93, 41, 119, 124);
 		frmMain.getContentPane().add(panelimg);
 		
 		lblBackImg = new JLabel("lblBackImg");
-		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
 		lblBackImg.setBounds(0, 0, 661, 571);
 		frmMain.getContentPane().add(lblBackImg);
 		

@@ -207,21 +207,21 @@ public class LoginFrame {
 		pwfPw.setBounds(171, 279, 134, 30);
 		frmLogin.getContentPane().add(pwfPw);
 		
-		JLabel lblCloseX = new JLabel("X");
-		lblCloseX.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
-			}
-		});
-		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
-		lblCloseX.setForeground(Color.WHITE);
-		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCloseX.setBounds(344, 7, 43, 20);
-		frmLogin.getContentPane().add(lblCloseX);
+//		JLabel lblCloseX = new JLabel("X");
+//		lblCloseX.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				System.exit(0);
+//			}
+//		});
+//		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
+//		lblCloseX.setForeground(Color.WHITE);
+//		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblCloseX.setBounds(344, 7, 43, 20);
+//		frmLogin.getContentPane().add(lblCloseX);
 		
 		lblBackImg = new JLabel("BackImg");
-		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
 		lblBackImg.setBounds(0, 0, 381, 471);
 		frmLogin.getContentPane().add(lblBackImg);
 	}

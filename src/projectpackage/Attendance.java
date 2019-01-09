@@ -27,6 +27,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
+import java.awt.event.MouseMotionAdapter;
 
 public class Attendance extends JDialog {
 	static JFrame tmpFrame;
@@ -38,6 +39,7 @@ public class Attendance extends JDialog {
 	private JPanel panel;
 	private JButton btnManagement;
 	private Statement stmt = MainStart.connectDataBase();
+	int xx, xy;
 
 	/**
 	 * Launch the application.
@@ -62,6 +64,21 @@ public class Attendance extends JDialog {
 
 	public Attendance(JFrame frame) {
 		super(frame, true);
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				setLocation(x - xx, y - xy);
+			}
+		});
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
 		setTitle("출결");
 		setBounds(100, 100, 661, 571);
 		setLocationRelativeTo(frame);
@@ -70,11 +87,13 @@ public class Attendance extends JDialog {
 		getContentPane().setLayout(null);
 
 		JLabel lblStart_1 = new JLabel("");
+		lblStart_1.setForeground(Color.WHITE);
 		lblStart_1.setFont(new Font("굴림", Font.BOLD, 16));
 		lblStart_1.setBounds(211, 277, 195, 21);
 		getContentPane().add(lblStart_1);
 
 		JLabel lblEnd_1 = new JLabel("");
+		lblEnd_1.setForeground(Color.WHITE);
 		lblEnd_1.setFont(new Font("굴림", Font.BOLD, 16));
 		lblEnd_1.setBounds(211, 326, 195, 18);
 		getContentPane().add(lblEnd_1);
@@ -178,47 +197,52 @@ public class Attendance extends JDialog {
 		btnLog.setBounds(457, 410, 110, 30);
 		getContentPane().add(btnLog);
 	
-		JLabel lblCloseX = new JLabel("X");
-		lblCloseX.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				Attendance.this.dispose();
-			}
-		});
-		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCloseX.setForeground(Color.WHITE);
-		lblCloseX.setFont(new Font("Dialog", Font.BOLD, 18));
-		lblCloseX.setBounds(622, 8, 42, 20);
-		getContentPane().add(lblCloseX);
+//		JLabel lblCloseX = new JLabel("X");
+//		lblCloseX.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				Attendance.this.dispose();
+//			}
+//		});
+//		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblCloseX.setForeground(Color.WHITE);
+//		lblCloseX.setFont(new Font("Dialog", Font.BOLD, 18));
+//		lblCloseX.setBounds(622, 8, 42, 20);
+//		getContentPane().add(lblCloseX);
 
 		lblNowDate = new JLabel("현재 날짜");
+		lblNowDate.setForeground(Color.WHITE);
 		lblNowDate.setFont(new Font("굴림", Font.BOLD, 24));
 		lblNowDate.setBounds(78, 212, 223, 29);
 		getContentPane().add(lblNowDate);
 
 		JLabel lblStart = new JLabel("출근시간");
+		lblStart.setForeground(Color.WHITE);
 		lblStart.setFont(new Font("굴림", Font.BOLD, 16));
 		lblStart.setBounds(78, 277, 79, 15);
 		getContentPane().add(lblStart);
 
 		JLabel lblEnd = new JLabel("퇴근시간");
+		lblEnd.setForeground(Color.WHITE);
 		lblEnd.setFont(new Font("굴림", Font.BOLD, 16));
 		lblEnd.setBounds(78, 326, 79, 15);
 		getContentPane().add(lblEnd);
 
 		lblDept = new JLabel("New label");
-		lblDept.setForeground(Color.BLACK);
-		lblDept.setBounds(181, 85, 80, 20);
+		lblDept.setForeground(Color.WHITE);
+		lblDept.setBounds(219, 85, 80, 20);
 		getContentPane().add(lblDept);
 		lblDept.setText("1");
 
 		lblPosi = new JLabel("New label");
-		lblPosi.setBounds(181, 115, 80, 20);
+		lblPosi.setForeground(Color.WHITE);
+		lblPosi.setBounds(219, 115, 80, 20);
 		getContentPane().add(lblPosi);
 		lblPosi.setText("2");
 
 		lblNm = new JLabel("New label");
-		lblNm.setBounds(181, 145, 80, 20);
+		lblNm.setForeground(Color.WHITE);
+		lblNm.setBounds(219, 145, 80, 20);
 		getContentPane().add(lblNm);
 		lblNm.setText("3");
 
@@ -253,11 +277,11 @@ public class Attendance extends JDialog {
 				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
 			}
 		};
-		panel.setBounds(40, 41, 119, 124);
+		panel.setBounds(78, 41, 119, 124);
 		getContentPane().add(panel);
 		
 		JLabel lblBackImg = new JLabel("lblBackImg");
-		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
 		lblBackImg.setBounds(0, 0, 661, 571);
 		getContentPane().add(lblBackImg);
 		

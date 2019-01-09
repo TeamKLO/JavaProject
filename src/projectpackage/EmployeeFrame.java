@@ -51,6 +51,7 @@ import java.awt.Dialog;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import java.awt.event.MouseMotionAdapter;
 
 public class EmployeeFrame extends JDialog {
 	
@@ -95,6 +96,8 @@ public class EmployeeFrame extends JDialog {
 	private Image image;	   //이미지
 	private JLabel labelImage; //이미지 라벨
 	private String getimage = "";   //이미지 경로
+	int xx,xy;
+
 	
 	
 	///이미지
@@ -142,6 +145,21 @@ public class EmployeeFrame extends JDialog {
 	 */
 	
 	public EmployeeFrame() {
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				setLocation(x - xx, y - xy);
+			}
+		});
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
 		setBounds(100, 100, 661, 700);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
@@ -156,34 +174,36 @@ public class EmployeeFrame extends JDialog {
 		insertButton = new JButton("등 록");
 		insertButton.setBackground(new Color(255, 255, 224));
 		insertButton.setFont(new Font("굴림체", Font.BOLD, 12));
-		insertButton.setBounds(40, 589, 110, 30);
+		insertButton.setBounds(40, 629, 110, 30);
 		getContentPane().add(insertButton);
 		
 		updateButton = new JButton("수 정");
 		updateButton.setBackground(new Color(255, 255, 224));
 		updateButton.setFont(new Font("굴림체", Font.BOLD, 12));
-		updateButton.setBounds(195, 589, 110, 30);
+		updateButton.setBounds(195, 629, 110, 30);
 		getContentPane().add(updateButton);
 		
 		deleteButton = new JButton("삭 제");
 		deleteButton.setBackground(new Color(255, 255, 224));
 		deleteButton.setFont(new Font("굴림체", Font.BOLD, 12));
-		deleteButton.setBounds(353, 589, 110, 30);
+		deleteButton.setBounds(353, 629, 110, 30);
 		getContentPane().add(deleteButton);
 		
 		closeButton = new JButton("닫 기");
 		closeButton.setBackground(new Color(255, 255, 224));
 		closeButton.setFont(new Font("굴림체", Font.BOLD, 12));
-		closeButton.setBounds(513, 589, 110, 30);
+		closeButton.setBounds(513, 629, 110, 30);
 		getContentPane().add(closeButton);
 		
 		insertDeptButton = new JButton("부서등록");
+		insertDeptButton.setVisible(false);
 		insertDeptButton.setBackground(new Color(255, 255, 224));
 		insertDeptButton.setFont(new Font("굴림체", Font.BOLD, 12));
 		insertDeptButton.setBounds(40, 650, 110, 30);
 		getContentPane().add(insertDeptButton);
 		
 		insertPositionButton= new JButton("직책등록");
+		insertPositionButton.setVisible(false);
 		insertPositionButton.setBackground(new Color(255, 255, 224));
 		insertPositionButton.setFont(new Font("굴림체", Font.BOLD, 12));
 		insertPositionButton.setBounds(195, 650, 110, 30);
@@ -256,29 +276,31 @@ public class EmployeeFrame extends JDialog {
 		comboBoxGender = new JComboBox(comboBoxGenderMenu);
 		comboBoxGender.setFont(new Font("굴림체", Font.BOLD, 12));
 		comboBoxGender.setBackground(new Color(255, 255, 224));
-		comboBoxGender.setBounds(315, 433, 60,30);
+		comboBoxGender.setBounds(314, 387, 60,30);
 		getContentPane().add(comboBoxGender);		
 		
 		//이름
 		textFieldName = new JTextField();
 		textFieldName.setFont(new Font("돋움", Font.PLAIN, 15));
-		textFieldName.setBounds(202, 434, 90,30);
+		textFieldName.setBounds(209, 387, 90,30);
 		getContentPane().add(textFieldName);
 		//이름라벨
 		labelName = new JLabel("이름 :");
+		labelName.setForeground(Color.WHITE);
 		labelName.setFont(new Font("굴림체", Font.BOLD, 12));
-		labelName.setBounds(217, 387, 50,30);
+		labelName.setBounds(162, 387, 50,30);
 		getContentPane().add(labelName);
 		
 		//사원번호
 		labelEmpNoView = new JLabel();
 		labelEmpNoView.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelEmpNoView.setBounds(114, 313, 60,30);
+		labelEmpNoView.setBounds(90, 387, 60,30);
 		getContentPane().add(labelEmpNoView);
 		//사원번호 라벨
 		labelEmpNo = new JLabel("사원번호 : ");
+		labelEmpNo.setForeground(Color.WHITE);
 		labelEmpNo.setFont(new Font("굴림체", Font.BOLD, 12));
-		labelEmpNo.setBounds(36, 310, 100,30);
+		labelEmpNo.setBounds(19, 387, 100,30);
 		getContentPane().add(labelEmpNo);
 		
 		// 전화번호
@@ -287,6 +309,7 @@ public class EmployeeFrame extends JDialog {
 		getContentPane().add(textFieldPhone);
 		//전화번호라벨
 		labelPhone = new JLabel("전화번호 :");
+		labelPhone.setForeground(Color.WHITE);
 		labelPhone.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelPhone.setBounds(422, 487, 100,30);
 		getContentPane().add(labelPhone);
@@ -297,6 +320,7 @@ public class EmployeeFrame extends JDialog {
 		getContentPane().add(textFieldAddress);
 		//주소라벨
 		labelAddress = new JLabel("주소 :");
+		labelAddress.setForeground(Color.WHITE);
 		labelAddress.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelAddress.setBounds(17, 488, 50,30);
 		getContentPane().add(labelAddress);
@@ -307,6 +331,7 @@ public class EmployeeFrame extends JDialog {
 		getContentPane().add(textFieldPassword);
 		//비밀번호라벨
 		labelPassword = new JLabel("비밀번호 :");
+		labelPassword.setForeground(Color.WHITE);
 		labelPassword.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelPassword.setBounds(477, 534, 100,30);
 		getContentPane().add(labelPassword);
@@ -318,6 +343,7 @@ public class EmployeeFrame extends JDialog {
 		getContentPane().add(dateChooserBirthday);
 		//생년월일라벨
 		labelBirthday = new JLabel("생년월일 :");
+		labelBirthday.setForeground(Color.WHITE);
 		labelBirthday.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelBirthday.setBounds(193, 532, 100,30);
 		getContentPane().add(labelBirthday);
@@ -329,6 +355,7 @@ public class EmployeeFrame extends JDialog {
 		getContentPane().add(dateChooserHiredate);
 		//입사일라벨
 		labelHiredate = new JLabel("입사일 :");
+		labelHiredate.setForeground(Color.WHITE);
 		labelHiredate.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelHiredate.setBounds(17, 530, 100,30);
 		getContentPane().add(labelHiredate);
@@ -337,7 +364,7 @@ public class EmployeeFrame extends JDialog {
 		searchButton = new JButton("찾기");
 		searchButton.setFont(new Font("굴림체", Font.BOLD, 12));
 		searchButton.setBackground(new Color(255, 255, 224));
-		searchButton.setBounds(473, 340, 60, 30);
+		searchButton.setBounds(477, 387, 60, 30);
 		getContentPane().add(searchButton);			
 		//이미지경로 필드
 		textFieldImage = new JTextField();
@@ -346,8 +373,9 @@ public class EmployeeFrame extends JDialog {
 		getContentPane().add(textFieldImage);
 		//이미지 라벨
 		labelImage = new JLabel("사진등록 :");
+		labelImage.setForeground(Color.WHITE);
 		labelImage.setFont(new Font("굴림체", Font.BOLD, 12));
-		labelImage.setBounds(397, 340, 70, 30);
+		labelImage.setBounds(399, 387, 70, 30);
 		getContentPane().add(labelImage);
 	
 		
@@ -447,7 +475,7 @@ public class EmployeeFrame extends JDialog {
 		
 		
 	
-		//////이미지	
+		//////이미지	      
 		lblBackImg = new JLabel("lblBackImg");
 		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
 		lblBackImg.setBounds(0, 0, 661, 700);

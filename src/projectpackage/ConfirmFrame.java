@@ -101,6 +101,21 @@ public class ConfirmFrame extends JDialog {
 		// 부모가 되는 JDialog의 owner는 frame, modal은 Dialog.ModalityType.APPLICATION_MODAL 결재
 		// 화면은 모달로 동작
 		super(frame, Dialog.ModalityType.APPLICATION_MODAL);
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				setLocation(x - xx, y - xy);
+			}
+		});
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
 	
 		
 		setTitle("내가 결재할 내용");
@@ -188,19 +203,19 @@ public class ConfirmFrame extends JDialog {
 		txtContent.setBounds(48, 438, 564, 100);
 		getContentPane().add(txtContent);
 		
-		lblCloseX = new JLabel("X");
-		lblCloseX.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				ConfirmFrame.this.dispose();
-			}
-		});
-		
-		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
-		lblCloseX.setForeground(Color.WHITE);
-		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCloseX.setBounds(622, 8, 42, 20);
-		this.getContentPane().add(lblCloseX);
+//		lblCloseX = new JLabel("X");
+//		lblCloseX.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				ConfirmFrame.this.dispose();
+//			}
+//		});
+//		
+//		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
+//		lblCloseX.setForeground(Color.WHITE);
+//		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+//		lblCloseX.setBounds(622, 8, 42, 20);
+//		this.getContentPane().add(lblCloseX);
 	
 
 		btnConfirm = new JButton("승인");
@@ -288,7 +303,7 @@ public class ConfirmFrame extends JDialog {
 		getContentPane().add(label);
 		
 		lblBackImg = new JLabel("lblBackImg");
-		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
 		lblBackImg.setBounds(0, 0, 661, 700);
 		getContentPane().add(lblBackImg);
 		
