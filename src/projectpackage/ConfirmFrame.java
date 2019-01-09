@@ -41,6 +41,10 @@ import javax.swing.SwingConstants;
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.ImageIcon;
+import java.awt.event.MouseMotionAdapter;
 
 public class ConfirmFrame extends JDialog {
 	// static JFrame 필드는 단지 main의 EventQueue안의 생성자를 만족시키기 위한 것일 뿐, 프로그램 실행과 상관없음
@@ -68,6 +72,9 @@ public class ConfirmFrame extends JDialog {
 	};
 	private JButton btnRefresh;
 	private JLabel label;
+	private JLabel lblBackImg;
+	private JLabel lblCloseX;
+	int xx,xy;
 
 	/**
 	 * Launch the application.
@@ -94,29 +101,36 @@ public class ConfirmFrame extends JDialog {
 		// 부모가 되는 JDialog의 owner는 frame, modal은 Dialog.ModalityType.APPLICATION_MODAL 결재
 		// 화면은 모달로 동작
 		super(frame, Dialog.ModalityType.APPLICATION_MODAL);
+	
+		
 		setTitle("내가 결재할 내용");
-		setBounds(100, 100, 550, 450);
+		setBounds(100, 100, 661,700);
 		// frame이 생성될 때 위치는 frame의 중앙
 		setLocationRelativeTo(frame);
+		this.setUndecorated(true);
 		// frame이 close 될 때의 설정
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 
 		dtcSDate = new JDateChooser();
+		dtcSDate.setBackground(new Color(255, 255, 224));
 		// JDateChooser의 값이 변할 때 일어나는 이벤트
 		setDateChooserChangeEvent(dtcSDate);
 		dtcSDate.setDateFormatString("yyyy-MM-dd");
-		dtcSDate.setBounds(12, 10, 130, 21);
+		dtcSDate.setBounds(48, 58, 172, 36);
 		getContentPane().add(dtcSDate);
 
 		dtcEDate = new JDateChooser();
+		dtcEDate.setBackground(new Color(255, 255, 224));
 		// JDateChooser의 값이 변할 때 일어나는 이벤트
 		setDateChooserChangeEvent(dtcEDate);
 		dtcEDate.setDateFormatString("yyyy-MM-dd");
-		dtcEDate.setBounds(169, 10, 130, 21);
+		dtcEDate.setBounds(274, 58, 172, 36);
 		getContentPane().add(dtcEDate);
 
 		cbxCategory = new JComboBox();
+		cbxCategory.setBackground(new Color(255, 255, 224));
+		cbxCategory.setFont(new Font("굴림체", Font.BOLD, 12));
 		cbxCategory.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				if (arg0.getStateChange() == ItemEvent.SELECTED) {
@@ -127,11 +141,13 @@ public class ConfirmFrame extends JDialog {
 		});
 		cbxCategory.setModel(new DefaultComboBoxModel(new String[] { "전체", "일정", "기획", "구매" }));
 		cbxCategory.setSelectedIndex(0);
-		cbxCategory.setBounds(12, 50, 130, 21);
+		cbxCategory.setBounds(48, 117, 172, 36);
 		getContentPane().add(cbxCategory);
 
 		// JComboBox 상태가 변할 때 일어나는 이벤트
 		cbxState = new JComboBox();
+		cbxState.setBackground(new Color(255, 255, 224));
+		cbxState.setFont(new Font("굴림체", Font.BOLD, 12));
 		cbxState.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -142,14 +158,14 @@ public class ConfirmFrame extends JDialog {
 		});
 		cbxState.setModel(new DefaultComboBoxModel(new String[] { "전체", "대기", "승인", "반려" }));
 		cbxState.setSelectedIndex(0);
-		cbxState.setBounds(169, 50, 130, 21);
+		cbxState.setBounds(274, 117, 172, 36);
 		getContentPane().add(cbxState);
 
 		JScrollPane scrollPane = new JScrollPane();
 		// JScrollPane의 스크롤바 설정
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(12, 81, 510, 158);
+		scrollPane.setBounds(48, 190, 564, 225);
 		getContentPane().add(scrollPane);
 
 		// JTable을 DefaultTableModel로 제어
@@ -169,10 +185,28 @@ public class ConfirmFrame extends JDialog {
 
 		txtContent = new JTextArea();
 		txtContent.setText("");
-		txtContent.setBounds(12, 248, 510, 93);
+		txtContent.setBounds(48, 438, 564, 100);
 		getContentPane().add(txtContent);
+		
+		lblCloseX = new JLabel("X");
+		lblCloseX.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ConfirmFrame.this.dispose();
+			}
+		});
+		
+		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
+		lblCloseX.setForeground(Color.WHITE);
+		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCloseX.setBounds(622, 8, 42, 20);
+		this.getContentPane().add(lblCloseX);
+	
 
 		btnConfirm = new JButton("승인");
+		btnConfirm.setBackground(new Color(255, 255, 224));
+		btnConfirm.setFont(new Font("굴림체", Font.BOLD, 12));
+		btnConfirm.setForeground(Color.BLACK);
 		btnConfirm.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -188,10 +222,13 @@ public class ConfirmFrame extends JDialog {
 				setConfirm();
 			}
 		});
-		btnConfirm.setBounds(12, 364, 130, 23);
+		btnConfirm.setBounds(46, 629, 110, 30);
 		getContentPane().add(btnConfirm);
 
 		btnReturn = new JButton("반려");
+		btnReturn.setBackground(new Color(255, 255, 224));
+		btnReturn.setFont(new Font("굴림체", Font.BOLD, 12));
+		btnReturn.setForeground(Color.BLACK);
 		btnReturn.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -207,10 +244,13 @@ public class ConfirmFrame extends JDialog {
 				setReturn();
 			}
 		});
-		btnReturn.setBounds(169, 364, 130, 23);
+		btnReturn.setBounds(276, 629, 110, 30);
 		getContentPane().add(btnReturn);
 
 		btnClose = new JButton("닫기");
+		btnClose.setBackground(new Color(255, 255, 224));
+		btnClose.setFont(new Font("굴림체", Font.BOLD, 12));
+		btnClose.setForeground(Color.BLACK);
 		btnClose.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -225,10 +265,11 @@ public class ConfirmFrame extends JDialog {
 				ConfirmFrame.this.dispose();
 			}
 		});
-		btnClose.setBounds(392, 364, 130, 23);
+		btnClose.setBounds(507, 629, 110, 30);
 		getContentPane().add(btnClose);
 
 		btnRefresh = new JButton("결재 내용 보기");
+		btnRefresh.setFont(new Font("굴림체", Font.BOLD, 12));
 		btnRefresh.setVisible(false);
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -236,13 +277,22 @@ public class ConfirmFrame extends JDialog {
 				setTable();
 			}
 		});
-		btnRefresh.setBounds(392, 49, 130, 23);
+		btnRefresh.setBounds(477, 117, 172, 36);
 		getContentPane().add(btnRefresh);
 
 		label = new JLabel("~");
+		label.setForeground(Color.WHITE);
+		label.setFont(new Font("굴림체", Font.BOLD, 40));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(141, 10, 26, 21);
+		label.setBounds(216, 68, 61, 21);
 		getContentPane().add(label);
+		
+		lblBackImg = new JLabel("lblBackImg");
+		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setBounds(0, 0, 661, 700);
+		getContentPane().add(lblBackImg);
+		
+		
 
 		// 화면에 나타나는 값 초기화
 		initDisplay();

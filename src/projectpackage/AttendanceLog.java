@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Calendar;
@@ -27,6 +29,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 import com.toedter.calendar.JDateChooser;
+import javax.swing.ImageIcon;
+import java.awt.Font;
+import java.awt.Color;
 
 public class AttendanceLog extends JDialog {
 	static JFrame tmpFrame;
@@ -71,23 +76,25 @@ public class AttendanceLog extends JDialog {
 	public AttendanceLog(Window frame) {
 		super(frame, Dialog.ModalityType.APPLICATION_MODAL);
 		setTitle("출결 로그");
-		setBounds(588, 300, 614, 500);
-		setLocationRelativeTo(frame);
+//		setBounds(588, 300, 614, 500);
+//		setLocationRelativeTo(frame);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 	
 
 		dateChooserSearchStartDate = new JDateChooser();
 		dateChooserSearchStartDate.setDateFormatString("yyyy-MM-dd");
-		dateChooserSearchStartDate.setBounds(74, 69, 109, 21);
+		dateChooserSearchStartDate.setBounds(48, 117, 172, 36);
 		getContentPane().add(dateChooserSearchStartDate);
 
 		dateChooserSearchEndDate = new JDateChooser();
 		dateChooserSearchEndDate.setDateFormatString("yyyy-MM-dd");
-		dateChooserSearchEndDate.setBounds(217, 69, 109, 21);
+		dateChooserSearchEndDate.setBounds(274, 117, 172, 36);
 		getContentPane().add(dateChooserSearchEndDate);
 
 		comboBoxDept = new JComboBox();
+		comboBoxDept.setBackground(new Color(255, 255, 224));
+		comboBoxDept.setFont(new Font("굴림체", Font.BOLD, 12));
 		comboBoxDept.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				if (arg0.getStateChange() == ItemEvent.SELECTED) {
@@ -99,7 +106,7 @@ public class AttendanceLog extends JDialog {
 		});
 		comboBoxDept.setModel(new DefaultComboBoxModel(new String[] { "전체", "영업부", "인사부", "기획부", "총무부", "개발부" }));
 		comboBoxDept.setSelectedIndex(0);
-		comboBoxDept.setBounds(74, 10, 109, 21);
+		comboBoxDept.setBounds(48, 58, 172, 36);
 		getContentPane().add(comboBoxDept);
 		comboBoxDept.setVisible(false);
 
@@ -113,7 +120,7 @@ public class AttendanceLog extends JDialog {
 		};
 		table = new JTable(model);
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(12, 107, 573, 215);
+		scrollPane.setBounds(48, 190, 564, 347);
 
 		table.getTableHeader().setReorderingAllowed(false);// 칼럼순서변경금지
 //		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //가로스크롤
@@ -127,37 +134,55 @@ public class AttendanceLog extends JDialog {
 
 		getContentPane().add(scrollPane);
 
-		JButton buttonClose = new JButton("닫기");
-		buttonClose.setBounds(455, 370, 130, 23);
+		JButton buttonClose = new JButton("닫 기");
+		buttonClose.setBackground(new Color(255, 255, 224));
+		buttonClose.setFont(new Font("굴림체", Font.BOLD, 12));
+		buttonClose.setBounds(507, 629, 110, 30);
 		buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AttendanceLog.this.dispose();
 			}
 		});
 		getContentPane().add(buttonClose);
-
-		JLabel label = new JLabel("검색 날짜");
-		label.setBounds(12, 69, 65, 21);
-		getContentPane().add(label);
-
-		JLabel label_1 = new JLabel("검색 부서");
-		label_1.setBounds(12, 10, 65, 21);
-		getContentPane().add(label_1);
-		label_1.setVisible(false);
+		
+		JLabel lblCloseX = new JLabel("X");
+		lblCloseX.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				AttendanceLog.this.dispose();
+			}
+		});
+		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCloseX.setForeground(Color.WHITE);
+		lblCloseX.setFont(new Font("Dialog", Font.BOLD, 18));
+		lblCloseX.setBounds(622, 8, 42, 20);
+		getContentPane().add(lblCloseX);
 
 		JLabel lblNewLabel = new JLabel("~");
-		lblNewLabel.setBounds(195, 69, 17, 21);
+		lblNewLabel.setForeground(Color.WHITE);
+		lblNewLabel.setFont(new Font("굴림체", Font.BOLD, 40));
+		lblNewLabel.setBounds(237, 123, 61, 21);
 		getContentPane().add(lblNewLabel);
 
 		JButton button = new JButton("검색");
+		button.setBackground(new Color(255, 255, 224));
+		button.setFont(new Font("굴림체", Font.BOLD, 12));
+		button.setForeground(Color.BLACK);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				model.setRowCount(0);
 				employeeSelect();
 			}
 		});
-		button.setBounds(349, 69, 65, 21);
+		button.setBounds(481, 117, 127, 36);
 		getContentPane().add(button);
+		
+		JLabel lblBackImg = new JLabel("lblBackImg");
+		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setBounds(0, 0, 661, 700);
+		getContentPane().add(lblBackImg);
+		
+		
 
 		scheduleSetDateChooser();
 		model.setRowCount(0);
@@ -165,27 +190,36 @@ public class AttendanceLog extends JDialog {
 
 		if (MainStart.man_code.equals("1")) { // 1번 코드일 때만 관리자 메뉴 보임
 			comboBoxDept.setVisible(true);
-			label_1.setVisible(true);
-			setBounds(100, 100, 580, 458);
+//			label_1.setVisible(true);
+//			setBounds(100, 100, 580, 458);
 		}
-
+		setBounds(100, 100, 661,700);
+		this.setUndecorated(true);
+		setLocationRelativeTo(frame);
 	}
 
 	/// 테이블 뷰 메소드
 	public void employeeSelect() {
 
 		String deptCBM = (String) comboBoxDept.getSelectedItem();
-		String a = ((JTextField) dateChooserSearchStartDate.getDateEditor().getUiComponent()).getText();
-
-		String b = ((JTextField) dateChooserSearchEndDate.getDateEditor().getUiComponent()).getText();
+		String a = "to_date('" + ((JTextField) dateChooserSearchStartDate.getDateEditor().getUiComponent()).getText()
+					+ " 00:00', 'yyyy-mm-dd hh24:mi') ";
+		
+	
+		String b = "to_date('" + ((JTextField) dateChooserSearchEndDate.getDateEditor().getUiComponent()).getText()
+					+ " 23:59', 'yyyy-mm-dd hh24:mi') ";
 
 		ResultSet result;
 
 		String query = "SELECT c.COM_DATE, d.DEP_NAME, e.EMP_NAME, c.COM_STARTDATE, c.COM_ENDDATE"
-				+ " FROM COMMUTE c, EMPLOYEE e, DEPARTMENT d, BELONG_DEPARTMENT bd" + " WHERE e.EMP_NO = c.emp_no"
-				+ " AND d.DEP_CODE = bd.DEP_CODE AND e.EMP_NO = bd.EMP_NO" + " AND c.COM_STARTDATE >= '" + a + "'";
+				+ " FROM COMMUTE c, EMPLOYEE e, DEPARTMENT d, BELONG_DEPARTMENT bd" 
+				+ " WHERE e.EMP_NO = c.emp_no"
+				+ " AND d.DEP_CODE = bd.DEP_CODE AND e.EMP_NO = bd.EMP_NO" 
+				+ " AND c.COM_STARTDATE >= " + a + " ";
 
-		String[] addString = new String[3];
+		
+		
+				String[] addString = new String[3];
 		if (!MainStart.man_code.equals("1")) {
 			addString[0] = " AND d.DEP_NAME = '" + MainStart.dep_name + "'";
 		} else {
@@ -193,7 +227,7 @@ public class AttendanceLog extends JDialog {
 		}
 
 		if (!b.isEmpty()) {
-			addString[1] = " AND c.COM_ENDDATE <= '" + b + "'";
+			addString[1] = " AND c.COM_ENDDATE <= " + b + " ";
 		} else {
 			addString[1] = "";
 		}

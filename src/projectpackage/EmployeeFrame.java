@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -60,7 +61,8 @@ public class EmployeeFrame extends JDialog {
 	private JButton deleteButton;  //삭제버튼
 	private JButton closeButton;   //닫기버튼
 	private JButton searchButton;  //이미지찾기 버튼
-	
+	private JButton insertDeptButton; //부서등록버튼
+	private JButton insertPositionButton; //직책등록버튼
 	//테이블
 	private DefaultTableModel model;//
 	private JTable table; 			// 사원 목록 테이블
@@ -94,12 +96,17 @@ public class EmployeeFrame extends JDialog {
 	private JLabel labelImage; //이미지 라벨
 	private String getimage = "";   //이미지 경로
 	
+	
+	///이미지
+	
+	JLabel lblBackImg;
+	
 	//메뉴바
 	
-	JMenuBar menuBar;
-	JMenu menu;
-	JMenuItem menuItemDept;
-	JMenuItem menuItemPosition;
+//	JMenuBar menuBar;
+//	JMenu menu;
+//	JMenuItem menuItemDept;
+//	JMenuItem menuItemPosition;
 	
 	
 	
@@ -135,9 +142,10 @@ public class EmployeeFrame extends JDialog {
 	 */
 	
 	public EmployeeFrame() {
-		setBounds(100, 100, 800, 750);
+		setBounds(100, 100, 661, 700);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
+		this.setUndecorated(true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		deptnameSelect();//부서 콤보박스 아이템 가져오기
@@ -145,21 +153,44 @@ public class EmployeeFrame extends JDialog {
 
 		
 		//////버튼
-		insertButton = new JButton("등록");
-		insertButton.setBounds(110, 650, 60, 30);
+		insertButton = new JButton("등 록");
+		insertButton.setBackground(new Color(255, 255, 224));
+		insertButton.setFont(new Font("굴림체", Font.BOLD, 12));
+		insertButton.setBounds(40, 589, 110, 30);
 		getContentPane().add(insertButton);
 		
-		updateButton = new JButton("수정");
-		updateButton.setBounds(270, 650, 60, 30);
+		updateButton = new JButton("수 정");
+		updateButton.setBackground(new Color(255, 255, 224));
+		updateButton.setFont(new Font("굴림체", Font.BOLD, 12));
+		updateButton.setBounds(195, 589, 110, 30);
 		getContentPane().add(updateButton);
 		
-		deleteButton = new JButton("삭제");
-		deleteButton.setBounds(440, 650, 60, 30);
+		deleteButton = new JButton("삭 제");
+		deleteButton.setBackground(new Color(255, 255, 224));
+		deleteButton.setFont(new Font("굴림체", Font.BOLD, 12));
+		deleteButton.setBounds(353, 589, 110, 30);
 		getContentPane().add(deleteButton);
 		
-		closeButton = new JButton("닫기");
-		closeButton.setBounds(600, 650, 60, 30);
-		getContentPane().add(closeButton);		
+		closeButton = new JButton("닫 기");
+		closeButton.setBackground(new Color(255, 255, 224));
+		closeButton.setFont(new Font("굴림체", Font.BOLD, 12));
+		closeButton.setBounds(513, 589, 110, 30);
+		getContentPane().add(closeButton);
+		
+		insertDeptButton = new JButton("부서등록");
+		insertDeptButton.setBackground(new Color(255, 255, 224));
+		insertDeptButton.setFont(new Font("굴림체", Font.BOLD, 12));
+		insertDeptButton.setBounds(40, 650, 110, 30);
+		getContentPane().add(insertDeptButton);
+		
+		insertPositionButton= new JButton("직책등록");
+		insertPositionButton.setBackground(new Color(255, 255, 224));
+		insertPositionButton.setFont(new Font("굴림체", Font.BOLD, 12));
+		insertPositionButton.setBounds(195, 650, 110, 30);
+		getContentPane().add(insertPositionButton);
+		
+		
+		
 		
 		
 		////테이블
@@ -172,7 +203,7 @@ public class EmployeeFrame extends JDialog {
 		};
 		table = new JTable(model);		
 		jScollPane = new JScrollPane (table);
-		jScollPane.setBounds(45, 30, 700, 400);
+		jScollPane.setBounds(48, 43, 564, 276);
 		
 		table.addMouseListener(new employeeTableMouseListener());
 		table.getTableHeader().setReorderingAllowed(false);// 칼럼순서변경금지
@@ -200,130 +231,138 @@ public class EmployeeFrame extends JDialog {
 		//부서
 //		String[] comboBoxDeptMenu = {"부서","영업부", "인사부", "기획부", "총무부", "개발부"};
 		comboBoxDept = new JComboBox(deptCombobox);
-		comboBoxDept.setBounds(70, 480, 70, 30);
+		comboBoxDept.setBackground(new Color(255, 255, 224));
+		comboBoxDept.setBounds(19, 434, 70, 30);
 		getContentPane().add(comboBoxDept);
 		
 		//직책 
 //		String[] comboBoxPositionMenu = {"직책","사원","대리","과장","부장","이사","사장"};
 		
 		comboBoxPosition = new JComboBox(positionCombobox);
-		comboBoxPosition.setBounds(160, 480, 70,30);
+		comboBoxPosition.setBackground(new Color(255, 255, 224));
+		comboBoxPosition.setBounds(112, 434, 70,30);
 		getContentPane().add(comboBoxPosition);
 		
 		// 관리코드
 		String[] comboBoxManagementCodeMenu = {"권한","없음","일반관리","DB관리"};
 		comboBoxManagementCode = new JComboBox(comboBoxManagementCodeMenu);
-		comboBoxManagementCode.setBounds(430, 580, 80,30);
+		comboBoxManagementCode.setFont(new Font("굴림체", Font.BOLD, 12));
+		comboBoxManagementCode.setBackground(new Color(255, 255, 224));
+		comboBoxManagementCode.setBounds(386, 534, 80,30);
 		getContentPane().add(comboBoxManagementCode);
 		
 		//성별					
 		String[] comboBoxGenderMenu = {"성별","M","F"};		
 		comboBoxGender = new JComboBox(comboBoxGenderMenu);
-		comboBoxGender.setBounds(390, 480, 60,30);
+		comboBoxGender.setFont(new Font("굴림체", Font.BOLD, 12));
+		comboBoxGender.setBackground(new Color(255, 255, 224));
+		comboBoxGender.setBounds(315, 433, 60,30);
 		getContentPane().add(comboBoxGender);		
 		
 		//이름
 		textFieldName = new JTextField();
 		textFieldName.setFont(new Font("돋움", Font.PLAIN, 15));
-		textFieldName.setBounds(285, 480, 90,30);
+		textFieldName.setBounds(202, 434, 90,30);
 		getContentPane().add(textFieldName);
 		//이름라벨
 		labelName = new JLabel("이름 :");
-		labelName.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelName.setBounds(240, 480, 50,30);
+		labelName.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelName.setBounds(217, 387, 50,30);
 		getContentPane().add(labelName);
 		
 		//사원번호
 		labelEmpNoView = new JLabel();
 		labelEmpNoView.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelEmpNoView.setBounds(140, 440, 60,30);
+		labelEmpNoView.setBounds(114, 313, 60,30);
 		getContentPane().add(labelEmpNoView);
 		//사원번호 라벨
 		labelEmpNo = new JLabel("사원번호 : ");
-		labelEmpNo.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelEmpNo.setBounds(70, 440, 100,30);
+		labelEmpNo.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelEmpNo.setBounds(36, 310, 100,30);
 		getContentPane().add(labelEmpNo);
 		
 		// 전화번호
 		textFieldPhone = new JTextField();
-		textFieldPhone.setBounds(600, 530, 100,30);
+		textFieldPhone.setBounds(496, 487, 147,30);
 		getContentPane().add(textFieldPhone);
 		//전화번호라벨
 		labelPhone = new JLabel("전화번호 :");
-		labelPhone.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelPhone.setBounds(525, 530, 100,30);
+		labelPhone.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelPhone.setBounds(422, 487, 100,30);
 		getContentPane().add(labelPhone);
 		
 		// 주소
 		textFieldAddress = new JTextField();
-		textFieldAddress.setBounds(110, 530, 400,30);
+		textFieldAddress.setBounds(68, 488, 337,30);
 		getContentPane().add(textFieldAddress);
 		//주소라벨
 		labelAddress = new JLabel("주소 :");
-		labelAddress.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelAddress.setBounds(65, 530, 50,30);
+		labelAddress.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelAddress.setBounds(17, 488, 50,30);
 		getContentPane().add(labelAddress);
 		
 		//비밀번호
 		textFieldPassword = new JTextField();
-		textFieldPassword.setBounds(600, 580, 100,30);
+		textFieldPassword.setBounds(551, 534, 92,30);
 		getContentPane().add(textFieldPassword);
 		//비밀번호라벨
 		labelPassword = new JLabel("비밀번호 :");
-		labelPassword.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelPassword.setBounds(525, 580, 100,30);
+		labelPassword.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelPassword.setBounds(477, 534, 100,30);
 		getContentPane().add(labelPassword);
 		
 		//생년월일
 		dateChooserBirthday = new JDateChooser();
 		dateChooserBirthday.setDateFormatString("yyyy-MM-dd");
-		dateChooserBirthday.setBounds(310, 580, 100, 30);
+		dateChooserBirthday.setBounds(268, 534, 100, 30);
 		getContentPane().add(dateChooserBirthday);
 		//생년월일라벨
 		labelBirthday = new JLabel("생년월일 :");
-		labelBirthday.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelBirthday.setBounds(235, 580, 100,30);
+		labelBirthday.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelBirthday.setBounds(193, 532, 100,30);
 		getContentPane().add(labelBirthday);
 		 
 		//입사일
 		dateChooserHiredate = new JDateChooser();
 		dateChooserHiredate.setDateFormatString("yyyy-MM-dd");
-		dateChooserHiredate.setBounds(110, 580, 100, 30);
+		dateChooserHiredate.setBounds(80, 532, 100, 30);
 		getContentPane().add(dateChooserHiredate);
 		//입사일라벨
 		labelHiredate = new JLabel("입사일 :");
-		labelHiredate.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelHiredate.setBounds(50, 580, 100,30);
+		labelHiredate.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelHiredate.setBounds(17, 530, 100,30);
 		getContentPane().add(labelHiredate);
 		
 		//이미지 등록 버튼
 		searchButton = new JButton("찾기");
-		searchButton.setBounds(558, 440, 60, 30);
+		searchButton.setFont(new Font("굴림체", Font.BOLD, 12));
+		searchButton.setBackground(new Color(255, 255, 224));
+		searchButton.setBounds(473, 340, 60, 30);
 		getContentPane().add(searchButton);			
 		//이미지경로 필드
 		textFieldImage = new JTextField();
 		textFieldImage.setFont(new Font("돋움", Font.PLAIN, 15));
-		textFieldImage.setBounds(462, 480, 156, 30);
+		textFieldImage.setBounds(411, 433, 232, 30);
 		getContentPane().add(textFieldImage);
 		//이미지 라벨
 		labelImage = new JLabel("사진등록 :");
-		labelImage.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelImage.setBounds(483, 440, 70, 30);
+		labelImage.setFont(new Font("굴림체", Font.BOLD, 12));
+		labelImage.setBounds(397, 340, 70, 30);
 		getContentPane().add(labelImage);
 	
 		
-		//메뉴바
-		menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		menu = new JMenu("등록");
-		menuBar.add(menu);
-		
-		menuItemDept = new JMenuItem("부서등록");
-		menu.add(menuItemDept);
-		
-		menuItemPosition = new JMenuItem("직책등록");
-		menu.add(menuItemPosition);
+//		//메뉴바
+//		menuBar = new JMenuBar();
+//		setJMenuBar(menuBar);
+//		
+//		menu = new JMenu("등록");
+//		menuBar.add(menu);
+//		
+//		menuItemDept = new JMenuItem("부서등록");
+//		menu.add(menuItemDept);
+//		
+//		menuItemPosition = new JMenuItem("직책등록");
+//		menu.add(menuItemPosition);
 		
 		
 		
@@ -335,7 +374,7 @@ public class EmployeeFrame extends JDialog {
 				g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
 			}
 		};		
-		panelImage.setBounds(629, 440, 90, 70);
+		panelImage.setBounds(553, 341, 90, 70);
 		getContentPane().add(panelImage);		
 		
 		
@@ -386,6 +425,35 @@ public class EmployeeFrame extends JDialog {
 			dispose();
 			}
 		});
+		
+		//부서등록버튼
+		insertDeptButton.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DepartmentFrame departmentFrame = new DepartmentFrame();
+				departmentFrame.setVisible(true);
+				
+			}
+		});
+		//직책등록버튼
+		insertPositionButton.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PositionFrame positionFrame = new PositionFrame();
+				positionFrame.setVisible(true);
+				
+			}
+		});
+		
+		
+	
+		//////이미지	
+		lblBackImg = new JLabel("lblBackImg");
+		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setBounds(0, 0, 661, 700);
+		getContentPane().add(lblBackImg);
+		
+		
 	
 		///이미지 클릭시 파일열기
 		panelImage.addMouseListener(new MouseAdapter() {
@@ -404,25 +472,29 @@ public class EmployeeFrame extends JDialog {
 				}
 			}
 		});		
+		
+		
+		//
 
 		////메뉴바 액션리스너
 		//부서변경메뉴
-		menuItemDept.addActionListener(new ActionListener() {			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				DepartmentFrame departmentFrame = new DepartmentFrame();
-				departmentFrame.setVisible(true);
-				
-			}
-		});
-		menuItemPosition.addActionListener(new ActionListener() {			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PositionFrame positionFrame = new PositionFrame();
-				positionFrame.setVisible(true);
-				
-			}
-		});
+//		menuItemDept.addActionListener(new ActionListener() {			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				DepartmentFrame departmentFrame = new DepartmentFrame();
+//				departmentFrame.setVisible(true);
+//				
+//			}
+//		});
+//		menuItemPosition.addActionListener(new ActionListener() {			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				PositionFrame positionFrame = new PositionFrame();
+//				positionFrame.setVisible(true);
+//				
+//			}
+//		});
+		
 		
 		
 		

@@ -7,6 +7,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Field;
@@ -37,6 +38,9 @@ import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
+import java.awt.Font;
+import java.awt.Color;
 
 // 결재 화면
 public class ApprovalFrame extends JDialog {
@@ -65,6 +69,9 @@ public class ApprovalFrame extends JDialog {
 	};
 	private JTable table;
 	private JScrollPane scrollPane;
+	private JLabel lblBackImg;
+	private JLabel lblCloseX;
+	int xx, xy;
 
 	/**
 	 * Launch the application.
@@ -90,29 +97,39 @@ public class ApprovalFrame extends JDialog {
 	public ApprovalFrame(JFrame frame) {
 		// 부모가 되는 JDialog의 owner는 frame, modal은 true이므로 결재 화면은 모달로 동작
 		super(frame, true);
+		getContentPane().setBackground(new Color(240, 240, 240));
+
 		setTitle("나의 기안 및 결재");
-		setBounds(100, 100, 554,719);
+
+		setBounds(100, 100, 661, 700);
 		// frame이 생성될 때 위치는 frame의 중앙
 		setLocationRelativeTo(frame);
+
+		this.setUndecorated(true);
+
 		// frame이 close 될 때의 설정
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setLayout(null);
 
 		dtcSDate = new JDateChooser();
+		dtcSDate.setBackground(new Color(255, 255, 224));
 		// JDateChooser의 값이 변할 때 일어나는 이벤트
 		setDateChooserChangeEvent(dtcSDate);
 		dtcSDate.setDateFormatString("yyyy-MM-dd");
-		dtcSDate.setBounds(12, 10, 130, 25);
+		dtcSDate.setBounds(48, 58, 172, 36);
 		getContentPane().add(dtcSDate);
 
 		dtcEDate = new JDateChooser();
+		dtcEDate.setBackground(new Color(255, 255, 224));
 		// JDateChooser의 값이 변할 때 일어나는 이벤트
 		setDateChooserChangeEvent(dtcEDate);
 		dtcEDate.setDateFormatString("yyyy-MM-dd");
-		dtcEDate.setBounds(169, 10, 130, 25);
+		dtcEDate.setBounds(274, 58, 172, 36);
 		getContentPane().add(dtcEDate);
 
 		cbxCategory = new JComboBox();
+		cbxCategory.setBackground(new Color(255, 255, 224));
+		cbxCategory.setFont(new Font("굴림체", Font.BOLD, 12));
 		// JComboBox 상태가 변할 때 일어나는 이벤트
 		cbxCategory.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
@@ -122,11 +139,13 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		cbxCategory.setBounds(12, 50, 130, 25);
+		cbxCategory.setBounds(48, 117, 172, 36);
 		cbxCategory.setModel(new DefaultComboBoxModel(new String[] { "전체", "일정", "기획", "구매" }));
 		getContentPane().add(cbxCategory);
 
 		cbxState = new JComboBox();
+		cbxState.setBackground(new Color(255, 255, 224));
+		cbxState.setFont(new Font("굴림체", Font.BOLD, 12));
 		// JComboBox 상태가 변할 때 일어나는 이벤트
 		cbxState.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -136,15 +155,18 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		cbxState.setBounds(169, 50, 130, 25);
+		cbxState.setBounds(274, 117, 172, 36);
 		cbxState.setModel(new DefaultComboBoxModel(new String[] { "전체", "대기", "승인", "반려" }));
 		getContentPane().add(cbxState);
 
 		txtContent = new JTextArea();
-		txtContent.setBounds(12, 248, 510, 93);
+		txtContent.setBounds(48, 438, 564, 100);
 		getContentPane().add(txtContent);
 
 		btnDraft = new JButton("기안 올리기");
+		btnDraft.setBackground(new Color(255, 255, 224));
+		btnDraft.setForeground(Color.BLACK);
+		btnDraft.setFont(new Font("굴림체", Font.BOLD, 12));
 		btnDraft.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -154,7 +176,7 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		btnDraft.setBounds(12, 600, 110, 30);
+		btnDraft.setBounds(48, 629, 110, 30);
 		btnDraft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// 기안 화면을 생성
@@ -165,7 +187,24 @@ public class ApprovalFrame extends JDialog {
 		});
 		getContentPane().add(btnDraft);
 
+		lblCloseX = new JLabel("X");
+		lblCloseX.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ApprovalFrame.this.dispose();
+			}
+		});
+
+		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
+		lblCloseX.setForeground(Color.WHITE);
+		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCloseX.setBounds(622, 8, 42, 20);
+		this.getContentPane().add(lblCloseX);
+
 		btnClose = new JButton("닫 기");
+		btnClose.setBackground(new Color(255, 255, 224));
+		btnClose.setForeground(Color.BLACK);
+		btnClose.setFont(new Font("굴림체", Font.BOLD, 12));
 		btnClose.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -175,7 +214,7 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		btnClose.setBounds(425, 600, 110, 30);
+		btnClose.setBounds(507, 629, 110, 30);
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ApprovalFrame.this.dispose();
@@ -184,6 +223,9 @@ public class ApprovalFrame extends JDialog {
 		getContentPane().add(btnClose);
 
 		btnConfirm = new JButton("결재 하기");
+		btnConfirm.setBackground(new Color(255, 255, 224));
+		btnConfirm.setForeground(Color.BLACK);
+		btnConfirm.setFont(new Font("굴림체", Font.BOLD, 12));
 		btnConfirm.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -201,14 +243,14 @@ public class ApprovalFrame extends JDialog {
 				window.setVisible(true);
 			}
 		});
-		btnConfirm.setBounds(154, 600, 110, 30);
+		btnConfirm.setBounds(199, 629, 110, 30);
 		getContentPane().add(btnConfirm);
 
 		scrollPane = new JScrollPane();
 		// JScrollPane의 스크롤바 설정
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollPane.setBounds(12, 81, 510, 158);
+		scrollPane.setBounds(48, 190, 564, 225);
 		getContentPane().add(scrollPane);
 
 		// JTable을 DefaultTableModel로 제어
@@ -227,21 +269,28 @@ public class ApprovalFrame extends JDialog {
 		scrollPane.setViewportView(table);
 
 		JButton btnTableRefresh = new JButton("나의 기안 보기");
+		btnTableRefresh.setBackground(new Color(255, 255, 224));
+		btnTableRefresh.setFont(new Font("굴림체", Font.BOLD, 12));
 		btnTableRefresh.setVisible(false);
 		btnTableRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setTable();
 			}
 		});
-		btnTableRefresh.setBounds(392, 49, 130, 23);
+		btnTableRefresh.setBounds(477, 117, 172, 36);
 		getContentPane().add(btnTableRefresh);
 
 		JLabel label = new JLabel("~");
+		label.setFont(new Font("굴림체", Font.BOLD, 40));
+		label.setForeground(Color.WHITE);
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(141, 10, 26, 21);
+		label.setBounds(216, 68, 61, 21);
 		getContentPane().add(label);
 
 		btnDelete = new JButton("기안 삭제");
+		btnDelete.setBackground(new Color(255, 255, 224));
+		btnDelete.setForeground(Color.BLACK);
+		btnDelete.setFont(new Font("굴림체", Font.BOLD, 12));
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (defaultTableModel.getRowCount() > 0) {
@@ -252,11 +301,20 @@ public class ApprovalFrame extends JDialog {
 				}
 			}
 		});
-		btnDelete.setBounds(293, 600, 110, 30);
+		btnDelete.setBounds(351, 629, 110, 30);
 		getContentPane().add(btnDelete);
+
+//		lblBackImg = new JLabel("lblBackImg");
+//
+//		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+//		lblBackImg.setBounds(0, 0, 661, 700);
+//		getContentPane().add(lblBackImg);
+
+
 
 		// 화면에 나타나는 값 초기화
 		initDisplay();
+
 	}
 
 	// 화면에 나타나는 값 초기화
@@ -352,7 +410,7 @@ public class ApprovalFrame extends JDialog {
 				table.setRowSelectionInterval(0, 0);
 				// 선택된 값을 txtContent에 입력
 				txtContent.setText(defaultTableModel.getValueAt(table.getSelectedRow(), 3).toString());
-			}			
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -425,8 +483,7 @@ public class ApprovalFrame extends JDialog {
 			try {
 				String aCode = defaultTableModel.getValueAt(table.getSelectedRow(), 7).toString();
 				// 대기인 기안을 DB에서 삭제
-				String query = "delete from APPROVAL " +
-								"where app_code = " + aCode;
+				String query = "delete from APPROVAL " + "where app_code = " + aCode;
 
 				this.stmt.executeQuery(query);
 				JOptionPane.showMessageDialog(this, "삭제 했습니다");

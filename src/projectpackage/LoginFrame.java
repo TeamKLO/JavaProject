@@ -15,6 +15,15 @@ import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Color;
+import java.awt.SystemColor;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 // 로그인 화면
 public class LoginFrame {
@@ -27,6 +36,8 @@ public class LoginFrame {
 	private JButton btnLogin;
 
 	private Statement stmt = MainStart.connectDataBase();
+	int xx,xy;
+	private JLabel lblBackImg;
 
 	/**
 	 * Launch the application.
@@ -61,22 +72,47 @@ public class LoginFrame {
 	// frame 초기 설정
 	private void initialize() {
 		frmLogin = new JFrame();
+		
+		frmLogin.getContentPane().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
+		frmLogin.getContentPane().addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				frmLogin.setLocation(x - xx, y - xy);
+			}
+		});
+		frmLogin.getContentPane().setBackground(new Color(173, 216, 230));
+		frmLogin.setBackground(Color.WHITE);
 		frmLogin.setTitle("로그인");
-		frmLogin.setBounds(100, 100, 270, 250);
+		frmLogin.setBounds(100, 100, 381, 471);
 		// frame이 생성될 때 위치는 모니터의 중앙
 		frmLogin.setLocationRelativeTo(null);
+		frmLogin.setUndecorated(true);
+		
 		// frame이 close 될 때의 설정
 		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmLogin.getContentPane().setLayout(null);
 
-		JLabel lblId = new JLabel("사원번호 : ");
-		lblId.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblId.setBounds(30, 35, 70, 20);
+		JLabel lblId = new JLabel("사원번호");
+		lblId.setFont(new Font("굴림체", Font.BOLD, 15));
+		lblId.setForeground(Color.WHITE);
+		lblId.setHorizontalAlignment(SwingConstants.LEFT);
+		lblId.setBounds(87, 217, 72, 20);
 		frmLogin.getContentPane().add(lblId);
 
-		JLabel lblPw = new JLabel("암호 : ");
-		lblPw.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblPw.setBounds(30, 75, 70, 20);
+		JLabel lblPw = new JLabel("패스워드");
+		lblPw.setFont(new Font("굴림체", Font.BOLD, 15));
+		lblPw.setForeground(Color.WHITE);
+		lblPw.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPw.setBounds(87, 283, 72, 20);
 		frmLogin.getContentPane().add(lblPw);
 
 		txtId = new JTextField();
@@ -89,11 +125,14 @@ public class LoginFrame {
 				}
 			}
 		});
-		txtId.setBounds(110, 35, 110, 20);
+		txtId.setBounds(171, 213, 134, 30);
 		frmLogin.getContentPane().add(txtId);
 		txtId.setColumns(10);
 
 		JButton btnClose = new JButton("닫기");
+		btnClose.setFont(new Font("굴림체", Font.BOLD, 12));
+		btnClose.setForeground(Color.BLACK);
+		btnClose.setBackground(new Color(255, 255, 224));
 		btnClose.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -109,10 +148,13 @@ public class LoginFrame {
 				System.exit(0);
 			}
 		});
-		btnClose.setBounds(145, 125, 80, 30);
+		btnClose.setBounds(218, 350, 110, 30);
 		frmLogin.getContentPane().add(btnClose);
 
 		btnLogin = new JButton("로그인");
+		btnLogin.setFont(new Font("굴림체", Font.BOLD, 12));
+		btnLogin.setForeground(Color.BLACK);
+		btnLogin.setBackground(new Color(255, 255, 224));
 		btnLogin.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -142,12 +184,14 @@ public class LoginFrame {
 
 			}
 		});
-		btnLogin.setBounds(30, 125, 80, 30);
+		btnLogin.setBounds(55, 350, 110, 30);
 		frmLogin.getContentPane().add(btnLogin);
 
 		lblLoginMessage = new JLabel("로그인 해주세요");
-		lblLoginMessage.setHorizontalAlignment(SwingConstants.LEFT);
-		lblLoginMessage.setBounds(38, 175, 206, 15);
+		lblLoginMessage.setFont(new Font("굴림체", Font.BOLD, 18));
+		lblLoginMessage.setForeground(new Color(255, 255, 255));
+		lblLoginMessage.setHorizontalAlignment(SwingConstants.CENTER);
+		lblLoginMessage.setBounds(55, 398, 276, 43);
 		frmLogin.getContentPane().add(lblLoginMessage);
 
 		pwfPw = new JPasswordField();
@@ -160,8 +204,26 @@ public class LoginFrame {
 				}
 			}
 		});
-		pwfPw.setBounds(110, 75, 110, 20);
+		pwfPw.setBounds(171, 279, 134, 30);
 		frmLogin.getContentPane().add(pwfPw);
+		
+		JLabel lblCloseX = new JLabel("X");
+		lblCloseX.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.exit(0);
+			}
+		});
+		lblCloseX.setFont(new Font("Euphemia", Font.BOLD, 18));
+		lblCloseX.setForeground(Color.WHITE);
+		lblCloseX.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCloseX.setBounds(344, 7, 43, 20);
+		frmLogin.getContentPane().add(lblCloseX);
+		
+		lblBackImg = new JLabel("BackImg");
+		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\JavaProject\\image\\BackImg.jpg"));
+		lblBackImg.setBounds(0, 0, 381, 471);
+		frmLogin.getContentPane().add(lblBackImg);
 	}
 
 	// 로그인 정보 세팅
