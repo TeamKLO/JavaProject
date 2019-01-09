@@ -149,6 +149,7 @@ public class DraftFrame extends JDialog {
 		getContentPane().add(btnClose);
 		
 		txtContent = new JTextArea();		
+		txtContent.setLineWrap(true);
 		txtContent.append("\r\n");
 		txtContent.setCaretPosition(txtContent.getText().length());
 		

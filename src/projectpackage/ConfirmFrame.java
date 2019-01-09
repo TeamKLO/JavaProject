@@ -21,6 +21,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -188,12 +190,14 @@ public class ConfirmFrame extends JDialog {
 		table = new JTable(defaultTableModel);
 		// JTable의 컬럼사이즈 자동변경을 중지
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		// 정렬기능 세팅
+		table.setRowSorter(new TableRowSorter(defaultTableModel));
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (table.getSelectedRow() >= 0) {
 					// 마우스 클릭시 테이블에 값이 있다면 txtContent에 입력
-					txtContent.setText(defaultTableModel.getValueAt(table.getSelectedRow(), 3).toString());
+					txtContent.setText(defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 3).toString());
 				}
 			}
 		});
@@ -299,6 +303,7 @@ public class ConfirmFrame extends JDialog {
 		getContentPane().add(label);
 		
 		txtContent = new JTextArea();		
+		txtContent.setLineWrap(true);
 		txtContent.setEditable(false);
 		txtContent.setText("");
 		txtContent.append("\r\n");
@@ -411,7 +416,7 @@ public class ConfirmFrame extends JDialog {
 				// 테이블에 값이 있다면 첫 번째 Row를 선택
 				table.setRowSelectionInterval(0, 0);
 				// 선택된 값을 txtContent에 입력
-				txtContent.setText(defaultTableModel.getValueAt(table.getSelectedRow(), 3).toString());
+				txtContent.setText(defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 3).toString());
 			}
 
 		} catch (Exception e) {
@@ -421,13 +426,19 @@ public class ConfirmFrame extends JDialog {
 
 	// 기안 승인
 	void setConfirm() {
+		// 다중 선택시 동작이 안 됨
+		if (table.getSelectedRowCount() != 1) {
+			JOptionPane.showMessageDialog(this, "한 항목만 선택하세요");
+			return;
+		}
+		
 		// 테이블에 값이 존재하고, 그 값이 "승인"이 아닌 경우에 승인
 		if (defaultTableModel.getRowCount() > 0
-				&& (!defaultTableModel.getValueAt(table.getSelectedRow(), 4).toString().equals("승인"))) {
+				&& (!defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 4).toString().equals("승인"))) {
 			try {
 				// 승인을 DB에 저장
 				String query = "update APPROVAL set " + "app_isconfirm = '승인', " + "app_confirmdate = sysdate "
-						+ "where app_code = " + defaultTableModel.getValueAt(table.getSelectedRow(), 6).toString();
+						+ "where app_code = " + defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6).toString();
 
 				this.stmt.executeQuery(query);
 				JOptionPane.showMessageDialog(this, "승인 했습니다");
@@ -444,13 +455,19 @@ public class ConfirmFrame extends JDialog {
 
 	// 기안 반려
 	void setReturn() {
+		// 다중 선택시 동작이 안 됨
+		if (table.getSelectedRowCount() != 1) {
+			JOptionPane.showMessageDialog(this, "한 항목만 선택하세요");
+			return;
+		}
+				
 		// 테이블에 값이 존재하고, 그 값이 "반려"가 아닌 경우에 반려
 		if (defaultTableModel.getRowCount() > 0
-				&& (!defaultTableModel.getValueAt(table.getSelectedRow(), 4).toString().equals("반려"))) {
+				&& (!defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 4).toString().equals("반려"))) {
 			try {
 				// 반려를 DB에 저장
 				String query = "update APPROVAL set " + "app_isconfirm = '반려', " + "app_confirmdate = sysdate "
-						+ "where app_code = " + defaultTableModel.getValueAt(table.getSelectedRow(), 6).toString();
+						+ "where app_code = " + defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 6).toString();
 
 				this.stmt.executeQuery(query);
 				JOptionPane.showMessageDialog(this, "반려 했습니다");

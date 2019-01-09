@@ -1,10 +1,14 @@
 package projectpackage;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -18,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -33,14 +38,10 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.ImageIcon;
-import java.awt.Font;
-import java.awt.Color;
 
 // 결재 화면
 public class ApprovalFrame extends JDialog {
@@ -268,12 +269,14 @@ public class ApprovalFrame extends JDialog {
 		table = new JTable(defaultTableModel);
 		// JTable의 컬럼사이즈 자동변경을 중지
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		// 정렬기능 세팅
+		table.setRowSorter(new TableRowSorter(defaultTableModel));
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (table.getSelectedRow() >= 0) {
 					// 마우스 클릭시 테이블에 값이 있다면 txtContent에 입력
-					txtContent.setText(defaultTableModel.getValueAt(table.getSelectedRow(), 3).toString());
+					txtContent.setText(defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 3).toString());
 				}
 			}
 		});
@@ -317,6 +320,7 @@ public class ApprovalFrame extends JDialog {
 		
 		txtContent = new JTextArea();
 		txtContent.setEditable(false);
+		txtContent.setLineWrap(true);
 		txtContent.append("\r\n");
 		txtContent.setCaretPosition(txtContent.getText().length());
 		
@@ -431,7 +435,7 @@ public class ApprovalFrame extends JDialog {
 				// 테이블에 값이 있다면 첫 번째 Row를 선택
 				table.setRowSelectionInterval(0, 0);
 				// 선택된 값을 txtContent에 입력
-				txtContent.setText(defaultTableModel.getValueAt(table.getSelectedRow(), 3).toString());
+				txtContent.setText(defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 3).toString());
 			}
 
 		} catch (Exception e) {
@@ -500,10 +504,16 @@ public class ApprovalFrame extends JDialog {
 
 	// 기안 삭제
 	void deleteDraft() {
+		// 다중 선택시 동작이 안 됨
+		if (table.getSelectedRowCount() != 1) {
+			JOptionPane.showMessageDialog(this, "한 항목만 선택하세요");
+			return;
+		}
+		
 		// 값이 "대기"인 경우에만 삭제가능
-		if ((defaultTableModel.getValueAt(table.getSelectedRow(), 4).toString().equals("대기"))) {
+		if ((defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 4).toString().equals("대기"))) {
 			try {
-				String aCode = defaultTableModel.getValueAt(table.getSelectedRow(), 7).toString();
+				String aCode = defaultTableModel.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 7).toString();
 				// 대기인 기안을 DB에서 삭제
 				String query = "delete from APPROVAL " + "where app_code = " + aCode;
 
