@@ -406,7 +406,7 @@ public class ScheduleFrame {
 		approvalLabel = new JLabel("일정승인표");
 		approvalLabel.setForeground(Color.WHITE);
 		approvalLabel.setFont(new Font("굴림체", Font.BOLD, 12));
-		approvalLabel.setBounds(48, 54, 100, 30);
+		approvalLabel.setBounds(12, 8, 100, 30);
 		panelApproval.add(approvalLabel);
 		
 		labelApprovalSearchBetween = new JLabel("~");
