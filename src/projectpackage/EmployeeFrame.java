@@ -875,23 +875,12 @@ public class EmployeeFrame extends JDialog {
 		String image = textFieldImage.getText();
 		
 		
-	//이미지 수정 코드
-		String updateImage = "";		
+	    //이미지 수정 경로 스트링
+		String updateImage = image;		
 		String location= System.getProperty("user.dir") + "\\image\\";		
-		//불러온파일
-		try {
-		File file = new File(image);
-		if(file.exists()) {//이미지파일이 있다면			
-		//저장할파일
-		File updateFile = new File(location+empNo+".JPG"); 
-		BufferedImage bi = ImageIO.read(file);
-		ImageIO.write(bi, "JPG", updateFile);		
-		updateImage = location+empNo+".JPG";
-		getimage = updateImage;
-		}
-		}catch(Exception e) {			
-			employeedialog();
-		}
+		
+		
+		
 		
 		
 		String employeeUpdateQuery = "UPDATE EMPLOYEE SET "
@@ -911,6 +900,20 @@ public class EmployeeFrame extends JDialog {
 					address.isEmpty()||hiredate.isEmpty()||updateImage.isEmpty()){
 				employeedialog();
 			}else {
+				///이미지파일 수정 코드
+				try {
+					File file = new File(image);
+					if(file.exists()) {//이미지파일이 있다면			
+					//저장할파일
+					File updateFile = new File(location+empNo+".JPG"); 
+					BufferedImage bi = ImageIO.read(file);
+					ImageIO.write(bi, "JPG", updateFile);		
+					updateImage = location+empNo+".JPG";
+					getimage = updateImage;
+					}
+					}catch(Exception e) {			
+						employeedialog();
+					}				
 			stmt.executeUpdate(employeeUpdateQuery);
 			stmt.executeUpdate("COMMIT");
 			employeedialogUpdate();}
