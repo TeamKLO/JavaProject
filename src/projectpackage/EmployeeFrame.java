@@ -945,6 +945,7 @@ public class EmployeeFrame extends JDialog {
            //관리창에서 이미지 보이게하는 메소드 이미지 뷰 메소드에서 뽑아옴
            Toolkit tk = Toolkit.getDefaultToolkit();
            image = tk.getImage(getimage);
+           image.flush();
            panelImage.repaint();
            panelImage.setVisible(true);   		
          			   			
