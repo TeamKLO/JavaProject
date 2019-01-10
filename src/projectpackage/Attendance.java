@@ -88,7 +88,7 @@ public class Attendance extends JDialog {
 				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
 			}
 		};
-		panel.setBounds(78, 41, 119, 124);
+		panel.setBounds(93, 41, 119, 124);
 		getContentPane().add(panel);
 		
 		
@@ -111,14 +111,14 @@ public class Attendance extends JDialog {
 
 		JLabel lblStart_1 = new JLabel("");
 		lblStart_1.setForeground(Color.WHITE);
-		lblStart_1.setFont(new Font("굴림", Font.BOLD, 16));
-		lblStart_1.setBounds(211, 277, 195, 21);
+		lblStart_1.setFont(new Font("굴림", Font.BOLD, 18));
+		lblStart_1.setBounds(175, 277, 195, 21);
 		getContentPane().add(lblStart_1);
 
 		JLabel lblEnd_1 = new JLabel("");
 		lblEnd_1.setForeground(Color.WHITE);
-		lblEnd_1.setFont(new Font("굴림", Font.BOLD, 16));
-		lblEnd_1.setBounds(211, 326, 195, 18);
+		lblEnd_1.setFont(new Font("굴림", Font.BOLD, 18));
+		lblEnd_1.setBounds(175, 326, 195, 21);
 		getContentPane().add(lblEnd_1);
 
 		JButton btnStart = new JButton("출근 등록");
@@ -156,7 +156,7 @@ public class Attendance extends JDialog {
 			}
 		});
 
-		btnStart.setBounds(78, 410, 110, 30);
+		btnStart.setBounds(93, 410, 110, 30);
 		getContentPane().add(btnStart);
 
 		JButton btnEnd = new JButton("퇴근 등록");
@@ -193,7 +193,7 @@ public class Attendance extends JDialog {
 			}
 
 		});
-		btnEnd.setBounds(269, 410, 110, 30);
+		btnEnd.setBounds(275, 410, 110, 30);
 		getContentPane().add(btnEnd);
 
 		JButton buttonClose = new JButton("닫 기");
@@ -233,39 +233,42 @@ public class Attendance extends JDialog {
 //		lblCloseX.setBounds(622, 8, 42, 20);
 //		getContentPane().add(lblCloseX);
 
-		lblNowDate = new JLabel("현재 날짜");
+		lblNowDate = new JLabel("");
 		lblNowDate.setForeground(Color.WHITE);
-		lblNowDate.setFont(new Font("굴림", Font.BOLD, 24));
-		lblNowDate.setBounds(78, 212, 223, 29);
+		lblNowDate.setFont(new Font("굴림체", Font.BOLD | Font.ITALIC, 30));
+		lblNowDate.setBounds(78, 208, 266, 35);
 		getContentPane().add(lblNowDate);
 
-		JLabel lblStart = new JLabel("출근시간");
+		JLabel lblStart = new JLabel("출근시간  :");
 		lblStart.setForeground(Color.WHITE);
 		lblStart.setFont(new Font("굴림", Font.BOLD, 16));
-		lblStart.setBounds(78, 277, 79, 15);
+		lblStart.setBounds(78, 277, 97, 21);
 		getContentPane().add(lblStart);
 
-		JLabel lblEnd = new JLabel("퇴근시간");
+		JLabel lblEnd = new JLabel("퇴근시간  :");
 		lblEnd.setForeground(Color.WHITE);
 		lblEnd.setFont(new Font("굴림", Font.BOLD, 16));
-		lblEnd.setBounds(78, 326, 79, 15);
+		lblEnd.setBounds(78, 326, 97, 21);
 		getContentPane().add(lblEnd);
 
 		lblDept = new JLabel("New label");
+		lblDept.setFont(new Font("굴림체", Font.BOLD, 15));
 		lblDept.setForeground(Color.WHITE);
-		lblDept.setBounds(219, 85, 80, 20);
+		lblDept.setBounds(234, 85, 80, 20);
 		getContentPane().add(lblDept);
 		lblDept.setText("1");
 
 		lblPosi = new JLabel("New label");
+		lblPosi.setFont(new Font("굴림체", Font.BOLD, 15));
 		lblPosi.setForeground(Color.WHITE);
-		lblPosi.setBounds(219, 115, 80, 20);
+		lblPosi.setBounds(234, 115, 80, 20);
 		getContentPane().add(lblPosi);
 		lblPosi.setText("2");
 
 		lblNm = new JLabel("New label");
+		lblNm.setFont(new Font("굴림체", Font.BOLD, 15));
 		lblNm.setForeground(Color.WHITE);
-		lblNm.setBounds(219, 145, 80, 20);
+		lblNm.setBounds(234, 145, 80, 20);
 		getContentPane().add(lblNm);
 		lblNm.setText("3");
 

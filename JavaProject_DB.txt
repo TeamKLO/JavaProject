@@ -212,4 +212,44 @@ Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT
 Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (9,10002,1,'외근 3','외근 간다 3',to_date('18/12/27','RR/MM/DD'),null,10003,'대기');
 Insert into JAVAPROJECT.APPROVAL (APP_CODE,EMP_NO,CAT_CODE,APP_TITLE,APP_CONTENT,APP_DRAFTDATE,APP_CONFIRMDATE,APP_CONFIRMER,APP_ISCONFIRM) values (11,10002,1,'휴가 10','휴가 간다 10',to_date('18/12/28','RR/MM/DD'),null,10003,'대기');
 
+insert into COMMUTE(com_date, emp_no, com_startdate, com_enddate) 
+values(to_date('2018-12-25', 'yyyy-mm-dd'),
+       10001,
+       to_date('2018-12-25 08:30:22', 'yyyy-mm-dd hh24:mi:ss'),
+       to_date('2018-12-25 18:00:00', 'yyyy-mm-dd hh24:mi:ss'));
+
+insert into COMMUTE(com_date, emp_no, com_startdate, com_enddate) 
+values(to_date('2018-12-26', 'yyyy-mm-dd'),
+       10001,
+       to_date('2018-12-26 08:50:35', 'yyyy-mm-dd hh24:mi:ss'),
+       to_date('2018-12-26 18:05:10', 'yyyy-mm-dd hh24:mi:ss'));
+
+insert into COMMUTE(com_date, emp_no, com_startdate, com_enddate) 
+values(to_date('2018-12-27', 'yyyy-mm-dd'),
+       10001,
+       to_date('2018-12-27 08:51:11', 'yyyy-mm-dd hh24:mi:ss'),
+       to_date('2018-12-27 18:04:10', 'yyyy-mm-dd hh24:mi:ss'));
+
+
+insert into COMMUTE(com_date, emp_no, com_startdate, com_enddate) 
+values(to_date('2018-12-25', 'yyyy-mm-dd'),
+       10004,
+       to_date('2018-12-25 08:30:22', 'yyyy-mm-dd hh24:mi:ss'),
+       to_date('2018-12-25 18:00:00', 'yyyy-mm-dd hh24:mi:ss'));
+
+insert into COMMUTE(com_date, emp_no, com_startdate, com_enddate) 
+values(to_date('2018-12-26', 'yyyy-mm-dd'),
+       10005,
+       to_date('2018-12-26 08:50:35', 'yyyy-mm-dd hh24:mi:ss'),
+       to_date('2018-12-26 18:05:10', 'yyyy-mm-dd hh24:mi:ss'));
+
+insert into COMMUTE(com_date, emp_no, com_startdate, com_enddate) 
+values(to_date('2018-12-27', 'yyyy-mm-dd'),
+       10003,
+       to_date('2018-12-27 08:51:11', 'yyyy-mm-dd hh24:mi:ss'),
+       to_date('2018-12-27 18:04:10', 'yyyy-mm-dd hh24:mi:ss'));
+
+
+
+
 commit;
