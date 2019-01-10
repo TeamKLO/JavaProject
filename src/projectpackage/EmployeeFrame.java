@@ -46,7 +46,7 @@ public class EmployeeFrame extends JDialog {
 	// static JFrame 필드는 단지 main의 EventQueue안의 생성자를 만족시키기 위한 것일 뿐, 프로그램 실행과 상관없음
 	static JFrame tmpFrame;
 	
-	private JLabel labelFrameTitle;
+	private JLabel labelFrameTitle;//프레임 타이틀라벨
 	//버튼
 	private JButton insertButton;  //등록버튼
 	private JButton updateButton;  //수정버튼
@@ -85,32 +85,25 @@ public class EmployeeFrame extends JDialog {
 	private JPanel panelImage; //이미지 판넬
 	private JTextField textFieldImage; //이미지 주소 필드
 	private Image image;	   //이미지
-	private JLabel labelImage; //이미지 라벨
+	private JLabel labelImage; //사진등록 라벨
 	private String getimage = "";   //이미지 경로
-	int xx,xy;
+	
 
+	//이미지 추가	
+	//JFileChooser
+	private JFileChooser jFileChooser;
+		
+	///프레임이미지	
+	private JLabel lblBackImg;
 	
-	
-	///이미지
-	
-	JLabel lblBackImg;
-	
-	//메뉴바
-	
+	//메뉴바	
 //	JMenuBar menuBar;
 //	JMenu menu;
 //	JMenuItem menuItemDept;
 //	JMenuItem menuItemPosition;
 	
-	
-	
-	
-	
-	//이미지 추가
-	
-	//JFileChooser
-	private JFileChooser jFileChooser;
-	
+	 //프레인 마우스리스너용 좌표
+	private int xx,xy;
 	
 	//DB접속
 	private Statement stmt = MainStart.connectDataBase();
@@ -137,31 +130,18 @@ public class EmployeeFrame extends JDialog {
 	
 	public EmployeeFrame(JFrame ownerFrame) {
 		super(ownerFrame, true);
-		addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				int x = e.getXOnScreen();
-				int y = e.getYOnScreen();
-				setLocation(x - xx, y - xy);
-			}
-		});
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				xx = e.getX();
-				xy = e.getY();
-			}
-		});
+	
+//		deptnameSelect();//부서 콤보박스 아이템 가져오기
+//		positionSelect();//직책 콤보박스 아이템 가져오기
+		
+		
 		setBounds(100, 100, 661, 700);
 		getContentPane().setLayout(null);
 		setLocationRelativeTo(null);
 		this.setUndecorated(true);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		
-		
-		deptnameSelect();//부서 콤보박스 아이템 가져오기
-		positionSelect();//직책 콤보박스 아이템 가져오기
-		
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);	
+	
+		//프레임 타이틀 라벨
 		labelFrameTitle = new JLabel("사원 관리");
 		labelFrameTitle.setForeground(Color.WHITE);
 		labelFrameTitle.setBounds(12, 12, 57, 15);
@@ -225,7 +205,7 @@ public class EmployeeFrame extends JDialog {
 		table.addMouseListener(new employeeTableMouseListener());
 		table.getTableHeader().setReorderingAllowed(false);// 칼럼순서변경금지
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //가로스크롤
-		table.setRowSorter(new TableRowSorter(model));
+		table.setRowSorter(new TableRowSorter(model)); //테이블 칼럼클릭 정렬
 		
 		DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer(); // 디폴트테이블셀렌더러를 생성
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
@@ -247,18 +227,18 @@ public class EmployeeFrame extends JDialog {
 		////입력 필드/////////////////////////////////////////
 		
 		//부서
-//		String[] comboBoxDeptMenu = {"부서","영업부", "인사부", "기획부", "총무부", "개발부"};
-		comboBoxDept = new JComboBox(deptCombobox);
+		String[] comboBoxDeptMenu = {"부서","영업부", "인사부", "기획부", "총무부", "개발부"};
+		comboBoxDept = new JComboBox(comboBoxDeptMenu);
 		comboBoxDept.setBackground(new Color(255, 255, 224));
-		comboBoxDept.setBounds(19, 434, 70, 30);
+		comboBoxDept.setBounds(31, 434, 70, 30);
 		getContentPane().add(comboBoxDept);
 		
 		//직책 
-//		String[] comboBoxPositionMenu = {"직책","사원","대리","과장","부장","이사","사장"};
+		String[] comboBoxPositionMenu = {"직책","사원","대리","과장","부장","이사","사장"};
 		
-		comboBoxPosition = new JComboBox(positionCombobox);
+		comboBoxPosition = new JComboBox(comboBoxPositionMenu);
 		comboBoxPosition.setBackground(new Color(255, 255, 224));
-		comboBoxPosition.setBounds(112, 434, 70,30);
+		comboBoxPosition.setBounds(124, 434, 70,30);
 		getContentPane().add(comboBoxPosition);
 		
 		// 관리코드
@@ -274,55 +254,55 @@ public class EmployeeFrame extends JDialog {
 		comboBoxGender = new JComboBox(comboBoxGenderMenu);
 		comboBoxGender.setFont(new Font("굴림체", Font.BOLD, 12));
 		comboBoxGender.setBackground(new Color(255, 255, 224));
-		comboBoxGender.setBounds(314, 387, 60,30);
+		comboBoxGender.setBounds(360, 433, 60,30);
 		getContentPane().add(comboBoxGender);		
 		
 		//이름
 		textFieldName = new JTextField();
 		textFieldName.setFont(new Font("돋움", Font.PLAIN, 15));
-		textFieldName.setBounds(209, 387, 90,30);
+		textFieldName.setBounds(255, 433, 90,30);
 		getContentPane().add(textFieldName);
 		//이름라벨
 		labelName = new JLabel("이름 :");
 		labelName.setForeground(Color.WHITE);
 		labelName.setFont(new Font("굴림체", Font.BOLD, 12));
-		labelName.setBounds(162, 387, 50,30);
+		labelName.setBounds(205, 433, 50,30);
 		getContentPane().add(labelName);
 		
 		//사원번호
 		labelEmpNoView = new JLabel();
 		labelEmpNoView.setForeground(Color.WHITE);
 		labelEmpNoView.setFont(new Font("돋움", Font.PLAIN, 15));
-		labelEmpNoView.setBounds(90, 387, 60,30);
+		labelEmpNoView.setBounds(102, 387, 60,30);
 		getContentPane().add(labelEmpNoView);
 		
 		//사원번호 라벨
 		labelEmpNo = new JLabel("사원번호 : ");
 		labelEmpNo.setForeground(Color.WHITE);
 		labelEmpNo.setFont(new Font("굴림체", Font.BOLD, 12));
-		labelEmpNo.setBounds(19, 387, 100,30);
+		labelEmpNo.setBounds(31, 387, 100,30);
 		getContentPane().add(labelEmpNo);
 		
 		// 전화번호
 		textFieldPhone = new JTextField();
-		textFieldPhone.setBounds(496, 487, 147,30);
+		textFieldPhone.setBounds(551, 487, 92,30);
 		getContentPane().add(textFieldPhone);
 		//전화번호라벨
 		labelPhone = new JLabel("전화번호 :");
 		labelPhone.setForeground(Color.WHITE);
 		labelPhone.setFont(new Font("굴림체", Font.BOLD, 12));
-		labelPhone.setBounds(422, 487, 100,30);
+		labelPhone.setBounds(477, 487, 100,30);
 		getContentPane().add(labelPhone);
 		
 		// 주소
 		textFieldAddress = new JTextField();
-		textFieldAddress.setBounds(68, 488, 337,30);
+		textFieldAddress.setBounds(80, 487, 385,30);
 		getContentPane().add(textFieldAddress);
 		//주소라벨
 		labelAddress = new JLabel("주소 :");
 		labelAddress.setForeground(Color.WHITE);
 		labelAddress.setFont(new Font("굴림체", Font.BOLD, 12));
-		labelAddress.setBounds(17, 488, 50,30);
+		labelAddress.setBounds(29, 488, 50,30);
 		getContentPane().add(labelAddress);
 		
 		//비밀번호
@@ -369,7 +349,7 @@ public class EmployeeFrame extends JDialog {
 		//이미지경로 필드
 		textFieldImage = new JTextField();
 		textFieldImage.setFont(new Font("돋움", Font.PLAIN, 15));
-		textFieldImage.setBounds(411, 433, 232, 30);
+		textFieldImage.setBounds(432, 433, 210, 30);
 		getContentPane().add(textFieldImage);
 		//이미지 라벨
 		labelImage = new JLabel("사진등록 :");
@@ -377,8 +357,8 @@ public class EmployeeFrame extends JDialog {
 		labelImage.setFont(new Font("굴림체", Font.BOLD, 12));
 		labelImage.setBounds(399, 387, 70, 30);
 		getContentPane().add(labelImage);
-	
 		
+
 //		//메뉴바
 //		menuBar = new JMenuBar();
 //		setJMenuBar(menuBar);
@@ -394,7 +374,7 @@ public class EmployeeFrame extends JDialog {
 		
 		
 		
-		//이미지 뷰
+		//사원사진 뷰
 		panelImage = new JPanel(){
 		// 이미지 파일을 가져오기 위해 paint 메소드를 오버라이드
 			@Override
@@ -402,7 +382,7 @@ public class EmployeeFrame extends JDialog {
 				g.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this);
 			}
 		};		
-		panelImage.setBounds(553, 341, 90, 70);
+		panelImage.setBounds(553, 350, 90, 70);
 		getContentPane().add(panelImage);		
 		
 		
@@ -475,15 +455,7 @@ public class EmployeeFrame extends JDialog {
 		
 		
 	
-		//////이미지	      
-		lblBackImg = new JLabel("lblBackImg");
-		lblBackImg.setIcon(new ImageIcon("C:\\Users\\KITRI\\git\\JavaProject\\image\\BackImg.jpg"));
-		lblBackImg.setBounds(0, 0, 661, 700);
-		getContentPane().add(lblBackImg);
-		
-		
-	
-		///이미지 클릭시 파일열기
+		///사원이미지 클릭시 파일열기
 		panelImage.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -500,6 +472,32 @@ public class EmployeeFrame extends JDialog {
 				}
 			}
 		});		
+		
+		
+		///프레임 드래그 마우스리스너
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+				int y = e.getYOnScreen();
+				setLocation(x - xx, y - xy);
+			}
+		});
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				xx = e.getX();
+				xy = e.getY();
+			}
+		});
+		
+		
+		
+		//////프레임이미지	      
+		lblBackImg = new JLabel("lblBackImg");
+		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
+		lblBackImg.setBounds(0, 0, 661, 700);
+		getContentPane().add(lblBackImg);
 		
 		
 		//
@@ -635,7 +633,11 @@ public class EmployeeFrame extends JDialog {
 					labelEmpNoView.setText((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()),3));
 				}
 				if (i == 4) {
+					if((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 4)==null) {
+						comboBoxGender.setSelectedIndex(0);
+					}else {
 					comboBoxGender.setSelectedItem((String) model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 4));
+				}
 				}
 				if (i == 5) {
 					if((Date)model.getValueAt(table.convertRowIndexToModel(table.getSelectedRow()), 5)!=null) {
