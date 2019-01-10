@@ -44,9 +44,9 @@ public class ScheduleFrame {
 
 	// *** 메인 UI 관련 변수 선언 ***
 	public JFrame frame;
-	public JFrame ownerFrame;
+	public JFrame ownerFrame; //메인프레임 상속용 필드
 	
-	private JLabel labelFrameTitle;
+	private JLabel labelFrameTitle; //프레임 타이틀 라벨
 
 	
 	 // 일반 사원 관리자 공용
@@ -81,7 +81,7 @@ public class ScheduleFrame {
 	private JButton buttonInsert; // 추가버튼
 	private JButton buttonUpdate; // 수정버튼
 	private JButton buttonDelete; // 삭제버튼
-	int xx, xy;
+	
 
 	// 일정승인창
 	private JPanel panelApproval;// 일정승인보기 판넬
@@ -96,10 +96,13 @@ public class ScheduleFrame {
 	private JScrollPane approvalJScollPaneContent;// 일정내용
 	
 
-	// 이미지
+	// 프레임이미지
 	private JLabel lblBackImg; //공용판넬 이미지
 	private JLabel lblBackImgEdit; //관리자판넬 이미지
 	private JLabel lblBackImgApproval;//일정승인창 이미지
+	
+	//프레인 마우스리스너용 좌표
+	private int xx, xy; 
 	
 	// db연결
 	private Statement stmt = MainStart.connectDataBase();
@@ -155,6 +158,7 @@ public class ScheduleFrame {
 		frame.setUndecorated(true);
 		frame.getContentPane().setLayout(null);	
 		
+		///프레임 타이틀 라벨
 		labelFrameTitle = new JLabel("일정");
 		labelFrameTitle.setForeground(Color.WHITE);
 		labelFrameTitle.setBounds(12, 12, 57, 15);
@@ -241,6 +245,8 @@ public class ScheduleFrame {
 		labelSearchBetween.setFont(new Font("돋움", Font.PLAIN, 12));
 		panel.add(labelSearchBetween);
 
+		
+		////////////////////////////////
 		//////// 관리자용 판넬///////////////
 		panelEdit = new JPanel();
 		panelEdit.setBounds(0, 0, 661, 700);
@@ -249,7 +255,7 @@ public class ScheduleFrame {
 		panelEdit.setVisible(false);	
 
 		/// 버튼///////////		
-		buttonInsert = new JButton("추 가");
+		buttonInsert = new JButton("등 록");
 		buttonInsert.setBackground(new Color(255, 255, 224));
 		buttonInsert.setFont(new Font("굴림체", Font.BOLD, 12));
 		buttonInsert.setBounds(48, 629, 110, 30);
@@ -269,8 +275,7 @@ public class ScheduleFrame {
 
 		
 
-		//// 입력필드//////////////
-
+		//// 입력필드/////
 		// 라벨
 		labelDept = new JLabel("부서 : ");
 		labelDept.setForeground(Color.WHITE);
@@ -313,7 +318,7 @@ public class ScheduleFrame {
 		labelDeptView.setBounds(274, 502, 80, 30);
 		panelEdit.add(labelDeptView);
 
-		// 입력필드
+		// 텍스트필드
 		textFieldEmpNo = new JTextField();
 		textFieldEmpNo.setBounds(124, 505, 80, 25);
 		textFieldEmpNo.setColumns(10);
@@ -378,13 +383,14 @@ public class ScheduleFrame {
 		approvalJScollPane = new JScrollPane(approvalDbTable);
 		approvalDbTable.getTableHeader().setReorderingAllowed(false);// 칼럼순서변경금지
 		approvalDbTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); // 가로스크롤
+		approvalDbTable.setRowSorter(new TableRowSorter(approvalModel)); //테이블 칼럼클릭 정렬
 
 		approvalDbTable.getColumn("결재내용").setWidth(0);
 		approvalDbTable.getColumn("결재내용").setMinWidth(0);
 		approvalDbTable.getColumn("결재내용").setMaxWidth(0);
 		approvalDbTable.getColumn("승인시간").setWidth(150);
 		approvalDbTable.getColumn("승인시간").setMinWidth(150);
-//				approvalDbTable.getColumn("승인시간").setMaxWidth(0);
+//		approvalDbTable.getColumn("승인시간").setMaxWidth(0); 
 		/// 테이블 내용 가운데 정렬하기
 		dtcr.setHorizontalAlignment(SwingConstants.CENTER); // 렌더러의 가로정렬을 CENTER로
 		tcm = approvalDbTable.getColumnModel(); // 정렬할 테이블의 컬럼모델을 가져옴
@@ -393,8 +399,7 @@ public class ScheduleFrame {
 			tcm.getColumn(i).setCellRenderer(dtcr);
 		}
 
-		approvalJScollPane.setBounds(47, 190, 338, 225);
-		approvalDbTable.setRowSorter(new TableRowSorter(approvalModel)); //테이블 열클릭 정렬
+		approvalJScollPane.setBounds(47, 190, 338, 225);		
 		panelApproval.add(approvalJScollPane);
 
 		//// 라벨
@@ -647,7 +652,7 @@ public class ScheduleFrame {
 			}
 		});
 		
-		////// 이미지
+		////// 프레임 이미지
 		lblBackImg = new JLabel("lblBackImg");
 		lblBackImg.setIcon(new ImageIcon(System.getProperty("user.dir") + "\\image\\BackImg.jpg"));
 		lblBackImg.setBounds(0, 0, 661, 700);

@@ -148,12 +148,12 @@ ALTER TABLE APPROVAL_CATEGORY ADD CONSTRAINT PK_APPROVAL_CATEGORIE PRIMARY KEY (
 기획부 사원 한지민
 기획부 대리 최지우
 
-insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10001, 1234, '손예진', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\손예진.jpg');
-insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10002, 1234, '전지현', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\전지현.jpg');
-insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10003, 1234, '송혜교', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\송혜교.jpg');
-insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10004, 1234, '김혜수', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\김혜수.jpg');
-insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10005, 1234, '한지민', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\한지민.jpg');
-insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_image) values(10006, 1234, '최지우', 'C:\Users\KITRI\eclipse-workspace\JavaProject\image\최지우.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_gender, emp_birthday, emp_mobile, emp_address, emp_joinday, emp_image) values(10001, 1234, '손예진', 'F', to_date('2000-01-07', 'yyyy-mm-dd'), '010-1234-3422', '서울', to_date('2019-01-07', 'yyyy-mm-dd'), 'C:\Users\KITRI\git\JavaProject\image\손예진.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_gender, emp_birthday, emp_mobile, emp_address, emp_joinday, emp_image) values(10002, 1234, '전지현', 'F', to_date('2000-01-06', 'yyyy-mm-dd'), '010-2342-6786', '경기', to_date('2019-01-06', 'yyyy-mm-dd'), 'C:\Users\KITRI\git\JavaProject\image\전지현.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_gender, emp_birthday, emp_mobile, emp_address, emp_joinday, emp_image) values(10003, 1234, '송혜교', 'F', to_date('2000-01-05', 'yyyy-mm-dd'), '010-2523-3456', '인천', to_date('2019-01-05', 'yyyy-mm-dd'), 'C:\Users\KITRI\git\JavaProject\image\송혜교.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_gender, emp_birthday, emp_mobile, emp_address, emp_joinday, emp_image) values(10004, 1234, '김혜수', 'F', to_date('2000-01-04', 'yyyy-mm-dd'), '010-1923-6785', '대전', to_date('2019-01-04', 'yyyy-mm-dd'), 'C:\Users\KITRI\git\JavaProject\image\김혜수.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_gender, emp_birthday, emp_mobile, emp_address, emp_joinday, emp_image) values(10005, 1234, '한지민', 'F', to_date('2000-01-07', 'yyyy-mm-dd'), '010-7965-3453', '광주', to_date('2019-01-07', 'yyyy-mm-dd'), 'C:\Users\KITRI\git\JavaProject\image\한지민.jpg');
+insert into EMPLOYEE(emp_no, emp_password, emp_name, emp_gender, emp_birthday, emp_mobile, emp_address, emp_joinday, emp_image) values(10006, 1234, '최지우', 'F', to_date('2000-01-06', 'yyyy-mm-dd'), '010-3453-5678', '부산', to_date('2019-01-06', 'yyyy-mm-dd'), 'C:\Users\KITRI\git\JavaProject\image\최지우.jpg');
 
 insert into BELONG_DEPARTMENT(emp_no, dep_code) values(10001, 1);
 insert into BELONG_DEPARTMENT(emp_no, dep_code) values(10002, 1);
